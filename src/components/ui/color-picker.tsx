@@ -3,6 +3,7 @@
 import {
   type KeyboardEvent,
   type PointerEvent,
+  useId,
   useRef,
   useState,
 } from "react";
@@ -89,6 +90,7 @@ export function ColorPicker({
   const [text, setText] = useState(defaultValue);
   const svRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
+  const hexId = useId();
   const hex = rgbToHex(hsvToRgb(hsv));
 
   const apply = (next: HSV) => {
@@ -234,11 +236,11 @@ export function ColorPicker({
       </div>
 
       <div className="mt-3 flex items-center gap-2">
-        <label className="sr-only" htmlFor="cp-hex">
+        <label className="sr-only" htmlFor={hexId}>
           Hex color
         </label>
         <input
-          id="cp-hex"
+          id={hexId}
           value={text}
           onChange={(e) => {
             setText(e.target.value);

@@ -9,7 +9,7 @@ export interface FAQBlockProps {
 
 const DEFAULT_ITEMS: AccordionItem[] = [
   {
-    title: "Is Lumen UI free to use?",
+    title: "Is ONONC free to use?",
     content:
       "Yes — copy any component into your project and own it. There is no runtime dependency on this library.",
   },

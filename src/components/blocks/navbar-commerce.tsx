@@ -46,7 +46,7 @@ const money = (n: number) =>
  * dismisses on Escape or outside click. The category bar collapses on mobile.
  */
 export function NavbarCommerce({
-  brand = "Lumen",
+  brand = "ONONC",
   categories = DEFAULT_CATEGORIES,
   initialCart = DEFAULT_CART,
   className,

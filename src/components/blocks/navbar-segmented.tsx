@@ -41,7 +41,7 @@ const DEFAULT_ITEMS: SegmentedNavItem[] = [
  * a tab with `aria-current`; the control collapses to a stacked menu on mobile.
  */
 export function NavbarSegmented({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   ctaLabel = "Get started",
   className,

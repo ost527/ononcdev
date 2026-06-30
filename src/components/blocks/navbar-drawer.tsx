@@ -44,7 +44,7 @@ const DEFAULT_SECONDARY: DrawerNavItem[] = [
  * click. Link reveal staggers in, and collapses to a fade under reduced-motion.
  */
 export function NavbarDrawer({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   secondaryItems = DEFAULT_SECONDARY,
   ctaLabel = "Start a project",

@@ -109,7 +109,7 @@ const EQ_BARS = [0.4, 0.85, 0.55, 1, 0.7];
 export function BentoProfile({
   name = "Ava Reed",
   handle = "@avareed",
-  bio = "Design engineer crafting calm, motion-first interfaces. Currently building Lumen UI.",
+  bio = "Design engineer crafting calm, motion-first interfaces. Currently building ONONC.",
   location = "Lisbon, PT",
   role = "Design Engineer",
   links = DEFAULT_LINKS,

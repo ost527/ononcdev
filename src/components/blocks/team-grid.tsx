@@ -45,7 +45,7 @@ function initials(name: string) {
  */
 export function TeamGrid({
   heading = "Meet the team",
-  subheading = "The people building Lumen UI.",
+  subheading = "The people building ONONC.",
   members = DEFAULT_MEMBERS,
   className,
 }: TeamGridProps) {

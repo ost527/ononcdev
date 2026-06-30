@@ -1,7 +1,7 @@
 # Navbar Blocks
 
 Eighteen production-grade navigation variants in the **Section Blocks** category, in
-addition to the original `Navbar`. Each is an original design built on the Lumen
+addition to the original `Navbar`. Each is an original design built on the ONONC
 UI design tokens — responsive, keyboard-accessible, and `prefers-reduced-motion`
 aware.
 
@@ -170,7 +170,7 @@ Collapses to a toggle menu (switchers included) on mobile.
 - Props: `brand`, `items`, `languages`, `currencies` (`{ value, label, hint? }`), `ctaLabel`, `className`.
 
 ## Shared conventions
-- **Client components** (`"use client"`) that compose only Lumen UI design tokens
+- **Client components** (`"use client"`) that compose only ONONC design tokens
   (`border-border`, `bg-surface`, `text-muted`, `from-brand`/`to-brand-2`, `brand-ink`, …).
 - **Motion** via `motion/react`; every JS-driven animation is gated by
   `useReducedMotion()`, and CSS transitions inherit the global reduced-motion guard.

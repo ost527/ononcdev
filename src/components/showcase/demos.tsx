@@ -28,7 +28,7 @@ export function ModalDemo() {
       >
         Open dialog
       </button>
-      <Modal open={open} onClose={() => setOpen(false)} title="Welcome to Lumen UI">
+      <Modal open={open} onClose={() => setOpen(false)} title="Welcome to ONONC">
         <p>
           A fully accessible dialog — press Escape, click the backdrop, or use a
           button to close. Focus is moved in and restored for you.

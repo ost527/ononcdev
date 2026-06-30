@@ -164,7 +164,7 @@ function VersionSwitcher({
  * theme toggle is a local demo control and does not change the page theme.
  */
 export function NavbarDocs({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   versions = DEFAULT_VERSIONS,
   stars = "2.4k",

@@ -10,6 +10,8 @@ export interface SegmentedControlProps {
   value?: string;
   onValueChange?: (value: string) => void;
   className?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 }
 
 /**
@@ -22,6 +24,8 @@ export function SegmentedControl({
   value,
   onValueChange,
   className,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
 }: SegmentedControlProps) {
   const baseId = useId();
   const [internal, setInternal] = useState(defaultValue ?? options[0]);
@@ -45,6 +49,8 @@ export function SegmentedControl({
   return (
     <div
       role="radiogroup"
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
       onKeyDown={onKeyDown}
       className={cn(
         "inline-flex gap-1 rounded-full border border-border bg-surface p-1",

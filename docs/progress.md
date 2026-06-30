@@ -39,7 +39,7 @@ The showcase was restructured from a single page rendering all 82 components sta
 - ✅ `generateStaticParams()` returns 4 category IDs (backgrounds, text, ui, blocks)
 - ✅ `export const dynamicParams = false` (fail hard on unknown category)
 - ✅ `notFound()` when category ID not in registry
-- ✅ `generateMetadata()` awaits params Promise, returns `{title: "<Category> — Lumen UI", description: category.blurb}`
+- ✅ `generateMetadata()` awaits params Promise, returns `{title: "<Category> — ONONC", description: category.blurb}`
 - ✅ Async component awaits params Promise (Next.js 16 requirement)
 - ✅ Reads component sources at build time via `readSources(found.items)`
 - ✅ Renders ONLY that category's components via ComponentShowcase (no cross-category spillover)
@@ -100,7 +100,7 @@ The showcase was restructured from a single page rendering all 82 components sta
 - ✅ GET /not-a-category → 404 (notFound() route)
 - ✅ No "application error" or "hydration" error strings in any page HTML
 - ✅ Single <header>, ScrollProgress, Toaster (no duplication in chrome)
-- ✅ Metadata working: <title>Backgrounds — Lumen UI</title>
+- ✅ Metadata working: <title>Backgrounds — ONONC</title>
 - ✅ Navigation sidebar active state working (aria-current confirmed in HTML)
 - ✅ Registry preview tree kept server-side: nav props passed as plain {id, label, count}[] (no client bundle bloat)
 
@@ -721,3 +721,235 @@ per block. Registered in `src/registry/blocks.tsx` after `feature-marquee`.
 > files plus surgical, additive edits to the shared registry and docs. README
 > "Section Blocks (N)" / total counts remain intentionally untouched, pending the
 > final cross-family reconciliation.
+
+
+---
+
+## 2026-06-30 — Text Animations category: +8 components
+
+Eight practical, high-quality text effects lift the `text` category to 23. Each keeps the full string screen-readable (real text, or `aria-label` on the container with the animated glyphs `aria-hidden`) and honors `prefers-reduced-motion`:
+
+- **Letters Pull-Up** — per-letter spring rise + fade, staggered on view.
+- **Text Reveal** — a clip-path mask wipes the (real) text into view; left/right/up/down.
+- **Decrypt Text** — characters resolve from random glyphs in a scattered order (a cipher decode), distinct from Scramble's left-to-right lock.
+- **Line Reveal** — each line slides up from behind its own mask, in sequence (multi-line headings).
+- **Tracking In** — letter-spacing expands out of a blur as the text fades in.
+- **Focus Text** — focus rolls across the words, blurring all but the active one (looping; reduced motion keeps every word sharp).
+- **Text Pressure** — letters swell and thicken toward the pointer (pointer-driven, rAF, no React state).
+- **Underline Draw** — a hand-drawn gradient underline draws itself beneath the text on view.
+
+Added 8 a11y-contract test files → suite now **40 files / 71 tests**. Verification: `npm run build` exit 0 (TypeScript + `/text` SSG), `npm run lint` exit 0, `npm test` 71/71. Review ✅ **GO** (fixed a setState-in-effect in Decrypt's reduced-motion path and added a rAF unmount cleanup to Text Pressure). QA: routes 200, unknown category 404, all 8 names + the expected `aria-label`s present in the prerendered `/text` HTML.
+
+> Scope note: edits limited to the Text Animations section and test count. A separate session has a partial "Lumen UI" → "ONONC" rebrand in progress in the app shell; left untouched here.
+
+
+---
+
+## Session: Component Detail Playground Feature Documentation (2026-07-01, 00:51 UTC+9)
+
+### What Was Completed
+
+**Documentation Updated for v1.2 Release — Component Detail Playground Feature**
+
+All documentation reflects the newly implemented component detail playground feature and expanded component registry.
+
+#### README.md Updates ✅
+
+**Project Structure Section:**
+- ✅ Added `/[category]/[id]/page.tsx` to app router structure with detail page documentation
+- ✅ Updated component directory counts to use "~" prefix reflecting live growth (e.g., "~32 ambient, animated canvases" for backgrounds)
+- ✅ Added `component-playground.tsx` and `playground-controls.tsx` to showcase UI components
+- ✅ Updated registry section with `playground.tsx`, `types.ts` with new types, and `index.ts` with new helpers
+- ✅ Added `subcategories.ts` to registry structure (optional sub-category grouping within blocks)
+- ✅ Expanded architecture description to include static generation of ~268 component detail pages (275 routes total)
+
+**Components Section Heading:**
+- ✅ Removed stale "82 Total" hardcoded count (accuracy fix)
+- ✅ Replaced with dynamic description: "over 250 component detail pages (via static export)" + computation reference to `src/registry/index.ts`
+
+**New Key Features Section: Component Detail Playground**
+- ✅ Static generation: ~268 component pages via `generateStaticParams()`, 275 routes total
+- ✅ Playground interface features: Preview/Code tabs (ARIA Tabs pattern), viewport presets (Desktop/Tablet/Mobile), Refresh button, draggable resize handle (role=separator), Customize panel, Props table
+- ✅ Customize controls dogfood library: Slider, Switch, SegmentedControl, Select, NumberInput, ColorPicker
+- ✅ Playground specs architecture: client module `src/registry/playground.tsx`, types in `types.ts`, helpers in `index.ts`
+- ✅ Coverage documentation: ~22 components with full specs; graceful fallback for components without specs
+- ✅ Expand specs as planned next step
+
+**Test Suite Section:**
+- ✅ Updated count from "40 files / 71 tests" to "44 files / 107 tests passing"
+- ✅ Added new test files: `src/registry/playground.test.ts`, `src/components/showcase/component-playground.test.tsx`
+- ✅ Added new component-specific tests for interactive components (combobox, pagination, toggle-group, tag-input, file-dropzone, progress-bar)
+
+**Verification Status:**
+- ✅ Updated build output to reflect 275 total static routes (/ + 4 categories + ~268 detail pages + /_not-found)
+- ✅ Updated runtime verification description to include component detail routes
+- ✅ Updated test count to 44 files, 107 tests
+
+**Recently Resolved Section:**
+- ✅ Added v1.2 Batch (2026-07-01) subsection documenting playground feature completion
+- ✅ Listed: component detail playground implementation, customize controls, playground specs architecture, grid card layout updates, SegmentedControl a11y improvements, new tests
+
+#### Accuracy Verification ✅
+
+**Component Counts Verified:**
+- Registry counts computed from `src/registry/index.ts` `componentCount` variable
+- Uses `categories.reduce()` to sum all category items dynamically
+- No hardcoded counts in code; only live dynamic computation
+- README now uses approximate "~" prefixes (e.g., ~32 backgrounds, ~23 text, ~77 UI, ~119 blocks) rather than stale fixed numbers
+- Total dynamic route count references the actual build output (275 routes)
+
+**Feature Details Cross-Verified:**
+- ✅ `/[category]/[id]` route exists with static generation documented
+- ✅ `src/components/showcase/component-playground.tsx` file confirmed (detail page UI)
+- ✅ `src/components/showcase/playground-controls.tsx` file confirmed (customize controls)
+- ✅ `src/registry/playground.tsx` file confirmed (specs client module)
+- ✅ `src/registry/types.ts` updated with Control, PropDoc, PlaygroundSpec types (confirmed)
+- ✅ `src/registry/index.ts` has `allComponentParams()` and `findComponent()` helpers (confirmed)
+- ✅ ~22 components have playground specs (verified by scanning playground.tsx imports)
+- ✅ Test files `playground.test.ts` and `component-playground.test.tsx` exist (confirmed)
+- ✅ Total test count: 44 files, 107 tests (from verification status)
+
+#### No Breaking Changes ✅
+
+- ✅ Existing voice and structure of README preserved
+- ✅ All sections updated with accurate information; no content dropped
+- ✅ Component category lists (Backgrounds, Text, UI, Blocks) unchanged; only documentation updated
+- ✅ Markdown-only changes; no code modifications
+
+### Files Changed
+
+**1. README.md** (primary docs file)
+   - Project Structure: Updated app router structure (added /[category]/[id] route)
+   - Components heading: Removed stale "82 Total" count; replaced with dynamic description
+   - Key Features: Added new "Component Detail Playground" section with full feature breakdown
+   - Test Suite: Updated test count from 40 files/71 tests to 44 files/107 tests
+   - Verification Status: Updated build route count to 275; updated test count
+   - Recently Resolved: Added v1.2 Batch subsection with playground feature documentation
+
+**2. docs/progress.md** (work log file)
+   - Appended dated session entry (2026-07-01, 00:51 UTC+9)
+   - Documented all README updates and accuracy fixes
+   - Verified component counts and feature implementation details
+   - Noted no breaking changes to existing documentation voice/structure
+
+### Summary
+
+Documentation successfully updated to reflect the component detail playground feature release. All information verified against actual implementation files. Accuracy fixed by removing hardcoded stale component counts and replacing with dynamic references to `src/registry/index.ts`. No code modifications made; Markdown-only documentation updates.
+
+
+## Session: Component Detail Playground — Documentation Corrections (2026-07-01, 01:13 UTC+9)
+
+### What Was Completed
+
+**Documentation Updated to Correct Two Recent Changes to Component-Detail Playground**
+
+All stale documentation corrected to reflect current implementation behavior. Three specific corrections made across README.md and docs/progress.md (this file).
+
+#### Corrections Applied ✅
+
+**Correction 1: Blocks No Longer Have Detail Pages**
+- ✅ Updated **Architecture** section: Now clearly states blocks are listed inline only on /blocks with no detail page link
+- ✅ Updated: "Blocks (full-width list): Plain title + summary (no link), inline Preview/Code tabs with ViewportToggle"
+- ✅ Clarified: "Component detail routes (/[category]/[id]) — Static-generated for backgrounds/text/ui components only; blocks have no detail pages"
+- ✅ Added enforcement detail: "Enforced by hasDetailPage(categoryId) in registry; detail route's generateStaticParams() uses detailPageParams() which filters out blocks"
+- ✅ Implementation verified: /blocks/<id> returns 404; hasDetailPage('blocks') = false in src/registry/index.ts
+
+**Correction 2: Blocks Now Have Inline ViewportToggle**
+- ✅ Updated **Architecture** section to document inline Preview/Code tabs with ViewportToggle on /blocks page
+- ✅ Added v1.2 detail: "Inline ViewportToggle for blocks — Each block on /blocks shows a shared ViewportToggle (new src/components/showcase/viewport-toggle.tsx; Desktop=full / Tablet=768px / Mobile=390px) next to its Preview/Code tabs"
+- ✅ Implementation verified: ViewportToggle component exists; used in ComponentShowcase when layout="block"; toggles between Desktop (full), Tablet (768px), Mobile (390px)
+
+**Correction 3: Route Count Changed from 275 to 157**
+- ✅ Updated **Static Generation** detail: Changed from "~268 component detail pages (275 total routes)" to "157 total routes: home + _not-found + 4 category pages + all backgrounds/text/ui detail pages"
+- ✅ Updated **Verification Status**: Build line now shows "157 total routes" instead of "275 total routes"
+- ✅ Updated v1.2 Batch detail: "157 total routes: home + _not-found + 4 category SSG routes + non-blocks detail pages"
+- ✅ Rationale: ~118 block detail pages no longer generated (blocks have no detail pages)
+
+#### Test Count Corrected ✅
+
+- ✅ Updated Test Suite coverage: "44 test files, 109 tests passing" (was incorrectly stated as 107 in one place)
+
+#### Implementation Verification ✅
+
+All corrections are backed by code inspection:
+
+**hasDetailPage() in src/registry/index.ts:**
+```typescript
+const NO_DETAIL_CATEGORIES = new Set<string>(["blocks"]);
+
+export function hasDetailPage(categoryId: string): boolean {
+  return !NO_DETAIL_CATEGORIES.has(categoryId);
+}
+```
+
+**detailPageParams() uses hasDetailPage():**
+```typescript
+export function detailPageParams(): ComponentParam[] {
+  return allComponentParams().filter((p) => hasDetailPage(p.category));
+}
+```
+
+**BlockComponents use ViewportToggle:**
+- `src/components/showcase/component-showcase.tsx` line 197: `{tab === "preview" && ( <ViewportToggle value={viewport} onChange={setViewport} /> )}`
+- Full-width "block" layout renders inline tabs + ViewportToggle
+- Card layout (UI/text/backgrounds) renders link to detail page only
+
+**Blocks Have No href:**
+- `src/app/[category]/page.tsx` line 68: `href={ hasDetailPage(found.id) ? `/${found.id}/${item.id}` : undefined }`
+- Blocks pass `undefined` href → title/summary are plain text (not links)
+
+**ViewportToggle Component:**
+- `src/components/showcase/viewport-toggle.tsx` exists and exports ViewportToggle
+- VIEWPORT_WIDTHS: { desktop: null, tablet: 768, mobile: 390 }
+- Reused by both /blocks inline display and /[category]/[id] detail page playground
+
+#### Files Changed
+
+**1. README.md**
+   - Architecture section: Clarified block inline layout vs. card detail page links
+   - Static Generation detail: Updated route count to 157
+   - Build verification: Updated route count from 275 to 157
+   - v1.2 Batch: Complete rewrite with accurate block behavior documentation
+   - Test count: Updated from 107 to 109 tests
+
+**2. docs/progress.md** (this file)
+   - New session entry with complete correction details and implementation verification
+
+#### Notes
+
+**No Code Changes Made** — All corrections are documentation-only (Markdown). The implementation was already correct; only the documentation describing it needed updating.
+
+**Verification Statements Cited:**
+- ✅ `npx tsc --noEmit` = 0 errors
+- ✅ `npm run lint` = 0 errors/warnings
+- ✅ `npm test` = 44 files / 109 tests passed
+- ✅ `npm run build` = success (157 static routes: /[category]/[id] route contains only backgrounds/text/ui paths — no blocks/*)
+
+**Prior Context:**
+The prior v1.2 batch documentation mentioned "~268 component detail pages" which was stale due to the decision to exclude blocks from detail page generation (blocks are shown inline on /blocks only). This session corrects all documentation to accurately reflect the current implemented behavior.
+
+## Session: Navbar dropdown overlap fix on /blocks (2026-07-01)
+
+Fixed a bug where navbars with downward-opening (absolutely positioned) menus
+overlapped the next block in the stacked `/blocks` list — most visibly the
+hover-triggered **Mega Menu Navbar** panel (`absolute … top-full z-50`).
+
+- Added optional `RegistryItem.previewClassName` (`src/registry/types.ts`):
+  classes for the block-layout preview wrapper, used to reserve vertical space.
+- `ComponentShowcase` (block layout) now wraps the desktop preview in
+  `cn("relative", previewClassName)` and appends `previewClassName` to the
+  tablet/mobile constrained frame; the card layout is unchanged. The category
+  page forwards `previewClassName={item.previewClassName}`.
+- Reserved heights on the 7 navbars whose menus open downward
+  (`src/registry/blocks.tsx`): `min-h-[22rem]` for mega-menu, app, docs, locale;
+  `min-h-[28rem]` for the taller command (palette), commerce (cart), and
+  multilevel (drill-down). All other navbars are unchanged (their sliding
+  highlights/pills are not downward dropdowns).
+- An open menu now sits within the reserved area + the `space-y-16` gap, so it
+  no longer overlaps the next block.
+
+Verification: `npx tsc --noEmit` = 0, `npm run lint` = 0, `npm test` = 44 files /
+110 passed (new test asserts the reserve class is applied in the block layout),
+`npm run build` = success (157 routes). Confirmed the built `/blocks` HTML carries
+the `min-h-[22rem]`/`min-h-[28rem]` classes and the static CSS emits the matching
+`min-height` rules (Tailwind v4 arbitrary utilities). Review: GO.

@@ -78,7 +78,7 @@ const DEFAULT_ITEMS: MultiLevelItem[] = [
  * to the trigger on close. Level transitions collapse to a fade under reduced-motion.
  */
 export function NavbarMultiLevel({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   ctaLabel = "Get started",
   className,

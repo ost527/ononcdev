@@ -31,7 +31,7 @@ const DEFAULT_ITEMS: AutoHideNavItem[] = [
  * the behavior previews in place. Under reduced-motion the bar never hides.
  */
 export function NavbarAutoHide({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   ctaLabel = "Get started",
   className,

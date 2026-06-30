@@ -31,7 +31,7 @@ const DEFAULT_TABS: BottomTab[] = [
  * aria-current. Shown inside a phone-style frame for preview.
  */
 export function NavbarBottom({
-  brand = "Lumen",
+  brand = "ONONC",
   tabs = DEFAULT_TABS,
   actionLabel = "Create",
   className,

@@ -20,7 +20,7 @@ export interface HeroGlowProps {
  * it freezes gracefully under prefers-reduced-motion.
  */
 export function HeroGlow({
-  announcement = "Lumen 2.0 is here",
+  announcement = "ONONC 2.0 is here",
   title = "Your whole workflow, in one",
   highlight = "luminous workspace",
   description = "Plan, build, and launch without switching tabs. A single, fast surface for the work that matters — beautifully out of your way.",
@@ -101,7 +101,7 @@ export function HeroGlow({
             <span className="size-2.5 rounded-full bg-brand/60" />
             <span className="size-2.5 rounded-full bg-brand-2/60" />
             <span className="mx-auto rounded-md border border-border bg-surface px-6 py-0.5 text-[11px] text-muted">
-              lumen.dev
+              ononc.dev
             </span>
           </div>
           {/* Abstract app layout */}

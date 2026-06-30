@@ -243,7 +243,7 @@ export const ui: Category = {
           className="w-full max-w-sm"
           defaultIndex={0}
           items={[
-            { title: "What is Lumen UI?", content: "An original animated component kit." },
+            { title: "What is ONONC?", content: "An original animated component kit." },
             { title: "Is it accessible?", content: "Yes — ARIA wiring and keyboard support throughout." },
             { title: "Can I theme it?", content: "Everything reads from CSS variables." },
           ]}
@@ -629,7 +629,7 @@ export const ui: Category = {
         <Textarea
           className="w-72"
           placeholder="Write a short bio…"
-          defaultValue="Lumen UI is an original, motion-first component library."
+          defaultValue="ONONC is an original, motion-first component library."
           maxLength={160}
           showCount
         />
@@ -703,7 +703,7 @@ export const ui: Category = {
         <HoverCard
           trigger={
             <button className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground">
-              @lumen
+              @ononc
             </button>
           }
         >
@@ -712,7 +712,7 @@ export const ui: Category = {
               L
             </div>
             <div>
-              <p className="font-semibold text-foreground">Lumen UI</p>
+              <p className="font-semibold text-foreground">ONONC</p>
               <p className="text-xs">Motion-first React components.</p>
             </div>
           </div>

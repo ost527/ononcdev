@@ -28,7 +28,7 @@ const DEFAULT_ITEMS: NavItem[] = [
  * small screens. The toggle exposes aria-expanded.
  */
 export function NavbarBlock({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   ctaLabel = "Get started",
   className,

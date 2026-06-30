@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
 import { ThemeToggle } from "@/components/showcase/theme-toggle";
 import { categories, componentCount } from "@/registry";
 
@@ -8,11 +7,11 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-2 text-white">
-            <Sparkles className="size-4" />
-          </span>
-          <span className="font-semibold">Lumen UI</span>
+        <Link
+          href="/"
+          className="flex items-center text-lg font-bold tracking-tight transition-opacity hover:opacity-80"
+        >
+          ONONC
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {categories.map((category) => (

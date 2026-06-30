@@ -36,7 +36,7 @@ const DEFAULT_FEATURES = [
  */
 export function PricingSpotlight({
   badge = "Lifetime deal",
-  name = "Lumen Pro",
+  name = "ONONC Pro",
   description = "Everything in one payment. Own it forever — no subscription, no lock-in.",
   price = "$199",
   originalPrice = "$399",

@@ -29,7 +29,7 @@ export interface HeroVideoProps {
  */
 export function HeroVideo({
   eyebrow = "Watch the 2-minute tour",
-  title = "See Lumen in",
+  title = "See ONONC in",
   highlight = "motion",
   description = "A quick look at how teams design, review, and ship — all in one calm, fast surface.",
   primaryLabel = "Get started",

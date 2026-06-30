@@ -181,7 +181,7 @@ export function BentoProduct({
               <span className="size-2.5 rounded-full bg-amber-400/80" />
               <span className="size-2.5 rounded-full bg-emerald-500/80" />
               <span className="ml-2 flex-1 truncate rounded-md bg-background px-3 py-1 text-[11px] text-muted-2">
-                app.lumen.ui/dashboard
+                app.ononc.ui/dashboard
               </span>
             </div>
             {/* body */}

@@ -30,7 +30,7 @@ const DEFAULT_ITEMS: StickyNavItem[] = [
  * region (focusable for keyboard scrolling) so the effect previews in place.
  */
 export function NavbarSticky({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   ctaLabel = "Get started",
   className,

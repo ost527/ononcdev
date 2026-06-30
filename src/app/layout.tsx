@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lumen UI — Original animated component library",
+  title: "ONONC — Original animated component library",
   description:
     "An original, motion-first React component library for Next.js: animated backgrounds, text effects, interactive components, and section blocks.",
 };
@@ -44,7 +44,7 @@ export default function RootLayout({
         <SiteHeader />
         {children}
         <div className="mx-auto mt-auto w-full max-w-6xl px-4 pb-20 pt-24 sm:px-6">
-          <FooterBlock />
+          <FooterBlock brand="ONONC" />
         </div>
         <Toaster />
       </body>

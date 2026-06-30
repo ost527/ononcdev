@@ -37,7 +37,7 @@ type Status = "idle" | "loading" | "done";
  */
 export function HeroAI({
   eyebrow = "Meet your AI copilot",
-  title = "Describe it. Lumen",
+  title = "Describe it. ONONC",
   highlight = "builds it",
   description = "Turn a sentence into shippable UI. Ask for a section, a flow, or a whole page — and refine it in plain language.",
   placeholder = "Ask anything — e.g. “Design a pricing page”",

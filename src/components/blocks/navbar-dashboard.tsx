@@ -34,7 +34,7 @@ function initials(name: string) {
  * tabs expose `aria-current` and the row scrolls horizontally on small screens.
  */
 export function NavbarDashboard({
-  brand = "Lumen",
+  brand = "ONONC",
   breadcrumb = DEFAULT_BREADCRUMB,
   tabs = DEFAULT_TABS,
   userName = "Avery Quinn",

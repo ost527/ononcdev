@@ -34,9 +34,9 @@ const DEFAULT_ITEMS: AnnounceNavItem[] = [
  * collapses to a toggle menu on small screens.
  */
 export function NavbarAnnounce({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
-  announcement = "Lumen UI 1.1 is here — six new navigation blocks.",
+  announcement = "ONONC 1.1 is here — six new navigation blocks.",
   announcementCtaLabel = "See what's new",
   ctaLabel = "Get started",
   signInLabel = "Sign in",

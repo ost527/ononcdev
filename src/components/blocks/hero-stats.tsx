@@ -56,7 +56,7 @@ export function HeroStats({
   eyebrow = "Trusted at scale",
   title = "Infrastructure your team can",
   highlight = "rely on",
-  description = "From your first user to your ten-millionth, Lumen stays fast, observable, and calm. The numbers below update live as you scroll.",
+  description = "From your first user to your ten-millionth, ONONC stays fast, observable, and calm. The numbers below update live as you scroll.",
   primaryLabel = "Start free",
   secondaryLabel = "Talk to sales",
   stats = DEFAULT_STATS,

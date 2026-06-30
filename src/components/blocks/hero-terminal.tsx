@@ -27,7 +27,7 @@ interface Line {
 }
 
 const LINES: Line[] = [
-  { kind: "command", text: "npm create lumen@latest my-app" },
+  { kind: "command", text: "npm create ononc@latest my-app" },
   { kind: "comment", text: "# scaffolding a fresh workspace…" },
   { kind: "output", text: "✓ 82 components linked" },
   { kind: "output", text: "✓ Tailwind v4 + tokens configured" },
@@ -36,7 +36,7 @@ const LINES: Line[] = [
 ];
 
 const FULL_SCRIPT =
-  "Terminal demo: scaffold a project with npm create lumen, install dependencies, then run npm run dev to start the server.";
+  "Terminal demo: scaffold a project with npm create ononc, install dependencies, then run npm run dev to start the server.";
 
 function lineColor(kind: LineKind) {
   switch (kind) {
@@ -64,7 +64,7 @@ export function HeroTerminal({
   highlight = "production",
   titleAfter = "in minutes.",
   description = "A typed, tree-shakeable component layer with sensible defaults. Install once, theme with CSS variables, and ship interfaces that feel hand-crafted.",
-  command = "npm i lumen-ui",
+  command = "npm i ononc",
   primaryLabel = "Read the docs",
   secondaryLabel = "Browse components",
   className,
@@ -195,7 +195,7 @@ export function HeroTerminal({
             <span className="size-2.5 rounded-full bg-brand-2/60" />
             <span className="ml-3 inline-flex items-center gap-1.5 text-[11px] text-muted">
               <TerminalSquare className="size-3.5" />
-              zsh — lumen
+              zsh — ononc
             </span>
           </div>
 

@@ -14,7 +14,7 @@ export interface BannerBlockProps {
  * BannerBlock — a dismissible announcement bar with a gradient wash and a CTA.
  */
 export function BannerBlock({
-  message = "Lumen UI just shipped a big batch of new components.",
+  message = "ONONC just shipped a big batch of new components.",
   ctaLabel = "See what's new",
   className,
 }: BannerBlockProps) {

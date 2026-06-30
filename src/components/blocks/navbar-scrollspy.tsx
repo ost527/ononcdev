@@ -35,7 +35,7 @@ const DEFAULT_SECTIONS: ScrollspySection[] = [
  * reduced-motion). The scroll region is focusable for keyboard scrolling.
  */
 export function NavbarScrollspy({
-  brand = "Lumen",
+  brand = "ONONC",
   sections = DEFAULT_SECTIONS,
   ctaLabel = "Get started",
   className,

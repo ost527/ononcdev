@@ -47,7 +47,7 @@ export function BentoInteractive({
   eyebrow = "Interactive",
   heading = "Built to be touched",
   subheading = "Every surface reacts — to the pointer, to focus, to a tap. Hover, drag, and click around.",
-  command = "npm i lumen-ui",
+  command = "npm i ononc",
   className,
 }: BentoInteractiveProps) {
   const [copied, setCopied] = useState(false);

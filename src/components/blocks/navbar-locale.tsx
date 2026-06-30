@@ -177,7 +177,7 @@ const DEFAULT_CURRENCIES: LocaleOption[] = [
  * and focus return to its trigger. Collapses to a toggle menu on mobile.
  */
 export function NavbarLocale({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   languages = DEFAULT_LANGUAGES,
   currencies = DEFAULT_CURRENCIES,

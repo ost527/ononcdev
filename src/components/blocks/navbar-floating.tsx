@@ -32,7 +32,7 @@ const DEFAULT_ITEMS: FloatingNavItem[] = [
  * panel on small screens. The slide is disabled under reduced-motion.
  */
 export function NavbarFloating({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   ctaLabel = "Get started",
   className,

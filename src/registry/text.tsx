@@ -13,6 +13,14 @@ import { NumberTicker } from "@/components/text/number-ticker";
 import { ScrollReveal } from "@/components/text/scroll-reveal";
 import { FlipText } from "@/components/text/flip-text";
 import { GradientUnderline } from "@/components/text/gradient-underline";
+import { LettersPullUp } from "@/components/text/letters-pull-up";
+import { TextReveal } from "@/components/text/text-reveal";
+import { DecryptText } from "@/components/text/decrypt-text";
+import { LineReveal } from "@/components/text/line-reveal";
+import { TrackingIn } from "@/components/text/tracking-in";
+import { FocusText } from "@/components/text/focus-text";
+import { TextPressure } from "@/components/text/text-pressure";
+import { UnderlineDraw } from "@/components/text/underline-draw";
 import type { Category } from "@/registry/types";
 
 const HEADING = "px-6 text-center text-3xl font-semibold sm:text-4xl";
@@ -180,6 +188,94 @@ export const text: Category = {
         <GradientUnderline href="#" className="text-2xl sm:text-3xl">
           Hover this link
         </GradientUnderline>
+      ),
+    },
+    {
+      id: "letters-pull-up",
+      name: "Letters Pull-Up",
+      description: "Each letter springs up and fades in, staggered, on view.",
+      sourcePath: "components/text/letters-pull-up.tsx",
+      tags: ["motion", "scroll"],
+      preview: <LettersPullUp text="Letter by letter" className={HEADING} />,
+    },
+    {
+      id: "text-reveal",
+      name: "Text Reveal",
+      description: "A clip-path mask wipes the text into view.",
+      sourcePath: "components/text/text-reveal.tsx",
+      tags: ["motion", "scroll"],
+      preview: <TextReveal className={HEADING}>Wiped into view</TextReveal>,
+    },
+    {
+      id: "decrypt-text",
+      name: "Decrypt Text",
+      description: "Characters resolve out of random glyphs in scattered order.",
+      sourcePath: "components/text/decrypt-text.tsx",
+      tags: ["motion", "scroll"],
+      preview: (
+        <DecryptText
+          text="DECRYPTING SIGNAL"
+          className="px-6 text-center font-mono text-2xl font-semibold sm:text-3xl"
+        />
+      ),
+    },
+    {
+      id: "line-reveal",
+      name: "Line Reveal",
+      description: "Each line slides up from behind a mask, in sequence.",
+      sourcePath: "components/text/line-reveal.tsx",
+      tags: ["motion", "scroll"],
+      preview: (
+        <LineReveal
+          lines={["Designed in lines,", "revealed in sequence."]}
+          className={HEADING}
+        />
+      ),
+    },
+    {
+      id: "tracking-in",
+      name: "Tracking In",
+      description: "Letter-spacing expands out of a blur as the text fades in.",
+      sourcePath: "components/text/tracking-in.tsx",
+      tags: ["motion", "scroll"],
+      preview: <TrackingIn className={HEADING}>Tracking in</TrackingIn>,
+    },
+    {
+      id: "focus-text",
+      name: "Focus Text",
+      description: "Focus rolls across the words, blurring all but the active one.",
+      sourcePath: "components/text/focus-text.tsx",
+      tags: ["motion", "loop"],
+      preview: (
+        <FocusText
+          words={["Design", "Build", "Ship", "Repeat"]}
+          className={HEADING}
+        />
+      ),
+    },
+    {
+      id: "text-pressure",
+      name: "Text Pressure",
+      description: "Letters swell and thicken toward the cursor.",
+      sourcePath: "components/text/text-pressure.tsx",
+      tags: ["pointer"],
+      preview: (
+        <TextPressure
+          text="Hover the pressure"
+          className="px-6 text-center text-3xl font-bold sm:text-4xl"
+        />
+      ),
+    },
+    {
+      id: "underline-draw",
+      name: "Underline Draw",
+      description: "A hand-drawn gradient underline draws in beneath the text.",
+      sourcePath: "components/text/underline-draw.tsx",
+      tags: ["motion", "scroll"],
+      preview: (
+        <div className={HEADING}>
+          The <UnderlineDraw>important</UnderlineDraw> part
+        </div>
       ),
     },
   ],

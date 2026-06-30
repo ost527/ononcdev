@@ -48,7 +48,7 @@ function UnderlineLink({ label, href }: SplitNavItem) {
  * hover and keyboard focus. Collapses to a centered brand with a toggle menu.
  */
 export function NavbarSplit({
-  brand = "Lumen",
+  brand = "ONONC",
   leftItems = DEFAULT_LEFT,
   rightItems = DEFAULT_RIGHT,
   ctaLabel = "Get started",

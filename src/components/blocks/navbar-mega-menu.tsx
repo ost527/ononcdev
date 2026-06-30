@@ -100,7 +100,7 @@ const DEFAULT_ITEMS: MegaNavItem[] = [
  * bar collapses to a stacked menu that groups each section's links.
  */
 export function NavbarMegaMenu({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   ctaLabel = "Get started",
   signInLabel = "Sign in",

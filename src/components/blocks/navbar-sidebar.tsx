@@ -53,10 +53,10 @@ function initials(name: string) {
  * at the foot. The surrounding content pane is demo scaffolding.
  */
 export function NavbarSidebar({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   userName = "Avery Quinn",
-  userEmail = "avery@lumen.dev",
+  userEmail = "avery@ononc.dev",
   className,
 }: NavbarSidebarProps) {
   const [active, setActive] = useState(0);

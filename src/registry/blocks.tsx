@@ -139,6 +139,7 @@ export const blocks: Category = {
         "SaaS-grade bar with rich, categorized mega-menu dropdowns and a featured card.",
       sourcePath: "components/blocks/navbar-mega-menu.tsx",
       tags: ["composed", "a11y"],
+      previewClassName: "min-h-[22rem]",
       preview: <NavbarMegaMenu />,
     },
     {
@@ -166,6 +167,7 @@ export const blocks: Category = {
         "Product top bar with workspace switcher, search, notifications, and avatar menu.",
       sourcePath: "components/blocks/navbar-app.tsx",
       tags: ["composed", "a11y"],
+      previewClassName: "min-h-[22rem]",
       preview: <NavbarApp />,
     },
     {
@@ -193,6 +195,7 @@ export const blocks: Category = {
         "Search opens an inline command palette with full keyboard navigation.",
       sourcePath: "components/blocks/navbar-command.tsx",
       tags: ["composed", "a11y"],
+      previewClassName: "min-h-[28rem]",
       preview: <NavbarCommand />,
     },
     {
@@ -220,6 +223,7 @@ export const blocks: Category = {
         "Storefront header with search, account, and a cart badge with a mini-cart popover.",
       sourcePath: "components/blocks/navbar-commerce.tsx",
       tags: ["composed", "a11y"],
+      previewClassName: "min-h-[28rem]",
       preview: <NavbarCommerce />,
     },
     {
@@ -247,6 +251,7 @@ export const blocks: Category = {
         "Documentation header with a version switcher, search, theme toggle, and star count.",
       sourcePath: "components/blocks/navbar-docs.tsx",
       tags: ["composed", "a11y"],
+      previewClassName: "min-h-[22rem]",
       preview: <NavbarDocs />,
     },
     {
@@ -274,6 +279,7 @@ export const blocks: Category = {
         "Drill-down menu with nested submenus that slide between levels with a back trail.",
       sourcePath: "components/blocks/navbar-multilevel.tsx",
       tags: ["composed", "a11y"],
+      previewClassName: "min-h-[28rem]",
       preview: <NavbarMultiLevel />,
     },
     {
@@ -292,6 +298,7 @@ export const blocks: Category = {
         "Marketing bar with accessible language and currency switchers.",
       sourcePath: "components/blocks/navbar-locale.tsx",
       tags: ["composed", "a11y"],
+      previewClassName: "min-h-[22rem]",
       preview: <NavbarLocale />,
     },
     {

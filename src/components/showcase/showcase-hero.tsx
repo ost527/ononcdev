@@ -12,7 +12,7 @@ export function ShowcaseHero({ count }: { count: number }) {
   const router = useRouter();
 
   return (
-    <ParticleField className="dark flex min-h-[78vh] items-center justify-center bg-background px-4 pb-24 pt-20 text-foreground">
+    <ParticleField className="flex min-h-[78vh] items-center justify-center bg-background px-4 pb-24 pt-20 text-foreground">
       <div className="mx-auto max-w-3xl text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 text-xs font-medium text-muted backdrop-blur">
           <Sparkles className="size-3.5 text-brand-ink" />

@@ -178,7 +178,7 @@ export function HeroSplit({
                 <span className="size-2.5 rounded-full bg-brand/70" />
                 <span className="size-2.5 rounded-full bg-brand-2/70" />
                 <span className="ml-3 truncate rounded-md border border-border bg-surface px-2 py-0.5 text-[11px] text-muted">
-                  app.lumen.dev/overview
+                  app.ononc.dev/overview
                 </span>
               </div>
 

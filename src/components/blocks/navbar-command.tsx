@@ -69,7 +69,7 @@ const DEFAULT_GROUPS: CommandGroup[] = [
  * click dismisses it. Open/close fades respect reduced-motion.
  */
 export function NavbarCommand({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_LINKS,
   groups = DEFAULT_GROUPS,
   ctaLabel = "Get started",

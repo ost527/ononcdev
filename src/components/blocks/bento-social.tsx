@@ -80,7 +80,7 @@ function Avatar({ name, gradient }: { name: string; gradient: string }) {
 const DEFAULT_TESTIMONIALS: [Testimonial, Testimonial, Testimonial] = [
   {
     quote:
-      "Lumen UI let us ship a genuinely polished product in weeks, not months. Motion, accessibility, and theming were already handled — we just composed.",
+      "ONONC let us ship a genuinely polished product in weeks, not months. Motion, accessibility, and theming were already handled — we just composed.",
     name: "Mara Vance",
     role: "VP Engineering, Northwind",
     gradient: "from-brand to-brand-2",
@@ -116,7 +116,7 @@ const LOGOS = [
 export function BentoSocial({
   eyebrow = "Loved by teams",
   heading = "Don't just take our word for it",
-  subheading = "Thousands of teams build their interfaces on Lumen UI.",
+  subheading = "Thousands of teams build their interfaces on ONONC.",
   testimonials = DEFAULT_TESTIMONIALS,
   className,
 }: BentoSocialProps) {
@@ -237,7 +237,7 @@ export function BentoSocial({
             <div className="text-3xl font-semibold tracking-tight">
               <CountUp to={10} suffix="k+" />
             </div>
-            <p className="text-sm text-muted">Teams shipping with Lumen</p>
+            <p className="text-sm text-muted">Teams shipping with ONONC</p>
           </div>
         </Cell>
 
@@ -266,7 +266,7 @@ export function BentoSocial({
               <CountUp to={98} suffix="%" />
             </div>
             <p className="text-pretty text-muted">
-              of teams would recommend Lumen UI to a colleague.
+              of teams would recommend ONONC to a colleague.
             </p>
           </div>
         </Cell>

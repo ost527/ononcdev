@@ -55,7 +55,7 @@ function ChannelTile({ channel }: { channel: ContactChannel }) {
 export function BentoContact({
   heading = "Let's build something together",
   subheading = "Questions, partnerships, or just saying hi — pick whichever channel suits you.",
-  email = "hello@lumenui.dev",
+  email = "hello@ononc.dev",
   location = "Lisbon HQ",
   address = "Rua da Prata 12",
   className,

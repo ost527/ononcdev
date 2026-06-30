@@ -271,7 +271,7 @@ export function BentoShowcase({
             <div className="text-2xl font-semibold tracking-tight">
               <CountUp to={10} suffix="k+" />
             </div>
-            <p className="text-sm text-muted">Teams building with Lumen</p>
+            <p className="text-sm text-muted">Teams building with ONONC</p>
           </div>
         </Cell>
 

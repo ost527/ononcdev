@@ -131,7 +131,7 @@ export function HeroShowcase({
   eyebrow = "One workspace, every view",
   title = "See your work the way your team",
   highlight = "thinks",
-  description = "Switch between dashboards, conversations, and boards without losing context. Lumen keeps everything a glance away.",
+  description = "Switch between dashboards, conversations, and boards without losing context. ONONC keeps everything a glance away.",
   primaryLabel = "Start free",
   secondaryLabel = "Take a tour",
   features = ["Real-time sync", "Role-based access", "Full audit trail"],

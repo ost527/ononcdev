@@ -34,7 +34,7 @@ const DEFAULT_PROJECTS: [CreativeProject, CreativeProject, CreativeProject] = [
       "radial-gradient(at 22% 78%, #fb7185 0px, transparent 55%), radial-gradient(at 82% 18%, #8b5cf6 0px, transparent 52%), linear-gradient(135deg, #4c0519, #0b0d18)",
   },
   {
-    title: "Lumen OS",
+    title: "ONONC OS",
     role: "Design System & Motion",
     year: "2026",
     background:
@@ -100,7 +100,7 @@ function ProjectTile({ project }: { project: CreativeProject }) {
  * hover zoom that the global reduced-motion reset neutralizes.
  */
 export function BentoCreative({
-  name = "Studio Lumen",
+  name = "Studio ONONC",
   bio = "An independent design & engineering studio crafting interfaces with motion, restraint, and a point of view.",
   skills = DEFAULT_SKILLS,
   projects = DEFAULT_PROJECTS,
@@ -188,7 +188,7 @@ export function BentoCreative({
               <Mail className="size-4" />
               Start a conversation
             </a>
-            <span className="text-sm text-muted">hello@studiolumen.dev</span>
+            <span className="text-sm text-muted">hello@studioononc.dev</span>
           </div>
         </div>
       </div>

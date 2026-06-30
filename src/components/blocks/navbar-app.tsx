@@ -191,7 +191,7 @@ const DEFAULT_ITEMS: AppNavItem[] = [
   { label: "Analytics" },
   { label: "Settings" },
 ];
-const DEFAULT_WORKSPACES = ["Acme Inc.", "Lumen Labs", "Personal"];
+const DEFAULT_WORKSPACES = ["Acme Inc.", "ONONC Labs", "Personal"];
 
 function initials(name: string) {
   return name
@@ -209,7 +209,7 @@ function initials(name: string) {
  * navigation collapses behind a toggle on small screens.
  */
 export function NavbarApp({
-  brand = "Lumen",
+  brand = "ONONC",
   items = DEFAULT_ITEMS,
   workspaces = DEFAULT_WORKSPACES,
   userName = "Avery Quinn",

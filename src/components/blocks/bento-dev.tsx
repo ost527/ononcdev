@@ -52,9 +52,9 @@ function Cell({
   );
 }
 
-const DEFAULT_SNIPPET = `import { Lumen } from "lumen-ui";
+const DEFAULT_SNIPPET = `import { ONONC } from "ononc";
 
-const ui = new Lumen({ theme: "dark" });
+const ui = new ONONC({ theme: "dark" });
 await ui.mount("#app");`;
 
 const ENDPOINTS = [
@@ -165,16 +165,16 @@ export function BentoDev({
             <pre className="overflow-x-auto p-4 font-mono text-[12.5px] leading-relaxed">
               <code>
                 <span className="text-brand-3">import</span>
-                <span className="text-foreground"> {"{ Lumen }"} </span>
+                <span className="text-foreground"> {"{ ONONC }"} </span>
                 <span className="text-brand-3">from</span>
-                <span className="text-brand-2"> &quot;lumen-ui&quot;</span>
+                <span className="text-brand-2"> &quot;ononc&quot;</span>
                 <span className="text-foreground">;</span>
                 {"\n\n"}
                 <span className="text-brand-3">const</span>
                 <span className="text-foreground"> ui </span>
                 <span className="text-brand-3">=</span>
                 <span className="text-brand-3"> new</span>
-                <span className="text-brand-ink"> Lumen</span>
+                <span className="text-brand-ink"> ONONC</span>
                 <span className="text-foreground">({"{ "}theme: </span>
                 <span className="text-brand-2">&quot;dark&quot;</span>
                 <span className="text-foreground"> {"}"});</span>

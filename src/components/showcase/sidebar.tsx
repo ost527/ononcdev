@@ -4,10 +4,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
+export interface NavSubGroup {
+  id: string;
+  label: string;
+  count: number;
+}
+
 export interface NavCategory {
   id: string;
   label: string;
   count: number;
+  groups?: NavSubGroup[];
 }
 
 const linkBase =
@@ -22,7 +29,7 @@ export function Sidebar({ nav }: { nav: NavCategory[] }) {
     <aside className="hidden w-60 shrink-0 md:block">
       <nav
         aria-label="Categories"
-        className="sticky top-20 space-y-1 py-8 pr-4"
+        className="sticky top-20 max-h-[calc(100dvh-5rem)] space-y-1 overflow-y-auto py-8 pr-4"
       >
         <Link
           href="/"
@@ -38,17 +45,38 @@ export function Sidebar({ nav }: { nav: NavCategory[] }) {
           const href = `/${category.id}`;
           const active = pathname === href;
           return (
-            <Link
-              key={category.id}
-              href={href}
-              aria-current={active ? "page" : undefined}
-              className={cn(linkBase, active ? linkActive : linkIdle)}
-            >
-              <span>{category.label}</span>
-              <span className="rounded-full border border-border px-1.5 text-[11px] text-muted">
-                {category.count}
-              </span>
-            </Link>
+            <div key={category.id}>
+              <Link
+                href={href}
+                aria-current={active ? "page" : undefined}
+                className={cn(linkBase, active ? linkActive : linkIdle)}
+              >
+                <span>{category.label}</span>
+                <span className="rounded-full border border-border px-1.5 text-[11px] text-muted">
+                  {category.count}
+                </span>
+              </Link>
+              {category.groups && category.groups.length > 0 ? (
+                <ul
+                  aria-label={`${category.label} sub-categories`}
+                  className="mb-1 ml-4 mt-0.5 space-y-0.5 border-l border-border pl-2"
+                >
+                  {category.groups.map((group) => (
+                    <li key={group.id}>
+                      <Link
+                        href={`${href}#group-${group.id}`}
+                        className="flex items-center justify-between gap-2 rounded-md px-2 py-1 text-[13px] text-muted transition-colors hover:bg-surface hover:text-foreground"
+                      >
+                        <span className="truncate">{group.label}</span>
+                        <span className="shrink-0 text-[11px] text-muted-2">
+                          {group.count}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           );
         })}
       </nav>

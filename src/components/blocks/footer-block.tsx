@@ -1,4 +1,4 @@
-import { AtSign, Globe, Rss, Sparkles } from "lucide-react";
+import { AtSign, Globe, Rss } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface FooterColumn {
@@ -24,7 +24,7 @@ const DEFAULT_COLUMNS: FooterColumn[] = [
  * columns of navigation links, with a legal strip beneath.
  */
 export function FooterBlock({
-  brand = "Lumen UI",
+  brand = "ONONC",
   tagline = "Original, motion-first components for the modern web.",
   columns = DEFAULT_COLUMNS,
   className,
@@ -38,11 +38,8 @@ export function FooterBlock({
     >
       <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-5">
         <div className="col-span-2">
-          <div className="flex items-center gap-2">
-            <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-2 text-white">
-              <Sparkles className="size-4" />
-            </span>
-            <span className="text-lg font-semibold">{brand}</span>
+          <div className="flex items-center">
+            <span className="text-lg font-bold tracking-tight">{brand}</span>
           </div>
           <p className="mt-3 max-w-xs text-sm text-muted">{tagline}</p>
           <div className="mt-4 flex gap-2">

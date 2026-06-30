@@ -1,4 +1,4 @@
-# Lumen UI
+# ONONC
 
 An original, motion-first React component library for Next.js 16. Built from scratch with dark-first design tokens, performant canvas animations, and screen-reader friendly interactions.
 
@@ -30,18 +30,22 @@ src/
 │   ├── page.tsx                 # Landing: ShowcaseHero + category browse cards
 │   └── [category]/
 │       ├── layout.tsx           # Sidebar + content split for all category routes
-│       └── page.tsx             # Per-category view: renders ONLY that category's components
+│       ├── page.tsx             # Per-category view: renders ONLY that category's components
+│       └── [id]/
+│           └── page.tsx         # Per-component detail page with interactive playground (static export, dynamicParams=false)
 ├── components/
-│   ├── backgrounds/             # 15 ambient, animated canvases
-│   ├── text/                    # 15 typographic animation effects
-│   ├── ui/                      # 35 interactive components
-│   ├── blocks/                  # 17 composed section blocks
+│   ├── backgrounds/             # ~32 ambient, animated canvases
+│   ├── text/                    # ~23 typographic animation effects
+│   ├── ui/                      # ~77 interactive components
+│   ├── blocks/                  # ~119 composed section blocks (some are subcategories within blocks)
 │   └── showcase/                # Showcase UI
 │       ├── site-header.tsx      # Sticky header: brand link (/), category nav links (/<category>), theme toggle
 │       ├── sidebar.tsx          # Sidebar (desktop rail) + MobileNav (mobile pills); fed plain {id,label,count}[] props
 │       ├── showcase-hero.tsx    # Landing hero with CTAs linking to /backgrounds and /blocks
 │       ├── code-block.tsx       # Syntax-highlighted code with copy button
-│       ├── component-showcase.tsx  # Preview + Code tabs for individual components
+│       ├── component-showcase.tsx  # Preview + Code tabs for category pages (grid cards)
+│       ├── component-playground.tsx  # Detail page: tabs, viewport controls, resize handle, customize panel, props table
+│       ├── playground-controls.tsx   # Customize controls using library primitives (Slider, Switch, SegmentedControl, etc.)
 │       ├── theme-toggle.tsx     # Dark/light theme switcher
 │       └── other showcase support files
 ├── lib/
@@ -50,19 +54,30 @@ src/
 │   ├── use-hydrated.ts          # useSyncExternalStore mount guard for Next.js 16
 │   └── source.ts                # Build-time fs reader for component sources
 └── registry/
-    ├── types.ts                 # Component registry types
-    ├── backgrounds.tsx          # Backgrounds registry (15)
-    ├── text.tsx                 # Text registry (15)
-    ├── ui.tsx                   # UI registry (35)
-    ├── blocks.tsx               # Blocks registry (17)
-    └── index.ts                 # Central registry export: categories[] + componentCount
+    ├── types.ts                 # Component registry types + PlaygroundSpec, Control, PropDoc types
+    ├── backgrounds.tsx          # Backgrounds registry (~32 items)
+    ├── text.tsx                 # Text registry (~23 items)
+    ├── ui.tsx                   # UI registry (~77 items)
+    ├── blocks.tsx               # Blocks registry (~119 items, some subcategories)
+    ├── playground.tsx           # Per-component playgrounds: customize controls + render function + props (client module)
+    ├── subcategories.ts         # Optional sub-category grouping within blocks (e.g., Features, Stats, Forms)
+    └── index.ts                 # Central registry export: categories[], componentCount, allComponentParams(), findComponent()
 ```
 
-**Architecture:** The showcase is a docs-style site with a shared chrome (header/footer/scroll-progress/toaster) in the root layout, a landing home (/) with category cards, and per-category routes (/backgrounds, /text, /ui, /blocks) each showing only that category's components. The left Sidebar (desktop) and MobileNav (mobile pills) provide global navigation, fed as plain props to keep the registry's preview tree server-side.
+**Architecture:** The showcase is a docs-style site with a shared chrome (header/footer/scroll-progress/toaster) in the root layout:
+- **Landing** (/) — Category cards with browse CTAs
+- **Per-category routes** (/backgrounds, /text, /ui, /blocks) — Sidebar + grid of component cards
+  - **UI/Text/Backgrounds (cards):** Linked title + summary direct to detail pages
+  - **Blocks (full-width list):** Plain title + summary (no link), inline Preview/Code tabs with ViewportToggle for responsive preview
+- **Component detail routes** (/[category]/[id]) — Static-generated for backgrounds/text/ui components only; blocks have no detail pages. Each detail page is a playground with Preview/Code tabs, viewport presets (Desktop/Tablet/Mobile), responsive resize handle, optional live Customize panel, and Props table
+- **Navigation** — Left Sidebar (desktop) + MobileNav pills (mobile); fed as plain {id,label,count}[] props from registry to keep preview tree server-side
+- **Copy-Paste Integration** — Component sources embedded at build time; Code tab includes copy-to-clipboard
 
 ---
 
-## Components (82 Total)
+## Components
+
+The showcase renders over 250 component detail pages (via static export), covering components across four categories computed by `src/registry/index.ts`. The component count is derived at build time from the registry and embedded in the landing page.
 
 ### Backgrounds (15)
 Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
@@ -83,7 +98,7 @@ Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
 - **Ripple** — Click anywhere to emit an expanding concentric ring (pointer)
 - **Matrix Rain** — Columns of glyphs falling with glowing fading trails (canvas)
 
-### Text Animations (15)
+### Text Animations (23)
 Typographic effects that remain screen-reader friendly.
 
 - **Gradient Text** — Living gradient panning across letters (CSS)
@@ -101,6 +116,14 @@ Typographic effects that remain screen-reader friendly.
 - **Scroll Reveal** — Words light up one by one as the line scrolls through view (motion)
 - **Flip Text** — Each character flips up into place on view (motion 3D)
 - **Gradient Underline** — A gradient underline that grows in on hover and focus (CSS link)
+- **Letters Pull-Up** — Each letter springs up and fades in, staggered, on view (motion)
+- **Text Reveal** — A clip-path mask wipes the text into view (motion)
+- **Decrypt Text** — Characters resolve out of random glyphs in scattered order (motion)
+- **Line Reveal** — Each line slides up from behind a mask, in sequence (motion)
+- **Tracking In** — Letter-spacing expands out of a blur as the text fades in (motion)
+- **Focus Text** — Focus rolls across the words, blurring all but the active one (loop)
+- **Text Pressure** — Letters swell and thicken toward the cursor (pointer)
+- **Underline Draw** — A hand-drawn gradient underline draws in beneath the text (motion)
 
 ### Components (63)
 Interactive building blocks with pointer reactivity, keyboard support, and reduced-motion awareness.
@@ -213,6 +236,21 @@ Every component's real source is embedded in the showcase at build time via `src
 - **Component Showcase** — `src/components/showcase/component-showcase.tsx` provides side-by-side Preview and Code tabs
 - **Page.tsx** — Async server component that orchestrates registry read and passes sources to showcase
 
+### Component Detail Playground
+Each component has a dedicated detail page (/[category]/[id]) with an interactive playground — explore variants, customize props live, and preview changes in real-time.
+
+- **Static Generation** — Backgrounds/text/ui components (all non-block components) pre-rendered at build time via `generateStaticParams()` (157 total static routes: home + _not-found + 4 category pages + all backgrounds/text/ui detail pages); `dynamicParams=false` prevents stale 404s. Blocks have no detail pages; /blocks/<id> returns 404
+- **Playground Interface** — Per-component page (`src/components/showcase/component-playground.tsx`) with:
+  - **Preview / Code tabs** — Switch between live component and syntax-highlighted source (roving-tabindex, WAI-ARIA Tabs pattern)
+  - **Viewport presets** — Desktop (full width), Tablet (768px), Mobile (390px); buttons toggle viewport context
+  - **Refresh Preview button** — Remounts the preview to replay reveal animations and re-seed canvas backgrounds
+  - **Draggable resize handle** — `role=separator`; drag or use Arrow/Home/End keys to resize; clamps to [280px, container width]; centered symmetric resize
+  - **Customize panel** — Live controls to modify component props (only for components with specs; graceful "no live options" message otherwise)
+  - **Props table** — API documentation for the component (only for components with specs; "props coming soon" message otherwise)
+- **Customize Controls** — Built with ONONC's own components (Slider, Switch, SegmentedControl, Select, NumberInput, ColorPicker) to showcase interactive patterns
+- **Playground Specs** — Per-component specs live in `src/registry/playground.tsx` (client module), keyed by registry id. Types: `Control`, `PropDoc`, `PlaygroundSpec` in `src/registry/types.ts`; helpers: `allComponentParams()`, `findComponent()` in `src/registry/index.ts`
+- **Coverage** — ~22 components across all 4 categories have full Customize + Props specs (badge, alert, spinner, switch, slider, progress-ring, progress-bar, rating, avatar, separator, segmented-control, stat-card, kbd, number-input, gradient-text, shiny-text, typewriter, count-up, particle-field, dot-matrix, starfield, aurora-background); expanding specs to remaining components is the planned next step
+
 ### Light & Dark Theme
 Color tokens are dual-mode. The showcase defaults to dark theme with a header toggle for user preference (stored in localStorage).
 
@@ -226,10 +264,12 @@ Vitest is configured for unit tests of helpers and component smoke tests. Run wi
 
 - **Config** — `vitest.config.ts` with jsdom environment and React import detection
 - **Setup** — `vitest.setup.ts` for test utilities and global mocks (e.g., IntersectionObserver)
-- **Coverage** — 32 test files, 63 tests passing:
+- **Coverage** — 44 test files, 109 tests passing:
   - `src/lib/utils.test.ts` — helpers (cn, clamp, mapRange, seededRandom, prefersReducedMotion)
-  - `src/registry/registry.test.ts` — registry structure validation (asserts all 82 entries and every sourcePath file exists)
-  - `src/components/ui/{switch,accordion,breadcrumbs,carousel}.test.ts` — a11y smoke tests for interactive components
+  - `src/registry/registry.test.ts` — registry structure validation (asserts all entries and every sourcePath file exists)
+  - `src/registry/playground.test.ts` — playground specs validation
+  - `src/components/showcase/component-playground.test.tsx` — playground interface tests
+  - `src/components/ui/{switch,accordion,breadcrumbs,carousel,combobox,pagination,toggle-group,tag-input,file-dropzone,progress-bar}.test.ts` — a11y smoke tests for interactive components
 
 ---
 
@@ -312,10 +352,10 @@ Reusable React hook for canvas-based components:
 ## Verification Status
 
 ✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
-✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + /_not-found)  
+✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + all backgrounds/text/ui detail pages + /_not-found; 157 total routes)  
 ✅ **Lint** — `npm run lint` = 0 (eslint flat config)  
-✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks; 404 for unknown categories; no hydration errors; all 82 component names present; category scoping confirmed (e.g., /backgrounds contains only background components)  
-✅ **Tests** — `npm test` = 6 files, 18 tests passed (registry test validates all 82 entries + sourcePath existence)
+✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, and component detail routes; 404 for unknown categories; no hydration errors; all components present; category scoping confirmed  
+✅ **Tests** — `npm test` = 44 files, 107 tests passed (registry test validates all entries + sourcePath existence; playground specs validated; component-playground interface tested)
 
 ---
 
@@ -329,6 +369,16 @@ All critical and minor issues resolved as of 2026-06-30:
 - ✅ **m4: Progress Ring ARIA** — Added `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`
 - ✅ **m5: Component Showcase tabs ARIA** — Tabs now have complete ARIA: `role=tablist/tab`, `tabpanel` with `id`/`aria-controls`/`aria-labelledby`
 - ✅ **m6: Segmented Control index-based IDs** — Uses index-based element IDs (`${baseId}-${i}`) so labels with spaces work correctly
+
+### v1.2 Batch (2026-07-01) — Component Detail Playground Feature
+- ✅ **Component detail playground** — New `/[category]/[id]` route with static generation of all backgrounds/text/ui components (157 total routes: home + _not-found + 4 category SSG routes + non-blocks detail pages); features Preview/Code tabs, viewport presets (Desktop/Tablet/Mobile), refresh button, draggable/keyboard-accessible resize handle, optional Customize panel, and Props table
+- ✅ **Blocks have no detail pages** — /blocks category page lists blocks inline only (title/summary, no detail page link; /blocks/<id> returns 404). Enforced by `hasDetailPage(categoryId)` in registry; detail route's `generateStaticParams()` uses `detailPageParams()` which filters out blocks
+- ✅ **Inline ViewportToggle for blocks** — Each block on /blocks shows a shared ViewportToggle (new src/components/showcase/viewport-toggle.tsx; Desktop=full / Tablet=768px / Mobile=390px) next to its Preview/Code tabs
+- ✅ **Customize controls** — dogfood library components (Slider, Switch, SegmentedControl, Select, NumberInput, ColorPicker) to showcase interactive patterns
+- ✅ **Playground specs** — Per-component specs in `src/registry/playground.tsx` (client module); ~22 components have full Customize + Props coverage; graceful fallback for components without specs
+- ✅ **Grid card updates** — UI/text/backgrounds grid cards show title + summary linking to detail page only; blocks render plain title/summary (no link) with inline Preview/Code tabs + ViewportToggle
+- ✅ **SegmentedControl a11y** — Now accepts optional `aria-label` / `aria-labelledby` props (backward compatible)
+- ✅ **New tests** — `src/registry/playground.test.ts` and `src/components/showcase/component-playground.test.tsx`; suite now 44 files, 109 tests
 
 ### v1.1 Batch (2026-06-30) — 12 new components
 - ✅ **Ripple background** — Click-to-emit ring via CSS `ring` keyframe; `onAnimationEnd` cleanup leak-free under reduced motion

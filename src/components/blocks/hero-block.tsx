@@ -32,7 +32,7 @@ const item: Variants = {
  * pill, gradient highlight, and call-to-action buttons. Content animates in.
  */
 export function HeroBlock({
-  eyebrow = "Introducing Lumen UI",
+  eyebrow = "Introducing ONONC",
   title = "Build interfaces that feel",
   highlight = "alive.",
   description = "A set of original, motion-first React components — backgrounds, text effects, and polished blocks — ready to drop into your Next.js app.",
