@@ -1,36 +1,316 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lumen UI
 
-## Getting Started
+An original, motion-first React component library for Next.js 16. Built from scratch with dark-first design tokens, performant canvas animations, and screen-reader friendly interactions.
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · Framer Motion · Lucide React
+
+---
+
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev          # Start dev server at http://localhost:3000
+npm run build        # Static build
+npm run start        # Preview production build
+npm run lint         # Run eslint
+npm test             # Run vitest suite
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The showcase site is fully static and renders at build time. No backend, no API routes, no dynamic data. Each component source is read at build time via `src/lib/source.ts` and embedded in the Code tab.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+src/
+├── app/
+│   ├── globals.css        # Design tokens (@theme), keyframes, utilities, light/dark variants
+│   ├── layout.tsx         # Root layout with metadata, dark class, no-flash script
+│   └── page.tsx           # Async server component reading all sources
+├── components/
+│   ├── backgrounds/       # 15 ambient, animated canvases
+│   ├── text/              # 15 typographic animation effects
+│   ├── ui/                # 35 interactive components
+│   ├── blocks/            # 17 composed section blocks
+│   └── showcase/          # Showcase UI (header, card, hero, theme-toggle, code-block, component-showcase)
+├── lib/
+│   ├── utils.ts           # cn, clamp, mapRange, seededRandom, prefersReducedMotion
+│   ├── use-canvas.ts      # Reusable canvas rAF hook
+│   ├── use-hydrated.ts    # useSyncExternalStore mount guard for Next.js 16
+│   └── source.ts          # Build-time fs reader for component sources
+└── registry/
+    ├── types.ts           # Component registry types
+    ├── backgrounds.tsx    # Backgrounds registry (15)
+    ├── text.tsx           # Text registry (15)
+    ├── ui.tsx             # UI registry (35)
+    ├── blocks.tsx         # Blocks registry (17)
+    └── index.ts           # Central registry export
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Components (82 Total)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backgrounds (15)
+Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
 
-## Deploy on Vercel
+- **Aurora** — Soft gradient halos drifting like northern lights (CSS)
+- **Gradient Mesh** — Panning multi-point color mesh with fine grain (CSS)
+- **Particle Field** — Drifting particles linking to neighbors and cursor (canvas)
+- **Dot Matrix** — Grid of dots swelling near the pointer (canvas)
+- **Flow Grid** — Tilted perspective grid scrolling toward the horizon (CSS 3D)
+- **Light Beams** — Vertical shafts of light breathing independently (CSS)
+- **Pulse Rings** — Concentric rings expanding like sonar (CSS)
+- **Starfield** — Twinkling stars drifting with subtle cursor parallax (canvas)
+- **Waves** — Layered sine waves scrolling across the lower edge (canvas)
+- **Meteors** — Glowing meteors streaking diagonally on staggered timers (CSS)
+- **Plasma** — Vivid blurred color fields panning while hue rotates (CSS)
+- **Flowing Lines** — Silk-like lines waving with layered motion and cursor pull (canvas)
+- **Spotlight Cursor** — A hidden dot grid revealed only inside a cursor spotlight (pointer)
+- **Ripple** — Click anywhere to emit an expanding concentric ring (pointer)
+- **Matrix Rain** — Columns of glyphs falling with glowing fading trails (canvas)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Text Animations (15)
+Typographic effects that remain screen-reader friendly.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Gradient Text** — Living gradient panning across letters (CSS)
+- **Shiny Text** — Glare sweeping across muted text on loop (CSS)
+- **Split Reveal** — Words sliding up from behind a mask, staggered on view (motion)
+- **Blur In** — Words resolve from a soft blur as they fade in (motion)
+- **Typewriter** — Typing and deleting through rotating phrases (loop)
+- **Rotating Text** — Swaps through words in a vertical slot (motion)
+- **Scramble Text** — Glyphs flickering and locking into the final string (hover/view)
+- **Glitch Text** — Two color channels jitter and clip for a CRT glitch (CSS)
+- **Wavy Text** — Each letter rides a continuous sine wave (CSS)
+- **Highlight Text** — A marker stroke sweeps in behind text on view (motion)
+- **Count Up** — Number easing to target on first view (motion)
+- **Number Ticker** — Odometer digits rolling to target on view (motion)
+- **Scroll Reveal** — Words light up one by one as the line scrolls through view (motion)
+- **Flip Text** — Each character flips up into place on view (motion 3D)
+- **Gradient Underline** — A gradient underline that grows in on hover and focus (CSS link)
+
+### Components (35)
+Interactive building blocks with pointer reactivity, keyboard support, and reduced-motion awareness.
+
+- **Magnetic Button** — Springs toward cursor, snaps back on leave (motion)
+- **Shimmer Button** — Band of light orbiting the border (CSS)
+- **Ripple Button** — Emits a ripple from the exact press point (pointer)
+- **Tilt Card** — 3D tilt toward pointer with tracking glare (motion 3D)
+- **Spotlight Card** — Radial glow following cursor surface (pointer)
+- **Dock** — macOS-style icons magnifying by proximity (motion)
+- **Marquee** — Seamless infinite scroller, pausing on hover (CSS loop)
+- **Carousel** — Looping slides with arrows, dots, arrow-key support (a11y)
+- **Accordion** — Accessible disclosure list with smooth height transitions (a11y)
+- **Tabs** — Accessible tablist with sliding underline indicator (a11y)
+- **Tooltip** — Shows on hover and keyboard focus, linked via aria (a11y)
+- **Switch** — Accessible toggle with a spring thumb (a11y)
+- **Segmented Control** — Single-select with a pill that slides to the choice (a11y)
+- **Modal** — Portaled dialog with focus management and Escape to close (a11y)
+- **Toast** — Imperative toasts via a tiny store and a Toaster (aria-live)
+- **Command Palette** — ⌘K launcher with live filtering and full keyboard nav (a11y)
+- **Dropdown Menu** — Menu button with roving focus, Escape, and outside-click (a11y)
+- **Popover** — Floating panel of arbitrary content with focus return (a11y)
+- **Drawer** — Slide-in side panel with focus management and Escape (a11y)
+- **OTP Input** — Segmented code entry with auto-advance and paste (form)
+- **Slider** — Range input with pointer drag and keyboard control (a11y)
+- **Rating** — Star rating with hover preview and arrow-key adjust (a11y)
+- **Stepper** — Multi-step progress with completed and active states (progress)
+- **Progress Ring** — Radial dial that eases to its value on view (motion)
+- **Scroll Progress** — Gradient bar tied to scroll position (motion)
+- **Image Compare** — Before/after wipe with draggable, keyboardable handle (pointer)
+- **Avatar Stack** — Overlapping avatars with an overflow +N chip (layout)
+- **Breadcrumbs** — Accessible trail with chevrons and aria-current (a11y)
+- **Skeleton** — Shimmering placeholders for loading states (loading)
+- **Combobox** — Searchable select with full keyboard nav and ARIA combobox role (a11y)
+- **Pagination** — Page navigator with ellipsis, aria-current, and boundary guards (a11y)
+- **Toggle Group** — Single or multi-select button group with aria-pressed (a11y)
+- **Tag Input** — Free-form tag entry: Enter/comma to add, Backspace/× to remove (form)
+- **File Dropzone** — Drag-and-drop file picker; front-end only, no uploads (form)
+- **Progress Bar** — Horizontal fill bar with role=progressbar, eases on view (motion)
+
+### Section Blocks (17)
+Composed, drop-in page sections built from the primitives above.
+
+- **Navbar** — Responsive navigation that collapses to a mobile menu (composed)
+- **Hero** — Animated marketing hero over aurora field (motion)
+- **Logo Cloud** — A quiet marquee of customer wordmarks (loop)
+- **Bento Grid** — Editorial asymmetric grid of spotlight feature cards (layout)
+- **Feature Grid** — Titled three-column grid of capabilities (layout)
+- **Steps** — Numbered how-it-works sequence with a connector line (layout)
+- **Stats Band** — Headline metrics counting up on view (motion)
+- **Pricing** — Three comparable tiers with highlighted plan (layout)
+- **Testimonials** — Opposing marquee rows of quote cards (loop)
+- **FAQ** — Frequently-asked questions built on the Accordion (a11y)
+- **Newsletter** — Subscribe form with validation (front-end only) (form)
+- **Comparison Table** — Feature matrix comparing plans with a highlighted column (layout)
+- **Timeline** — A vertical rail-and-node timeline of milestones (layout)
+- **CTA Section** — Closing call-to-action over animated mesh (motion)
+- **Footer** — Four-region footer with brand, links, and socials (layout)
+- **Banner** — Dismissible announcement bar with gradient wash and CTA (composed)
+- **Team Grid** — Responsive grid of team member cards with avatar and role (layout)
+
+---
+
+## Key Features
+
+### Copy-Paste Code Snippets
+Every component's real source is embedded in the showcase at build time via `src/lib/source.ts`. The Code tab uses Prism React Renderer to highlight syntax and includes a Copy button for easy paste into your own projects.
+
+- **Source Read at Build Time** — `src/lib/source.ts` (async fs operation) reads each component file and stores source code in the registry
+- **Code Block Component** — `src/components/showcase/code-block.tsx` renders highlighted code with Prism and handles copy-to-clipboard
+- **Component Showcase** — `src/components/showcase/component-showcase.tsx` provides side-by-side Preview and Code tabs
+- **Page.tsx** — Async server component that orchestrates registry read and passes sources to showcase
+
+### Light & Dark Theme
+Color tokens are dual-mode. The showcase defaults to dark theme with a header toggle for user preference (stored in localStorage).
+
+- **CSS Custom Properties** — `src/app/globals.css` defines `:root` (light tokens) and `.dark` (dark tokens) via CSS variable sets
+- **Class-Based Switching** — `src/app/layout.tsx` sets `className="dark"` by default and provides a no-flash inline script to prevent theme flicker on hard reload
+- **Theme Toggle** — `src/components/showcase/theme-toggle.tsx` reads localStorage and triggers class swap
+- **All Colors Adapt** — Background, surface, foreground, muted, border, and brand spectrum all have light/dark variants
+
+### Test Suite
+Vitest is configured for unit tests of helpers and component smoke tests. Run with `npm test`.
+
+- **Config** — `vitest.config.ts` with jsdom environment and React import detection
+- **Setup** — `vitest.setup.ts` for test utilities and global mocks (e.g., IntersectionObserver)
+- **Coverage** — 6 test files, 18 tests passing:
+  - `src/lib/utils.test.ts` — helpers (cn, clamp, mapRange, seededRandom, prefersReducedMotion)
+  - `src/registry/registry.test.ts` — registry structure validation (asserts all 82 entries and every sourcePath file exists)
+  - `src/components/ui/{switch,accordion,breadcrumbs,carousel}.test.ts` — a11y smoke tests for interactive components
+
+---
+
+## Design System
+
+### Color Tokens (Dark-first)
+Defined in `src/app/globals.css` as CSS custom properties and exported to Tailwind v4 via `@theme`:
+
+- **Background** — `#06070d` (deepest surface)
+- **Surface** — `#0b0d18` (content layer)
+- **Foreground** — `#e9ebf5` (text)
+- **Muted** — `#8a91a8`, `#5b6178` (secondary text)
+- **Border** — `rgba(255,255,255,0.08)` and `0.14` (structure)
+- **Brand Spectrum** — Violet (#8b5cf6) → Indigo (#22d3ee) → Rose (#fb7185)
+
+### Utilities & Keyframes
+- `text-gradient` — Expressive multi-color gradient fill
+- `glass` — Frosted-glass effect with backdrop blur
+- Custom animation keyframes: `marquee`, `aurora`, `grid-pan`, `shimmer`, `pulse-ring`, `ring`, `blink`, etc.
+- Font stack: Geist (with fallbacks)
+- Border radius: `2rem` (4xl)
+
+### Accessibility & Performance
+- **Reduced Motion Guard** — All animations collapse to 0.001ms under `prefers-reduced-motion: reduce`
+- **Canvas Components** — Pause off-screen via IntersectionObserver and on tab-hidden via visibilitychange
+- **DPR Capping** — Canvas rendering respects device pixel ratio (capped at 2 for performance)
+- **Keyboard Support** — All interactive components (combobox, pagination, toggle-group, tag-input, carousel, dock) fully keyboard-navigable
+- **Screen Reader Safe** — Text animations preserve semantic HTML and aria labels; interactive controls carry full ARIA roles and properties
+
+---
+
+## Key Helpers
+
+### `src/lib/utils.ts`
+- `cn()` — Tailwind class merging (via clsx + tailwind-merge)
+- `clamp(val, min, max)` — Numeric bounds
+- `mapRange(val, inMin, inMax, outMin, outMax)` — Linear interpolation
+- `seededRandom(seed)` — Deterministic random for reproducible animations
+- `prefersReducedMotion()` — Detects prefers-reduced-motion setting
+
+### `src/lib/use-canvas.ts`
+Reusable React hook for canvas-based components:
+- Automatic ResizeObserver for responsive scaling
+- IntersectionObserver to pause off-screen
+- Visibilitychange listener for tab-hidden pause
+- Device pixel ratio support (capped at 2)
+- Optional pointer tracking (mouse/touch)
+- Respects prefers-reduced-motion (renders single frame)
+
+---
+
+## Development Notes
+
+### Building a New Component
+1. Place component in `src/components/{category}/your-component.tsx`
+2. Export as a named React component (client or server safe)
+3. Add registry entry in `src/registry/{category}.tsx`
+4. Ensure reduced-motion support and off-screen pause (for canvas)
+5. Test in showcase before deploying
+
+### Animations & Motion
+- Prefer CSS keyframes for ambient effects (aurora, grid-pan, ring)
+- Use Framer Motion for interactive, pointer-driven effects
+- Canvas animations: use `useCanvas` hook for lifecycle management
+- All motion degrades gracefully under `prefers-reduced-motion: reduce`
+
+### Canvas Performance
+- Canvas components automatically pause when off-screen (IntersectionObserver)
+- Also pause when browser tab is hidden (visibilitychange)
+- DPR capped at 2x for battery/memory efficiency
+- Optional pointer tracking (disabled by default for lower cost)
+
+### Dark-First Design
+- All color tokens are dark-first; light theme is not implemented
+- Future extension: add light-mode CSS variable overrides to globals.css
+- Brand spectrum is intentionally distinct from third-party kits
+
+---
+
+## Verification Status
+
+✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
+✅ **Build** — `npm run build` succeeds (static prerender of / and /_not-found)  
+✅ **Lint** — `npm run lint` = 0 (eslint flat config)  
+✅ **Runtime** — `next start` returns HTTP 200; no hydration errors; all 82 component names present in HTML  
+✅ **Tests** — `npm test` = 6 files, 18 tests passed (registry test validates all 82 entries + sourcePath existence)
+
+---
+
+## Recently Resolved (v1.0 Release Candidate)
+
+All critical and minor issues resolved as of 2026-06-30:
+- ✅ **M1: Command Palette focus restoration** — `lastFocused` ref captures trigger element on open; restored in effect cleanup
+- ✅ **m1: Reduced Motion JS gap** — `rotating-text.tsx` now skips interval; `scroll-reveal.tsx` uses `useReducedMotion()` to keep words fully visible under reduced-motion preference
+- ✅ **m2: Modal/Drawer effect stability** — `onClose` stored in ref with its own update effect; `[open]` effect depends only on `[open]` to prevent spurious re-runs
+- ✅ **m3: Tooltip Escape handler** — Tooltip now closes on Escape keydown
+- ✅ **m4: Progress Ring ARIA** — Added `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`
+- ✅ **m5: Component Showcase tabs ARIA** — Tabs now have complete ARIA: `role=tablist/tab`, `tabpanel` with `id`/`aria-controls`/`aria-labelledby`
+- ✅ **m6: Segmented Control index-based IDs** — Uses index-based element IDs (`${baseId}-${i}`) so labels with spaces work correctly
+
+### v1.1 Batch (2026-06-30) — 12 new components
+- ✅ **Ripple background** — Click-to-emit ring via CSS `ring` keyframe; `onAnimationEnd` cleanup leak-free under reduced motion
+- ✅ **Matrix Rain background** — `useCanvas`-driven; bounded glyph strings; no per-frame allocation leak; dt clamped
+- ✅ **Flip Text** — Per-character 3D rotateX reveal on view; `aria-label` + `aria-hidden` chars
+- ✅ **Gradient Underline** — RSC-safe `<a>` wrapper; gradient underline grows on hover and `focus-visible`
+- ✅ **Combobox** — Full `role=combobox/listbox`; `aria-expanded`, `aria-controls`, `aria-activedescendant`; Arrow/Enter/Escape; outside-click cleanup
+- ✅ **Pagination** — Ellipsis math correct for all page counts; `aria-current`; Prev/Next disabled at bounds
+- ✅ **Toggle Group** — `role=group` + `aria-pressed`; single and multiple selection modes
+- ✅ **Tag Input** — Enter/comma add; Backspace/× remove; deduplication; labeled
+- ✅ **File Dropzone** — Front-end only (zero network calls); drag-state feedback; sr-only labeled `<input type="file">`
+- ✅ **Progress Bar** — `role=progressbar` + `aria-valuenow`; `useInView` fill; no setState-in-effect
+- ✅ **Banner block** — Dismissible announcement bar; gradient wash; CTA link
+- ✅ **Team Grid block** — Responsive avatar + name + role grid; configurable heading
+
+---
+
+## Known Minor Issues (non-blocking)
+
+None currently open. Recently resolved:
+
+- ✅ **progress-bar.tsx** — `aria-label` now falls back to `"Progress"` when the `label` prop is omitted, so the progressbar always has an accessible name.
+- ✅ **combobox.tsx** — The first ArrowDown while closed now only opens the list (no longer skips the first option); it advances only when already open.
+
+---
+
+## What's Next
+
+- Per-component copy-paste docs (props tables, usage examples, customization tips)
+- Behavioral unit tests for new interactive components (combobox keyboard nav, pagination ellipsis, toggle-group single/multiple, tag-input add/remove)
+- `docs/architecture.md` — Data flow, component composition patterns, animation strategy (CSS vs. Framer Motion vs. canvas)
+- `docs/decisions.md` — Dated decision log (dark-first rationale, motion lib choice, DPR cap, focus restoration pattern, etc.)
+- Light theme visual regression testing (contrast, all surfaces)
+- Cross-browser testing (Safari backdrop-filter, canvas DPR)
+- CI/CD integration (automated type check, build, lint on PR)
+- Optional: Figma design tokens sync, npm package export, Playwright E2E tests

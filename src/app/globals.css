@@ -1,26 +1,348 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Lumen UI — original premium component library design system.
+ * Dark-first. Tokens are intentionally distinct from any third-party kit.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --background: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef0f7;
+  --foreground: #0c0e1a;
+  --muted: #545b70;
+  --muted-2: #8a91a8;
+  --border: rgba(12, 14, 26, 0.1);
+  --border-strong: rgba(12, 14, 26, 0.16);
+
+  /* Brand spectrum: violet -> indigo -> cyan, with a rose accent. */
+  --brand: #8b5cf6;
+  --brand-ink: #6d28d9;
+  --brand-2: #0891b2;
+  --brand-3: #e11d62;
+  --ring: rgba(139, 92, 246, 0.55);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #06070d;
+  --surface: #0b0d18;
+  --surface-2: #11142370;
+  --foreground: #e9ebf5;
+  --muted: #8a91a8;
+  --muted-2: #5b6178;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  --brand: #8b5cf6;
+  --brand-ink: #c4b5fd;
+  --brand-2: #22d3ee;
+  --brand-3: #fb7185;
+  --ring: rgba(139, 92, 246, 0.55);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-2: var(--brand-2);
+  --color-brand-3: var(--brand-3);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-4xl: 2rem;
+
+  --animate-marquee: marquee var(--marquee-duration, 28s) linear infinite;
+  --animate-marquee-y: marquee-y var(--marquee-duration, 28s) linear infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+  --animate-aurora: aurora 16s ease-in-out infinite alternate;
+  --animate-grid-pan: grid-pan 24s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-gradient: gradient-pan 8s ease infinite;
+  --animate-spin-slow: spin 18s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.8s ease-out infinite;
+  --animate-blink: blink 1.05s steps(1, end) infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes marquee {
+  from {
+    transform: translateX(0);
   }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-y {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes aurora {
+  0% {
+    transform: translate3d(-8%, -4%, 0) rotate(-6deg) scale(1.1);
+  }
+  50% {
+    transform: translate3d(6%, 3%, 0) rotate(4deg) scale(1.25);
+  }
+  100% {
+    transform: translate3d(-4%, 6%, 0) rotate(8deg) scale(1.15);
+  }
+}
+
+@keyframes grid-pan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: var(--grid-size, 44px) var(--grid-size, 44px);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes gradient-pan {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes meteor {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--meteor-angle, 215deg));
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--meteor-x, -700px), var(--meteor-y, 700px), 0)
+      rotate(var(--meteor-angle, 215deg));
+    opacity: 0;
+  }
+}
+
+@keyframes hue {
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.34em);
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes ring {
+  from {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-a {
+  0%,
+  100% {
+    clip-path: inset(0 0 82% 0);
+    transform: translate(0, 0);
+  }
+  20% {
+    clip-path: inset(22% 0 48% 0);
+    transform: translate(-2px, -1px);
+  }
+  40% {
+    clip-path: inset(58% 0 18% 0);
+    transform: translate(2px, 1px);
+  }
+  60% {
+    clip-path: inset(40% 0 40% 0);
+    transform: translate(-1px, 1px);
+  }
+  80% {
+    clip-path: inset(8% 0 70% 0);
+    transform: translate(1px, -1px);
+  }
+}
+
+@keyframes glitch-b {
+  0%,
+  100% {
+    clip-path: inset(70% 0 8% 0);
+    transform: translate(0, 0);
+  }
+  25% {
+    clip-path: inset(30% 0 44% 0);
+    transform: translate(2px, 1px);
+  }
+  50% {
+    clip-path: inset(50% 0 28% 0);
+    transform: translate(-2px, -1px);
+  }
+  75% {
+    clip-path: inset(14% 0 58% 0);
+    transform: translate(1px, 1px);
+  }
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--brand) 40%, transparent);
+  color: #fff;
+}
+
+/* Slim, themed scrollbar. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--brand) 60%, var(--border-strong));
+  background-clip: padding-box;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reusable expressive helpers used across the library. */
+@utility text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--brand-ink),
+    var(--brand-2) 55%,
+    var(--brand-3)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@utility glass {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
