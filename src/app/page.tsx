@@ -1,79 +1,68 @@
-import { FooterBlock } from "@/components/blocks/footer-block";
-import { ComponentShowcase } from "@/components/showcase/component-showcase";
+import Link from "next/link";
+import {
+  ArrowRight,
+  LayoutGrid,
+  type LucideIcon,
+  MousePointerClick,
+  Sparkles,
+  Type,
+} from "lucide-react";
 import { ShowcaseHero } from "@/components/showcase/showcase-hero";
-import { SiteHeader } from "@/components/showcase/site-header";
-import { ScrollProgress } from "@/components/ui/scroll-progress";
-import { Toaster } from "@/components/ui/toast";
-import { readSources } from "@/lib/source";
 import { categories, componentCount } from "@/registry";
 
-export default async function Home() {
-  const allItems = categories.flatMap((c) => c.items);
-  const code = await readSources(allItems);
+const ICONS: Record<string, LucideIcon> = {
+  backgrounds: Sparkles,
+  text: Type,
+  ui: MousePointerClick,
+  blocks: LayoutGrid,
+};
 
+export default function Home() {
   return (
-    <>
-      <ScrollProgress />
-      <SiteHeader />
-      <main id="top">
-        <ShowcaseHero count={componentCount} />
+    <main>
+      <ShowcaseHero count={componentCount} />
 
-        <div className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-          {categories.map((category) => {
-            const isBlocks = category.id === "blocks";
-            return (
-              <section
-                key={category.id}
-                id={category.id}
-                className="scroll-mt-24 pt-20"
-              >
-                <div className="flex items-end justify-between gap-4">
-                  <div>
-                    <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                      {category.label}
-                    </h2>
-                    <p className="mt-2 max-w-2xl text-pretty text-muted">
-                      {category.blurb}
-                    </p>
-                  </div>
-                  <span className="shrink-0 rounded-full border border-border px-3 py-1 text-sm text-muted">
-                    {category.items.length}
-                  </span>
-                </div>
+      <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-6">
+        <section className="pt-16 sm:pt-20">
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              Browse by category
+            </h2>
+            <p className="mx-auto mt-2 max-w-xl text-pretty text-muted">
+              {componentCount} components across four categories. Open one to see
+              live previews and copy the source.
+            </p>
+          </div>
 
-                <div
-                  className={cnGrid(isBlocks)}
+          <div className="mt-10 grid gap-5 sm:grid-cols-2">
+            {categories.map((category) => {
+              const Icon = ICONS[category.id] ?? Sparkles;
+              return (
+                <Link
+                  key={category.id}
+                  href={`/${category.id}`}
+                  className="group flex flex-col rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-border-strong"
                 >
-                  {category.items.map((item) => (
-                    <ComponentShowcase
-                      key={item.id}
-                      name={item.name}
-                      description={item.description}
-                      code={code[item.id] ?? ""}
-                      preview={item.preview}
-                      tags={item.tags}
-                      layout={isBlocks ? "block" : "card"}
-                      frameClassName={item.frameClassName}
-                      bleed={item.bleed}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
-        </div>
-
-        <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
-          <FooterBlock />
-        </div>
-      </main>
-      <Toaster />
-    </>
+                  <div className="flex items-center justify-between">
+                    <span className="grid size-11 place-items-center rounded-xl border border-border bg-background text-brand-ink">
+                      <Icon className="size-5" />
+                    </span>
+                    <span className="rounded-full border border-border px-2.5 py-1 text-xs text-muted">
+                      {category.items.length} components
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold">{category.label}</h3>
+                  <p className="mt-1 flex-1 text-sm text-muted">{category.blurb}</p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand-ink">
+                    Explore
+                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+    </main>
   );
-}
-
-function cnGrid(isBlocks: boolean) {
-  return isBlocks
-    ? "mt-10 space-y-16"
-    : "mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3";
 }

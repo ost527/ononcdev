@@ -29,3 +29,6 @@ class MockObserver {
 
 vi.stubGlobal("IntersectionObserver", MockObserver);
 vi.stubGlobal("ResizeObserver", MockObserver);
+
+// jsdom doesn't implement scrollIntoView, which the Select listbox calls.
+Element.prototype.scrollIntoView = vi.fn();

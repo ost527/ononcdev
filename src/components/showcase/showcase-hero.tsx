@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { ParticleField } from "@/components/backgrounds/particle-field";
 import { GradientText } from "@/components/text/gradient-text";
@@ -7,8 +9,7 @@ import { SplitReveal } from "@/components/text/split-reveal";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
 export function ShowcaseHero({ count }: { count: number }) {
-  const scrollTo = (id: string) => () =>
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const router = useRouter();
 
   return (
     <ParticleField className="dark flex min-h-[78vh] items-center justify-center bg-background px-4 pb-24 pt-20 text-foreground">
@@ -28,18 +29,18 @@ export function ShowcaseHero({ count }: { count: number }) {
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
           <MagneticButton
-            onClick={scrollTo("backgrounds")}
+            onClick={() => router.push("/backgrounds")}
             aria-label="Explore components"
           >
             Explore components
             <ArrowRight className="size-4" />
           </MagneticButton>
-          <a
-            href="#blocks"
+          <Link
+            href="/blocks"
             className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-surface"
           >
             See section blocks
-          </a>
+          </Link>
         </div>
       </div>
     </ParticleField>

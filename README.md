@@ -25,28 +25,40 @@ The showcase site is fully static and renders at build time. No backend, no API 
 ```
 src/
 ├── app/
-│   ├── globals.css        # Design tokens (@theme), keyframes, utilities, light/dark variants
-│   ├── layout.tsx         # Root layout with metadata, dark class, no-flash script
-│   └── page.tsx           # Async server component reading all sources
+│   ├── globals.css              # Design tokens (@theme), keyframes, utilities, light/dark variants
+│   ├── layout.tsx               # Root layout: ScrollProgress + SiteHeader + {children} + FooterBlock + Toaster
+│   ├── page.tsx                 # Landing: ShowcaseHero + category browse cards
+│   └── [category]/
+│       ├── layout.tsx           # Sidebar + content split for all category routes
+│       └── page.tsx             # Per-category view: renders ONLY that category's components
 ├── components/
-│   ├── backgrounds/       # 15 ambient, animated canvases
-│   ├── text/              # 15 typographic animation effects
-│   ├── ui/                # 35 interactive components
-│   ├── blocks/            # 17 composed section blocks
-│   └── showcase/          # Showcase UI (header, card, hero, theme-toggle, code-block, component-showcase)
+│   ├── backgrounds/             # 15 ambient, animated canvases
+│   ├── text/                    # 15 typographic animation effects
+│   ├── ui/                      # 35 interactive components
+│   ├── blocks/                  # 17 composed section blocks
+│   └── showcase/                # Showcase UI
+│       ├── site-header.tsx      # Sticky header: brand link (/), category nav links (/<category>), theme toggle
+│       ├── sidebar.tsx          # Sidebar (desktop rail) + MobileNav (mobile pills); fed plain {id,label,count}[] props
+│       ├── showcase-hero.tsx    # Landing hero with CTAs linking to /backgrounds and /blocks
+│       ├── code-block.tsx       # Syntax-highlighted code with copy button
+│       ├── component-showcase.tsx  # Preview + Code tabs for individual components
+│       ├── theme-toggle.tsx     # Dark/light theme switcher
+│       └── other showcase support files
 ├── lib/
-│   ├── utils.ts           # cn, clamp, mapRange, seededRandom, prefersReducedMotion
-│   ├── use-canvas.ts      # Reusable canvas rAF hook
-│   ├── use-hydrated.ts    # useSyncExternalStore mount guard for Next.js 16
-│   └── source.ts          # Build-time fs reader for component sources
+│   ├── utils.ts                 # cn, clamp, mapRange, seededRandom, prefersReducedMotion
+│   ├── use-canvas.ts            # Reusable canvas rAF hook
+│   ├── use-hydrated.ts          # useSyncExternalStore mount guard for Next.js 16
+│   └── source.ts                # Build-time fs reader for component sources
 └── registry/
-    ├── types.ts           # Component registry types
-    ├── backgrounds.tsx    # Backgrounds registry (15)
-    ├── text.tsx           # Text registry (15)
-    ├── ui.tsx             # UI registry (35)
-    ├── blocks.tsx         # Blocks registry (17)
-    └── index.ts           # Central registry export
+    ├── types.ts                 # Component registry types
+    ├── backgrounds.tsx          # Backgrounds registry (15)
+    ├── text.tsx                 # Text registry (15)
+    ├── ui.tsx                   # UI registry (35)
+    ├── blocks.tsx               # Blocks registry (17)
+    └── index.ts                 # Central registry export: categories[] + componentCount
 ```
+
+**Architecture:** The showcase is a docs-style site with a shared chrome (header/footer/scroll-progress/toaster) in the root layout, a landing home (/) with category cards, and per-category routes (/backgrounds, /text, /ui, /blocks) each showing only that category's components. The left Sidebar (desktop) and MobileNav (mobile pills) provide global navigation, fed as plain props to keep the registry's preview tree server-side.
 
 ---
 
@@ -90,7 +102,7 @@ Typographic effects that remain screen-reader friendly.
 - **Flip Text** — Each character flips up into place on view (motion 3D)
 - **Gradient Underline** — A gradient underline that grows in on hover and focus (CSS link)
 
-### Components (35)
+### Components (63)
 Interactive building blocks with pointer reactivity, keyboard support, and reduced-motion awareness.
 
 - **Magnetic Button** — Springs toward cursor, snaps back on leave (motion)
@@ -128,6 +140,34 @@ Interactive building blocks with pointer reactivity, keyboard support, and reduc
 - **Tag Input** — Free-form tag entry: Enter/comma to add, Backspace/× to remove (form)
 - **File Dropzone** — Drag-and-drop file picker; front-end only, no uploads (form)
 - **Progress Bar** — Horizontal fill bar with role=progressbar, eases on view (motion)
+- **Checkbox** — Tri-state checkbox with an indeterminate option and labels (a11y, form)
+- **Radio Group** — Single-select with roving focus and arrow-key navigation (a11y, form)
+- **Select** — Listbox-style picker with type-ahead and full keyboard nav (a11y)
+- **Number Input** — Numeric stepper with clamp, step, and keyboard control (a11y, form)
+- **Textarea** — Auto-resizing multiline field with an optional character counter (form)
+- **Badge** — Compact status label in solid, soft, and outline variants (display)
+- **Alert** — Semantic callouts for info, success, warning, and errors (feedback, a11y)
+- **Spinner** — Accessible loading indicator in three sizes (feedback)
+- **Hover Card** — Rich preview revealed on hover or keyboard focus, with delay (overlay)
+- **Context Menu** — Right-click menu at the pointer with keyboard navigation (a11y, portal)
+- **Date Picker** — Calendar popover with WAI-ARIA grid keyboard navigation (a11y)
+- **Stat Card** — KPI tile with a trend delta and an animated sparkline (display, motion)
+- **Resizable** — Split panels with a draggable, keyboard-resizable divider (pointer, a11y)
+- **Tree View** — Expandable hierarchy with roving focus and arrow-key navigation (a11y)
+- **Toolbar** — Grouped controls with roving focus and aria-pressed toggles (a11y)
+- **Menubar** — Application menu bar with arrow-key navigation between menus (a11y)
+- **Data Table** — Sortable columns with aria-sort and optional row selection (a11y, data)
+- **Color Picker** — HSV picker with a saturation area, hue slider, hex input, and swatches (form, pointer)
+- **Calendar** — Inline month grid for single or range selection (a11y, keyboard)
+- **Kbd** — Keyboard key caps for documenting shortcuts (display)
+- **Card** — Composable content surface with header, content, and footer (layout, display)
+- **Avatar** — User image with initials fallback and an optional status dot (display)
+- **Separator** — Thin divider, horizontal or vertical, with an optional label (layout)
+- **Collapsible** — A single show/hide disclosure with an animated height (a11y, disclosure)
+- **Scroll Area** — A bounded scroll container with a custom, themed scrollbar (pointer, layout)
+- **Empty State** — A centered placeholder for empty content with an action (display, feedback)
+- **Multi-Select** — Searchable multi-select with removable chips and keyboard navigation (a11y, form)
+- **Time Picker** — Pick an hour, minute, and AM/PM with spinbutton segments (a11y, form)
 
 ### Section Blocks (17)
 Composed, drop-in page sections built from the primitives above.
@@ -137,6 +177,17 @@ Composed, drop-in page sections built from the primitives above.
 - **Logo Cloud** — A quiet marquee of customer wordmarks (loop)
 - **Bento Grid** — Editorial asymmetric grid of spotlight feature cards (layout)
 - **Feature Grid** — Titled three-column grid of capabilities (layout)
+- **Feature Cards** — Elevated capability cards with a gradient hover ring and staggered scroll reveal (motion)
+- **Feature Spotlight** — Alternating rows pairing copy and a checklist with branded mock visuals (motion)
+- **Feature Tabs** — Interactive tabbed tour with autoplay, a progress indicator, and full keyboard navigation (a11y)
+- **Feature Sticky Split** — A sticky intro and CTA beside a scroll-revealed feature list (layout)
+- **Feature Highlights** — Understated hairline-divider grid of capabilities; server-safe, pure-CSS hover (layout)
+- **Feature Media Cards** — Feature cards each topped with a branded mock visual and a staggered reveal (motion)
+- **Feature Carousel** — Accessible scroll-snap pager of feature cards with bound-aware prev/next controls (a11y)
+- **Feature Marquee** — Two opposing rows of capability pills that loop and pause on hover (loop)
+- **Feature Accordion** — Icon-led disclosure accordion that expands one capability at a time, inline (a11y)
+- **Feature Panels** — Interactive panels that expand on hover, focus, or tap to reveal each feature (a11y)
+- **Feature Checklist** — Server-safe "everything included" section of grouped checkmark columns (layout)
 - **Steps** — Numbered how-it-works sequence with a connector line (layout)
 - **Stats Band** — Headline metrics counting up on view (motion)
 - **Pricing** — Three comparable tiers with highlighted plan (layout)
@@ -175,7 +226,7 @@ Vitest is configured for unit tests of helpers and component smoke tests. Run wi
 
 - **Config** — `vitest.config.ts` with jsdom environment and React import detection
 - **Setup** — `vitest.setup.ts` for test utilities and global mocks (e.g., IntersectionObserver)
-- **Coverage** — 6 test files, 18 tests passing:
+- **Coverage** — 32 test files, 63 tests passing:
   - `src/lib/utils.test.ts` — helpers (cn, clamp, mapRange, seededRandom, prefersReducedMotion)
   - `src/registry/registry.test.ts` — registry structure validation (asserts all 82 entries and every sourcePath file exists)
   - `src/components/ui/{switch,accordion,breadcrumbs,carousel}.test.ts` — a11y smoke tests for interactive components
@@ -261,9 +312,9 @@ Reusable React hook for canvas-based components:
 ## Verification Status
 
 ✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
-✅ **Build** — `npm run build` succeeds (static prerender of / and /_not-found)  
+✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + /_not-found)  
 ✅ **Lint** — `npm run lint` = 0 (eslint flat config)  
-✅ **Runtime** — `next start` returns HTTP 200; no hydration errors; all 82 component names present in HTML  
+✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks; 404 for unknown categories; no hydration errors; all 82 component names present; category scoping confirmed (e.g., /backgrounds contains only background components)  
 ✅ **Tests** — `npm test` = 6 files, 18 tests passed (registry test validates all 82 entries + sourcePath existence)
 
 ---

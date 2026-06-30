@@ -1,27 +1,28 @@
+import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { ThemeToggle } from "@/components/showcase/theme-toggle";
 import { categories, componentCount } from "@/registry";
 
-/** Sticky top navigation: brand, per-category anchors, and component count. */
+/** Sticky top navigation: brand, per-category route links, count, theme toggle. */
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <a href="#top" className="flex items-center gap-2">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+        <Link href="/" className="flex items-center gap-2">
           <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-2 text-white">
             <Sparkles className="size-4" />
           </span>
           <span className="font-semibold">Lumen UI</span>
-        </a>
+        </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {categories.map((category) => (
-            <a
+            <Link
               key={category.id}
-              href={`#${category.id}`}
+              href={`/${category.id}`}
               className="rounded-full px-3 py-1.5 text-sm text-muted transition-colors hover:bg-surface hover:text-foreground"
             >
               {category.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="flex items-center gap-3">

@@ -1,13 +1,24 @@
 import {
   ArrowRight,
   Bell,
+  Bold,
+  ClipboardPaste,
   Compass,
+  Copy,
   Heart,
   Home,
+  Inbox,
+  Italic,
+  List,
   LogOut,
   Music,
+  Plus,
+  Scissors,
   Search,
   Settings,
+  Strikethrough,
+  Trash2,
+  Underline,
   User,
 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
@@ -39,6 +50,41 @@ import { Pagination } from "@/components/ui/pagination";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { TagInput } from "@/components/ui/tag-input";
 import { ToggleGroup } from "@/components/ui/toggle-group";
+import { Alert } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ContextMenu } from "@/components/ui/context-menu";
+import { DatePicker } from "@/components/ui/date-picker";
+import { HoverCard } from "@/components/ui/hover-card";
+import { NumberInput } from "@/components/ui/number-input";
+import { RadioGroup } from "@/components/ui/radio-group";
+import { Select } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { StatCard } from "@/components/ui/stat-card";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
+import { ColorPicker } from "@/components/ui/color-picker";
+import { DataTable } from "@/components/ui/data-table";
+import { Kbd } from "@/components/ui/kbd";
+import { Menubar } from "@/components/ui/menubar";
+import { Resizable } from "@/components/ui/resizable";
+import { Toolbar } from "@/components/ui/toolbar";
+import { TreeView } from "@/components/ui/tree-view";
+import { Avatar } from "@/components/ui/avatar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Collapsible } from "@/components/ui/collapsible";
+import { EmptyState } from "@/components/ui/empty-state";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { TimePicker } from "@/components/ui/time-picker";
 import {
   CommandPaletteDemo,
   DrawerDemo,
@@ -497,6 +543,566 @@ export const ui: Category = {
       tags: ["form", "pointer"],
       frameClassName: "min-h-72 w-full items-start justify-center p-6",
       preview: <FileDropzone />,
+    },
+    {
+      id: "checkbox",
+      name: "Checkbox",
+      description: "Tri-state checkbox with an indeterminate option and labels.",
+      sourcePath: "components/ui/checkbox.tsx",
+      tags: ["a11y", "form"],
+      frameClassName: "min-h-72 w-full items-center justify-center p-6",
+      preview: (
+        <div className="space-y-3">
+          <Checkbox
+            defaultChecked
+            label="Email notifications"
+            description="Get notified when something happens."
+          />
+          <Checkbox
+            indeterminate
+            label="Select all"
+            description="Some items are selected."
+          />
+          <Checkbox label="Disabled option" disabled />
+        </div>
+      ),
+    },
+    {
+      id: "radio-group",
+      name: "Radio Group",
+      description: "Single-select with roving focus and arrow-key navigation.",
+      sourcePath: "components/ui/radio-group.tsx",
+      tags: ["a11y", "form"],
+      frameClassName: "min-h-72 w-full items-center justify-center p-6",
+      preview: (
+        <RadioGroup
+          aria-label="Plan"
+          className="w-64"
+          defaultValue="pro"
+          options={[
+            { value: "free", label: "Free", description: "For trying things out." },
+            { value: "pro", label: "Pro", description: "For growing teams." },
+            { value: "ent", label: "Enterprise", description: "Advanced controls." },
+          ]}
+        />
+      ),
+    },
+    {
+      id: "select",
+      name: "Select",
+      description: "Listbox-style picker with type-ahead and full keyboard nav.",
+      sourcePath: "components/ui/select.tsx",
+      tags: ["a11y", "keyboard"],
+      frameClassName: "min-h-72 w-full items-start justify-center p-6",
+      preview: (
+        <Select
+          aria-label="Framework"
+          placeholder="Choose a framework"
+          options={[
+            { value: "next", label: "Next.js" },
+            { value: "remix", label: "Remix" },
+            { value: "astro", label: "Astro" },
+            { value: "nuxt", label: "Nuxt", disabled: true },
+            { value: "sveltekit", label: "SvelteKit" },
+          ]}
+        />
+      ),
+    },
+    {
+      id: "number-input",
+      name: "Number Input",
+      description: "Numeric stepper with clamp, step, and keyboard control.",
+      sourcePath: "components/ui/number-input.tsx",
+      tags: ["a11y", "form"],
+      preview: (
+        <NumberInput aria-label="Quantity" defaultValue={2} min={0} max={10} />
+      ),
+    },
+    {
+      id: "textarea",
+      name: "Textarea",
+      description: "Auto-resizing multiline field with an optional counter.",
+      sourcePath: "components/ui/textarea.tsx",
+      tags: ["form"],
+      frameClassName: "min-h-72 w-full items-start justify-center p-6",
+      preview: (
+        <Textarea
+          className="w-72"
+          placeholder="Write a short bio…"
+          defaultValue="Lumen UI is an original, motion-first component library."
+          maxLength={160}
+          showCount
+        />
+      ),
+    },
+    {
+      id: "badge",
+      name: "Badge",
+      description: "Compact status label in solid, soft, and outline variants.",
+      sourcePath: "components/ui/badge.tsx",
+      tags: ["display"],
+      preview: (
+        <div className="flex max-w-xs flex-wrap items-center justify-center gap-2">
+          <Badge tone="brand">Brand</Badge>
+          <Badge tone="success" dot>
+            Live
+          </Badge>
+          <Badge tone="warning" variant="soft">
+            Beta
+          </Badge>
+          <Badge tone="danger" variant="outline">
+            Deprecated
+          </Badge>
+          <Badge tone="neutral" variant="solid">
+            v2.0
+          </Badge>
+        </div>
+      ),
+    },
+    {
+      id: "alert",
+      name: "Alert",
+      description: "Semantic callouts for info, success, warning, and errors.",
+      sourcePath: "components/ui/alert.tsx",
+      tags: ["feedback", "a11y"],
+      frameClassName: "min-h-72 w-full items-center justify-center p-6",
+      preview: (
+        <div className="w-80 space-y-3">
+          <Alert variant="success" title="Payment received" dismissible>
+            Your invoice has been paid in full.
+          </Alert>
+          <Alert variant="warning" title="Storage almost full">
+            You have used 92% of your quota.
+          </Alert>
+        </div>
+      ),
+    },
+    {
+      id: "spinner",
+      name: "Spinner",
+      description: "Accessible loading indicator in three sizes.",
+      sourcePath: "components/ui/spinner.tsx",
+      tags: ["feedback", "loading"],
+      preview: (
+        <div className="flex items-center gap-6">
+          <Spinner size="sm" />
+          <Spinner size="md" />
+          <Spinner size="lg" />
+          <Spinner label="Loading…" />
+        </div>
+      ),
+    },
+    {
+      id: "hover-card",
+      name: "Hover Card",
+      description: "Rich preview revealed on hover or keyboard focus, with delay.",
+      sourcePath: "components/ui/hover-card.tsx",
+      tags: ["overlay", "hover"],
+      frameClassName: "min-h-72 w-full items-start justify-center p-6",
+      preview: (
+        <HoverCard
+          trigger={
+            <button className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground">
+              @lumen
+            </button>
+          }
+        >
+          <div className="flex items-center gap-3">
+            <div className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-brand to-brand-2 text-sm font-semibold text-white">
+              L
+            </div>
+            <div>
+              <p className="font-semibold text-foreground">Lumen UI</p>
+              <p className="text-xs">Motion-first React components.</p>
+            </div>
+          </div>
+          <p className="mt-3">Hover cards reveal extra context without a click.</p>
+        </HoverCard>
+      ),
+    },
+    {
+      id: "context-menu",
+      name: "Context Menu",
+      description: "Right-click menu at the pointer with keyboard navigation.",
+      sourcePath: "components/ui/context-menu.tsx",
+      tags: ["a11y", "pointer", "portal"],
+      preview: (
+        <ContextMenu
+          items={[
+            { label: "Copy", icon: <Copy className="size-4" />, shortcut: "⌘C" },
+            { label: "Cut", icon: <Scissors className="size-4" />, shortcut: "⌘X" },
+            {
+              label: "Paste",
+              icon: <ClipboardPaste className="size-4" />,
+              shortcut: "⌘V",
+            },
+            { separator: true },
+            { label: "Delete", icon: <Trash2 className="size-4" />, danger: true },
+          ]}
+        >
+          <div className="grid h-32 w-64 place-items-center rounded-xl border border-dashed border-border-strong text-sm text-muted">
+            Right-click here
+          </div>
+        </ContextMenu>
+      ),
+    },
+    {
+      id: "date-picker",
+      name: "Date Picker",
+      description: "Calendar popover with WAI-ARIA grid keyboard navigation.",
+      sourcePath: "components/ui/date-picker.tsx",
+      tags: ["a11y", "keyboard"],
+      frameClassName: "min-h-96 w-full items-start justify-center p-6",
+      preview: <DatePicker aria-label="Date" />,
+    },
+    {
+      id: "stat-card",
+      name: "Stat Card",
+      description: "KPI tile with a trend delta and an animated sparkline.",
+      sourcePath: "components/ui/stat-card.tsx",
+      tags: ["display", "motion"],
+      preview: (
+        <StatCard
+          label="Revenue"
+          value="$48.2k"
+          delta={12.4}
+          hint="vs last week"
+          data={[8, 12, 9, 15, 13, 19, 17, 24]}
+        />
+      ),
+    },
+    {
+      id: "resizable",
+      name: "Resizable",
+      description: "Split panels with a draggable, keyboard-resizable divider.",
+      sourcePath: "components/ui/resizable.tsx",
+      tags: ["pointer", "a11y"],
+      frameClassName: "min-h-72 w-full items-center p-6",
+      preview: (
+        <Resizable
+          aria-label="Resize demo"
+          className="h-44 w-full max-w-md"
+          first={
+            <div className="grid h-full place-items-center bg-gradient-to-br from-brand/15 to-transparent text-sm text-muted">
+              Sidebar
+            </div>
+          }
+          second={
+            <div className="grid h-full place-items-center text-sm text-muted">
+              Content
+            </div>
+          }
+        />
+      ),
+    },
+    {
+      id: "tree-view",
+      name: "Tree View",
+      description: "Expandable hierarchy with roving focus and arrow-key nav.",
+      sourcePath: "components/ui/tree-view.tsx",
+      tags: ["a11y", "keyboard"],
+      frameClassName: "min-h-80 w-full items-start justify-center p-6",
+      preview: (
+        <TreeView
+          aria-label="Files"
+          className="w-60"
+          defaultExpanded={["src", "components"]}
+          data={[
+            {
+              id: "src",
+              label: "src",
+              children: [
+                {
+                  id: "components",
+                  label: "components",
+                  children: [
+                    { id: "button", label: "button.tsx" },
+                    { id: "card", label: "card.tsx" },
+                  ],
+                },
+                { id: "lib", label: "lib", children: [{ id: "utils", label: "utils.ts" }] },
+                { id: "index", label: "index.ts" },
+              ],
+            },
+            { id: "readme", label: "README.md" },
+          ]}
+        />
+      ),
+    },
+    {
+      id: "toolbar",
+      name: "Toolbar",
+      description: "Grouped controls with roving focus and aria-pressed toggles.",
+      sourcePath: "components/ui/toolbar.tsx",
+      tags: ["a11y", "keyboard"],
+      preview: (
+        <Toolbar
+          aria-label="Text formatting"
+          items={[
+            { type: "toggle", id: "bold", label: "Bold", icon: <Bold className="size-4" />, defaultPressed: true },
+            { type: "toggle", id: "italic", label: "Italic", icon: <Italic className="size-4" /> },
+            { type: "toggle", id: "underline", label: "Underline", icon: <Underline className="size-4" /> },
+            { type: "toggle", id: "strike", label: "Strikethrough", icon: <Strikethrough className="size-4" /> },
+            { type: "separator", id: "s1" },
+            { id: "list", label: "Bulleted list", icon: <List className="size-4" /> },
+          ]}
+        />
+      ),
+    },
+    {
+      id: "menubar",
+      name: "Menubar",
+      description: "Application menu bar with arrow-key navigation between menus.",
+      sourcePath: "components/ui/menubar.tsx",
+      tags: ["a11y", "keyboard"],
+      frameClassName: "min-h-80 w-full items-start justify-center p-6",
+      preview: (
+        <Menubar
+          aria-label="Main menu"
+          menus={[
+            {
+              label: "File",
+              items: [
+                { label: "New File", shortcut: "⌘N" },
+                { label: "Open…", shortcut: "⌘O" },
+                { label: "Save", shortcut: "⌘S" },
+              ],
+            },
+            {
+              label: "Edit",
+              items: [
+                { label: "Undo", shortcut: "⌘Z" },
+                { label: "Redo", shortcut: "⇧⌘Z" },
+                { label: "Cut", disabled: true },
+              ],
+            },
+            {
+              label: "View",
+              items: [
+                { label: "Zoom In" },
+                { label: "Zoom Out" },
+                { label: "Full Screen", shortcut: "⌃⌘F" },
+              ],
+            },
+          ]}
+        />
+      ),
+    },
+    {
+      id: "data-table",
+      name: "Data Table",
+      description: "Sortable columns with aria-sort and optional row selection.",
+      sourcePath: "components/ui/data-table.tsx",
+      tags: ["a11y", "data"],
+      frameClassName: "min-h-80 w-full items-start p-6",
+      preview: (
+        <DataTable
+          className="w-full max-w-lg"
+          caption="Team members"
+          selectable
+          rowKey="name"
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "role", header: "Role", sortable: true },
+            { key: "commits", header: "Commits", sortable: true, align: "right" },
+          ]}
+          rows={[
+            { name: "Mara Vance", role: "Engineer", commits: 482 },
+            { name: "Devon Park", role: "Designer", commits: 197 },
+            { name: "Iris Cho", role: "PM", commits: 88 },
+            { name: "Leo Mendez", role: "Engineer", commits: 341 },
+          ]}
+        />
+      ),
+    },
+    {
+      id: "color-picker",
+      name: "Color Picker",
+      description: "HSV picker with a hue slider, hex input, and swatches.",
+      sourcePath: "components/ui/color-picker.tsx",
+      tags: ["pointer", "form"],
+      frameClassName: "min-h-80 w-full items-start justify-center p-6",
+      preview: <ColorPicker defaultValue="#8b5cf6" />,
+    },
+    {
+      id: "calendar",
+      name: "Calendar",
+      description: "Inline month grid for single or range selection (range shown).",
+      sourcePath: "components/ui/calendar.tsx",
+      tags: ["a11y", "keyboard"],
+      frameClassName: "min-h-96 w-full items-start justify-center p-6",
+      preview: <Calendar mode="range" aria-label="Date range" />,
+    },
+    {
+      id: "kbd",
+      name: "Kbd",
+      description: "Keyboard key caps for documenting shortcuts.",
+      sourcePath: "components/ui/kbd.tsx",
+      tags: ["display"],
+      preview: (
+        <div className="flex flex-col items-center gap-3">
+          <Kbd keys={["⌘", "K"]} />
+          <Kbd keys={["Ctrl", "Shift", "P"]} />
+          <Kbd keys={["Esc"]} />
+        </div>
+      ),
+    },
+    {
+      id: "card",
+      name: "Card",
+      description: "Composable content surface with header, content, and footer.",
+      sourcePath: "components/ui/card.tsx",
+      tags: ["layout", "display"],
+      preview: (
+        <Card className="w-72">
+          <CardHeader>
+            <CardTitle>Upgrade to Pro</CardTitle>
+            <CardDescription>
+              Unlock advanced analytics and priority support.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-sm text-muted">
+            Everything in Free, plus unlimited projects and team seats.
+          </CardContent>
+          <CardFooter>
+            <button
+              type="button"
+              className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
+            >
+              Upgrade
+            </button>
+          </CardFooter>
+        </Card>
+      ),
+    },
+    {
+      id: "avatar",
+      name: "Avatar",
+      description: "User image with initials fallback and an optional status dot.",
+      sourcePath: "components/ui/avatar.tsx",
+      tags: ["display"],
+      preview: (
+        <div className="flex items-center gap-4">
+          <Avatar name="Mara Vance" status="online" />
+          <Avatar name="Devon Park" size="lg" status="busy" />
+          <Avatar name="Iris Cho" size="sm" status="away" />
+        </div>
+      ),
+    },
+    {
+      id: "separator",
+      name: "Separator",
+      description: "Thin divider, horizontal or vertical, with an optional label.",
+      sourcePath: "components/ui/separator.tsx",
+      tags: ["layout"],
+      frameClassName: "min-h-72 w-full items-center justify-center p-6",
+      preview: (
+        <div className="w-64 space-y-4 text-sm text-muted">
+          <p>Account settings</p>
+          <Separator />
+          <p>Billing</p>
+          <Separator label="or" />
+          <div className="flex items-center gap-3">
+            <span>Email</span>
+            <Separator orientation="vertical" className="h-5" />
+            <span>SMS</span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "collapsible",
+      name: "Collapsible",
+      description: "A single show/hide disclosure with an animated height.",
+      sourcePath: "components/ui/collapsible.tsx",
+      tags: ["a11y", "disclosure"],
+      frameClassName: "min-h-72 w-full items-start justify-center p-6",
+      preview: (
+        <Collapsible
+          label="What's included?"
+          defaultOpen
+          className="max-w-sm rounded-xl border border-border bg-surface p-2"
+        >
+          Unlimited projects, advanced analytics, and priority support — all in
+          one plan.
+        </Collapsible>
+      ),
+    },
+    {
+      id: "scroll-area",
+      name: "Scroll Area",
+      description: "A bounded scroll container with a custom, themed scrollbar.",
+      sourcePath: "components/ui/scroll-area.tsx",
+      tags: ["pointer", "layout"],
+      preview: (
+        <ScrollArea className="h-48 w-64 rounded-xl border border-border bg-surface">
+          <div className="space-y-2 p-4 text-sm text-muted">
+            <p className="font-medium text-foreground">Changelog</p>
+            {Array.from({ length: 12 }, (_, i) => (
+              <p key={i}>
+                v1.{12 - i} — improvements and bug fixes across the board.
+              </p>
+            ))}
+          </div>
+        </ScrollArea>
+      ),
+    },
+    {
+      id: "empty-state",
+      name: "Empty State",
+      description: "A centered placeholder for empty content with an action.",
+      sourcePath: "components/ui/empty-state.tsx",
+      tags: ["display", "feedback"],
+      frameClassName: "min-h-72 w-full items-center justify-center p-6",
+      preview: (
+        <EmptyState
+          className="max-w-sm"
+          icon={<Inbox className="size-6" />}
+          title="No messages yet"
+          description="When you receive messages, they'll show up here."
+          action={
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
+            >
+              <Plus className="size-4" />
+              New message
+            </button>
+          }
+        />
+      ),
+    },
+    {
+      id: "multi-select",
+      name: "Multi-Select",
+      description: "Searchable multi-select with removable chips and keyboard nav.",
+      sourcePath: "components/ui/multi-select.tsx",
+      tags: ["a11y", "form"],
+      frameClassName: "min-h-80 w-full items-start justify-center p-6",
+      preview: (
+        <MultiSelect
+          aria-label="Technologies"
+          defaultValue={["React", "TypeScript"]}
+          options={[
+            "React",
+            "Next.js",
+            "TypeScript",
+            "Tailwind",
+            "Node.js",
+            "GraphQL",
+            "Prisma",
+            "Vite",
+          ]}
+        />
+      ),
+    },
+    {
+      id: "time-picker",
+      name: "Time Picker",
+      description: "Pick an hour, minute, and AM/PM with spinbutton segments.",
+      sourcePath: "components/ui/time-picker.tsx",
+      tags: ["a11y", "form"],
+      preview: <TimePicker defaultValue={{ hour: 9, minute: 30, period: "AM" }} />,
     },
   ],
 };
