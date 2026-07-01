@@ -78,7 +78,7 @@ function AnimatedAmount({ value, currency }: { value: number; currency: string }
   return (
     <span className="tabular-nums">
       {currency}
-      {Math.round(display).toLocaleString()}
+      {Math.round(display).toLocaleString("en-US")}
     </span>
   );
 }

@@ -2,6 +2,7 @@ import { backgrounds } from "@/registry/backgrounds";
 import { blocks } from "@/registry/blocks";
 import { text } from "@/registry/text";
 import { ui } from "@/registry/ui";
+import { isCustomizable } from "@/registry/customizable";
 import type { Category, RegistryItem } from "@/registry/types";
 
 /** All component categories, in showcase order. */
@@ -42,11 +43,28 @@ export function allComponentParams(): ComponentParam[] {
 }
 
 /**
- * The `{ category, id }` pairs that actually get a detail page (everything
- * except categories excluded by {@link hasDetailPage}).
+ * Whether a specific component gets a standalone `/[category]/[id]` detail
+ * (playground) page. A detail page only exists when the component has live
+ * Customize controls — components with nothing to customize are shown inline on
+ * the category grid only. Categories with no detail page at all (blocks) are
+ * excluded regardless.
+ */
+export function componentHasDetailPage(
+  categoryId: string,
+  id: string,
+): boolean {
+  return hasDetailPage(categoryId) && isCustomizable(id);
+}
+
+/**
+ * The `{ category, id }` pairs that actually get a detail page: every
+ * customizable component in a detail-page category. Powers
+ * `generateStaticParams` on the `/[category]/[id]` route.
  */
 export function detailPageParams(): ComponentParam[] {
-  return allComponentParams().filter((p) => hasDetailPage(p.category));
+  return allComponentParams().filter((p) =>
+    componentHasDetailPage(p.category, p.id),
+  );
 }
 
 /**

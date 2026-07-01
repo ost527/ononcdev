@@ -2,7 +2,7 @@
 
 import { type KeyboardEvent, type ReactNode, useId, useState } from "react";
 import Link from "next/link";
-import { Code2, Eye, Moon } from "lucide-react";
+import { Code2, Eye, Moon, SlidersHorizontal } from "lucide-react";
 import { CodeBlock } from "@/components/showcase/code-block";
 import {
   VIEWPORT_WIDTHS,
@@ -20,6 +20,8 @@ export interface ComponentShowcaseProps {
   layout?: "card" | "block";
   frameClassName?: string;
   bleed?: boolean;
+  /** When true, the card is badged as having live Customize controls. */
+  customizable?: boolean;
   /** When set, the title + summary link to the component detail page. */
   href?: string;
   /** Extra classes for the block-layout desktop preview wrapper (reserve height). */
@@ -133,6 +135,23 @@ function DarkOnlyBadge() {
   );
 }
 
+/**
+ * CustomizeBadge — marks components whose detail page exposes live "Customize"
+ * controls (their playground spec has a non-empty `controls` array). The icon
+ * is decorative; the text carries the meaning.
+ */
+function CustomizeBadge() {
+  return (
+    <span
+      className="inline-flex shrink-0 items-center gap-1 rounded-full border border-border-strong bg-background/85 px-2 py-0.5 text-[11px] font-medium text-brand-ink shadow-sm backdrop-blur-sm"
+      title="Has live Customize controls"
+    >
+      <SlidersHorizontal className="size-3" aria-hidden />
+      Customizable
+    </span>
+  );
+}
+
 /** Component name — links to the detail page when `href` is set. */
 function Heading({
   href,
@@ -186,6 +205,7 @@ export function ComponentShowcase({
   layout = "card",
   frameClassName,
   bleed,
+  customizable,
   href,
   previewClassName,
 }: ComponentShowcaseProps) {
@@ -253,10 +273,15 @@ export function ComponentShowcase({
         )}
       >
         {bleed ? <div className="absolute inset-0">{preview}</div> : preview}
+        {customizable && (
+          <div className="pointer-events-none absolute right-2 top-2 z-10">
+            <CustomizeBadge />
+          </div>
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-2 border-t border-border p-4">
         <div className="flex items-start justify-between gap-2">
-          <Heading href={href} name={name} className="font-medium" />
+          <Heading href={href} name={name} className="min-w-0 font-medium" />
           {bleed && <DarkOnlyBadge />}
         </div>
         <Summary href={href} description={description} />

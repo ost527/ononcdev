@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComponentShowcase } from "@/components/showcase/component-showcase";
 import { readSources } from "@/lib/source";
-import { categories, hasDetailPage } from "@/registry";
+import { categories, componentHasDetailPage } from "@/registry";
 import { groupItems } from "@/registry/subcategories";
 
 export const dynamicParams = false;
@@ -70,25 +70,25 @@ export default async function CategoryPage({
                   : "mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
               }
             >
-              {group.items.map((item) => (
-                <ComponentShowcase
-                  key={item.id}
-                  name={item.name}
-                  description={item.description}
-                  code={code[item.id] ?? ""}
-                  preview={item.preview}
-                  tags={item.tags}
-                  layout={isBlocks ? "block" : "card"}
-                  frameClassName={item.frameClassName}
-                  bleed={item.bleed}
-                  previewClassName={item.previewClassName}
-                  href={
-                    hasDetailPage(found.id)
-                      ? `/${found.id}/${item.id}`
-                      : undefined
-                  }
-                />
-              ))}
+              {group.items.map((item) => {
+                const detail = componentHasDetailPage(found.id, item.id);
+                return (
+                  <ComponentShowcase
+                    key={item.id}
+                    name={item.name}
+                    description={item.description}
+                    code={code[item.id] ?? ""}
+                    preview={item.preview}
+                    tags={item.tags}
+                    layout={isBlocks ? "block" : "card"}
+                    frameClassName={item.frameClassName}
+                    bleed={item.bleed}
+                    customizable={detail}
+                    previewClassName={item.previewClassName}
+                    href={detail ? `/${found.id}/${item.id}` : undefined}
+                  />
+                );
+              })}
             </div>
           </section>
         ))}

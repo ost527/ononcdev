@@ -86,7 +86,7 @@ function AnimatedAmount({ value }: { value: number }) {
     return () => cancelAnimationFrame(raf.current);
   }, [value]);
 
-  return <span className="tabular-nums">{Math.round(display).toLocaleString()}</span>;
+  return <span className="tabular-nums">{Math.round(display).toLocaleString("en-US")}</span>;
 }
 
 /**

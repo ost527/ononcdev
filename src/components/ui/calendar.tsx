@@ -28,13 +28,13 @@ const WEEKDAYS_FULL = [
   "Friday",
   "Saturday",
 ];
-const longFmt = new Intl.DateTimeFormat(undefined, {
+const longFmt = new Intl.DateTimeFormat("en-US", {
   weekday: "long",
   year: "numeric",
   month: "long",
   day: "numeric",
 });
-const monthFmt = new Intl.DateTimeFormat(undefined, {
+const monthFmt = new Intl.DateTimeFormat("en-US", {
   month: "long",
   year: "numeric",
 });

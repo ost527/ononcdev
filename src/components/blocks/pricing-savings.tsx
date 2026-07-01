@@ -94,7 +94,7 @@ export function PricingSavings({
                   {savings > 0 && (
                     <span className="rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-brand-ink">
                       Save {currency}
-                      {savings.toLocaleString()}/yr
+                      {savings.toLocaleString("en-US")}/yr
                     </span>
                   )}
                 </div>
@@ -115,7 +115,7 @@ export function PricingSavings({
                 </div>
                 <p className="mt-1 h-5 text-xs text-muted-2">
                   billed annually ({currency}
-                  {(plan.yearly * 12).toLocaleString()}/yr)
+                  {(plan.yearly * 12).toLocaleString("en-US")}/yr)
                 </p>
 
                 <button

@@ -208,7 +208,7 @@ export function BentoDev({
           <div className="mt-auto flex flex-col gap-1.5">
             {ENDPOINTS.map((ep) => (
               <div
-                key={ep.path}
+                key={`${ep.method} ${ep.path}`}
                 className="flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2 font-mono text-[12.5px]"
               >
                 <span className={cn("w-14 shrink-0 font-semibold", ep.tone)}>

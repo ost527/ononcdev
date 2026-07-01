@@ -85,7 +85,7 @@ export function PricingBundle({
                 {savings > 0 && (
                   <span className="rounded-full bg-brand px-2.5 py-0.5 text-xs font-semibold text-white">
                     Save {currency}
-                    {savings.toLocaleString()} ({pct}%)
+                    {savings.toLocaleString("en-US")} ({pct}%)
                   </span>
                 )}
               </div>

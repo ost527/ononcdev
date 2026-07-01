@@ -3,10 +3,12 @@ import {
   allComponentParams,
   categories,
   componentCount,
+  componentHasDetailPage,
   detailPageParams,
   findComponent,
   hasDetailPage,
 } from "./index";
+import { customizableIds, isCustomizable } from "./customizable";
 import { playgrounds } from "./playground";
 import type { PlaygroundValues } from "./types";
 
@@ -41,14 +43,46 @@ describe("detail page scope", () => {
     expect(hasDetailPage("backgrounds")).toBe(true);
   });
 
-  it("detailPageParams omits blocks but keeps the rest, all resolvable", () => {
+  it("detailPageParams omits blocks and includes only customizable components", () => {
     const detail = detailPageParams();
     expect(detail.some((p) => p.category === "blocks")).toBe(false);
     expect(detail.length).toBeGreaterThan(0);
     expect(detail.length).toBeLessThan(allComponentParams().length);
     for (const p of detail) {
       expect(findComponent(p.category, p.id), `${p.category}/${p.id}`).not.toBeNull();
+      expect(isCustomizable(p.id), `${p.category}/${p.id} customizable`).toBe(true);
     }
+  });
+
+  it("detail pages exactly match customizable components in detail-page categories", () => {
+    const expected = categories
+      .filter((c) => hasDetailPage(c.id))
+      .flatMap((c) => c.items.filter((i) => isCustomizable(i.id)));
+    expect(detailPageParams().length).toBe(expected.length);
+  });
+
+  it("componentHasDetailPage requires a detail-page category AND customize controls", () => {
+    // A customizable component in a detail-page category keeps its page.
+    const withPage = categories
+      .filter((c) => hasDetailPage(c.id))
+      .flatMap((c) => c.items.map((i) => ({ cat: c.id, id: i.id })))
+      .find((x) => isCustomizable(x.id));
+    if (withPage) {
+      expect(componentHasDetailPage(withPage.cat, withPage.id)).toBe(true);
+    }
+
+    // A non-customizable component loses its page even in a detail-page category.
+    const withoutPage = categories
+      .filter((c) => hasDetailPage(c.id))
+      .flatMap((c) => c.items.map((i) => ({ cat: c.id, id: i.id })))
+      .find((x) => !isCustomizable(x.id));
+    if (withoutPage) {
+      expect(componentHasDetailPage(withoutPage.cat, withoutPage.id)).toBe(false);
+    }
+
+    // Blocks never get a detail page.
+    const block = categories.find((c) => c.id === "blocks")!.items[0];
+    expect(componentHasDetailPage("blocks", block.id)).toBe(false);
   });
 });
 
@@ -97,6 +131,31 @@ describe("playground specs", () => {
       const values: PlaygroundValues = {};
       for (const c of spec.controls ?? []) values[c.key] = c.default;
       expect(spec.render(values), id).toBeTruthy();
+    }
+  });
+});
+
+describe("customizable ids stay in sync with playground controls", () => {
+  // The component cards badge "Customizable" from the server-safe
+  // `customizableIds` set, which mirrors the client-only `playgrounds`. This
+  // guards the two against drift: a spec that gains/loses controls must be
+  // reflected in `customizableIds`.
+  const expected = new Set(
+    Object.entries(playgrounds)
+      .filter(([, spec]) => (spec.controls?.length ?? 0) > 0)
+      .map(([id]) => id),
+  );
+
+  it("customizableIds exactly matches specs that have controls", () => {
+    const missing = [...expected].filter((id) => !customizableIds.has(id));
+    const extra = [...customizableIds].filter((id) => !expected.has(id));
+    expect(missing, "ids with controls missing from customizableIds").toEqual([]);
+    expect(extra, "ids in customizableIds without controls").toEqual([]);
+  });
+
+  it("every customizable id is a real component id", () => {
+    for (const id of customizableIds) {
+      expect(allIds.has(id), id).toBe(true);
     }
   });
 });

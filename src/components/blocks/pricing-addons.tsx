@@ -71,7 +71,7 @@ function AnimatedAmount({ value, currency }: { value: number; currency: string }
   return (
     <span className="tabular-nums">
       {currency}
-      {Math.round(display).toLocaleString()}
+      {Math.round(display).toLocaleString("en-US")}
     </span>
   );
 }
@@ -160,7 +160,7 @@ export function PricingAddons({
             </span>
             <span className="sr-only" aria-live="polite">
               Total {currency}
-              {total.toLocaleString()} per month
+              {total.toLocaleString("en-US")} per month
             </span>
           </div>
           <button

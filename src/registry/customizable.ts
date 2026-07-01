@@ -1,0 +1,93 @@
+/**
+ * Ids of components that expose live "Customize" controls on their detail page
+ * (their playground spec has a non-empty `controls` array).
+ *
+ * This is a plain, server-safe data module: the component cards render on the
+ * server and cannot read the client-only `playgrounds` module, so the set of
+ * customizable ids is mirrored here. The "playground / customizable sync" test
+ * asserts this stays in sync with the real specs, so the two can never
+ * silently drift.
+ */
+export const customizableIds: ReadonlySet<string> = new Set<string>([
+  "alert",
+  "aurora-background",
+  "avatar",
+  "badge",
+  "blur-in-text",
+  "breathing-text",
+  "clip-draw-text",
+  "color-cycle-text",
+  "count-up",
+  "decrypt-text",
+  "digi-clock-text",
+  "dot-matrix",
+  "dual-tone-text",
+  "elastic-text",
+  "expand-text",
+  "fire-text",
+  "flicker-in-text",
+  "flip-text",
+  "focus-text",
+  "ghost-text",
+  "glitch-text",
+  "glow-pulse-text",
+  "gradient-text",
+  "gradient-underline",
+  "gravity-text",
+  "highlight-text",
+  "holographic-text",
+  "kbd",
+  "kinetic-reveal",
+  "letters-pull-up",
+  "line-reveal",
+  "magnetic-text",
+  "morphing-text",
+  "neon-text",
+  "number-input",
+  "number-ticker",
+  "particle-field",
+  "perspective-text",
+  "progress-bar",
+  "progress-ring",
+  "pulse-wave-text",
+  "rating",
+  "revolve-text",
+  "ripple-text",
+  "rising-text",
+  "rotating-text",
+  "scatter-text",
+  "scramble-text",
+  "scroll-reveal",
+  "segmented-control",
+  "separator",
+  "shadow-text",
+  "shake-text",
+  "shatter-text",
+  "shiny-text",
+  "slider",
+  "spinner",
+  "split-color-text",
+  "split-flap",
+  "split-reveal",
+  "staggered-fade",
+  "starfield",
+  "stat-card",
+  "striped-text",
+  "swap-cascade",
+  "switch",
+  "text-pressure",
+  "text-reveal",
+  "ticker-text",
+  "tracking-in",
+  "twinkle-text",
+  "typewriter",
+  "underline-draw",
+  "warp-in-text",
+  "wavy-text",
+  "zoom-blur-text",
+]);
+
+/** Whether a component id exposes live Customize controls. */
+export function isCustomizable(id: string): boolean {
+  return customizableIds.has(id);
+}

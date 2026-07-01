@@ -82,7 +82,7 @@ function AnimatedAmount({ value, currency }: { value: number; currency: string }
   return (
     <span className="tabular-nums">
       {currency}
-      {Math.round(display).toLocaleString()}
+      {Math.round(display).toLocaleString("en-US")}
     </span>
   );
 }
@@ -157,7 +157,7 @@ export function PricingTierSlider({
 
         <span className="sr-only" aria-live="polite">
           Selected {tier.name}, {currency}
-          {tier.price.toLocaleString()} per month
+          {tier.price.toLocaleString("en-US")} per month
         </span>
 
         <ul className="mt-7 grid grid-cols-1 gap-2.5 text-sm sm:grid-cols-2">

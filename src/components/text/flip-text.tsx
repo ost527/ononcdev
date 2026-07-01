@@ -29,11 +29,12 @@ export function FlipText({
     show: { transition: { staggerChildren: stagger, delayChildren: delay } },
   };
   const item: Variants = {
-    hidden: { rotateX: -90, opacity: 0 },
+    hidden: { rotateX: -110, y: 16, opacity: 0 },
     show: {
       rotateX: 0,
+      y: 0,
       opacity: 1,
-      transition: { type: "spring", stiffness: 260, damping: 20 },
+      transition: { type: "spring", stiffness: 200, damping: 18, mass: 0.9 },
     },
   };
 

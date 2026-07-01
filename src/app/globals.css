@@ -306,6 +306,14 @@ body {
   background-clip: padding-box;
 }
 
+/* Hide the scrollbar while keeping the container scrollable. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;

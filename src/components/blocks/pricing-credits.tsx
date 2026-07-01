@@ -107,13 +107,13 @@ export function PricingCredits({
                 <div className="mt-4 rounded-2xl border border-border bg-background/50 p-4">
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-2xl font-semibold tabular-nums">
-                      {pack.credits.toLocaleString()}
+                      {pack.credits.toLocaleString("en-US")}
                     </span>
                     <span className="text-sm text-muted">credits</span>
                   </div>
                   {pack.bonus ? (
                     <p className="mt-1 text-sm font-medium text-brand-ink">
-                      + {pack.bonus.toLocaleString()} bonus credits
+                      + {pack.bonus.toLocaleString("en-US")} bonus credits
                     </p>
                   ) : null}
                   <p className="mt-2 text-xs tabular-nums text-muted-2">

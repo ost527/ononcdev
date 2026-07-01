@@ -109,7 +109,7 @@ function AnimatedAmount({
   return (
     <span className="tabular-nums">
       {currency}
-      {Math.round(display).toLocaleString()}
+      {Math.round(display).toLocaleString("en-US")}
     </span>
   );
 }
@@ -194,7 +194,7 @@ export function PricingToggle({
                   {free
                     ? "Free forever"
                     : annual
-                      ? `${currency}${(plan.yearly * 12).toLocaleString()} billed yearly`
+                      ? `${currency}${(plan.yearly * 12).toLocaleString("en-US")} billed yearly`
                       : "Billed monthly"}
                 </p>
 

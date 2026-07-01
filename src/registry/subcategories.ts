@@ -104,7 +104,10 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       label: "Gradient & styled",
       slugs: [
         "gradient-text", "shiny-text", "gradient-underline", "underline-draw",
-        "highlight-text", "glitch-text", "wavy-text",
+        "highlight-text", "glitch-text", "wavy-text", "neon-text",
+        "holographic-text", "shadow-text", "breathing-text", "ghost-text",
+        "glow-pulse-text", "ticker-text", "striped-text", "twinkle-text",
+        "pulse-wave-text", "color-cycle-text", "flicker-in-text",
       ],
     },
     {
@@ -113,13 +116,19 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       slugs: [
         "split-reveal", "blur-in-text", "flip-text", "letters-pull-up",
         "text-reveal", "line-reveal", "tracking-in", "scroll-reveal",
-        "decrypt-text",
+        "decrypt-text", "staggered-fade", "rising-text", "kinetic-reveal",
+        "clip-draw-text", "revolve-text", "gravity-text", "zoom-blur-text",
+        "warp-in-text", "expand-text", "dual-tone-text",
       ],
     },
     {
       id: "loop",
       label: "Looping & typing",
-      slugs: ["typewriter", "rotating-text", "scramble-text", "focus-text"],
+      slugs: [
+        "typewriter", "rotating-text", "scramble-text", "focus-text",
+        "fire-text", "morphing-text", "split-flap", "swap-cascade",
+        "digi-clock-text",
+      ],
     },
     {
       id: "numbers",
@@ -129,7 +138,11 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
     {
       id: "pointer",
       label: "Pointer-reactive",
-      slugs: ["text-pressure"],
+      slugs: [
+        "text-pressure", "scatter-text", "perspective-text",
+        "elastic-text", "ripple-text", "shake-text", "shatter-text",
+        "magnetic-text", "split-color-text",
+      ],
     },
   ],
   ui: [
