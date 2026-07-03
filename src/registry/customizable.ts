@@ -128,6 +128,7 @@ export const customizableIds: ReadonlySet<string> = new Set<string>([
   "stat-card",
   "striped-text",
   "swap-cascade",
+  "swipe-cards",
   "switch",
   "text-pressure",
   "text-reveal",

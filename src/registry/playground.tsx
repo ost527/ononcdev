@@ -22,6 +22,7 @@ import {
   SmoothCursor,
   type SmoothCursorVariant,
 } from "@/components/ui/smooth-cursor";
+import { SwipeCards } from "@/components/ui/swipe-cards";
 import { BlurInText } from "@/components/text/blur-in-text";
 import { BreathingText } from "@/components/text/breathing-text";
 import { ClipDrawText } from "@/components/text/clip-draw-text";
@@ -3121,6 +3122,39 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { name: "color", type: "string", default: '"var(--brand)"', description: "Cursor color (any CSS color)." },
       { name: "hideNative", type: "boolean", default: "true", description: "Hide the native cursor inside the area." },
       { name: "children", type: "ReactNode", description: "The hover area the cursor lives in.", required: true },
+    ],
+  },
+
+  "swipe-cards": {
+    controls: [
+      { type: "boolean", key: "loop", label: "Loop deck", group: "Deck", default: true },
+      { type: "number", key: "stackDepth", label: "Cards behind", group: "Deck", min: 1, max: 3, step: 1, default: 2 },
+      { type: "number", key: "swipeRotation", label: "Swipe tilt", group: "Motion", min: 0, max: 30, step: 2, unit: "°", default: 18 },
+      { type: "boolean", key: "showStamps", label: "Keep / Pass stamps", group: "Overlay", default: true },
+      { type: "boolean", key: "showControls", label: "Control buttons", group: "Overlay", default: true },
+    ],
+    usage: {
+      element: (v) =>
+        `<SwipeCards loop={${bool(v, "loop")}} stackDepth={${n(v, "stackDepth")}} swipeRotation={${n(v, "swipeRotation")}} showStamps={${bool(v, "showStamps")}} showControls={${bool(v, "showControls")}} />`,
+    },
+    render: (v) => (
+      <SwipeCards
+        loop={bool(v, "loop")}
+        stackDepth={n(v, "stackDepth")}
+        swipeRotation={n(v, "swipeRotation")}
+        showStamps={bool(v, "showStamps")}
+        showControls={bool(v, "showControls")}
+      />
+    ),
+    props: [
+      { name: "items", type: "SwipeCardItem[]", default: "gradient set", description: "Cards to deal, front to back ({ id, title, subtitle?, background?, tags? })." },
+      { name: "loop", type: "boolean", default: "true", description: "Recycle swiped cards to the back so the deck never empties." },
+      { name: "swipeRotation", type: "number", default: "18", description: "Max tilt (deg) as the front card is dragged sideways." },
+      { name: "stackDepth", type: "number", default: "2", description: "How many cards peek behind the front one (1–3)." },
+      { name: "showStamps", type: "boolean", default: "true", description: "Show the Keep/Pass stamps that fade in as you drag." },
+      { name: "showControls", type: "boolean", default: "true", description: "Show the circular Pass/Keep buttons below the deck." },
+      { name: "onSwipe", type: "(id, direction) => void", description: "Fires when a card leaves the deck, with its swipe direction." },
+      { name: "label", type: "string", default: '"Swipeable card deck"', description: "Accessible name for the deck." },
     ],
   },
 

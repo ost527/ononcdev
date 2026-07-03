@@ -163,7 +163,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       label: "Interactive showcase",
       slugs: [
         "chroma-card", "device-mockup", "infinite-gallery", "smooth-cursor",
-        "preloader", "globe",
+        "preloader", "globe", "swipe-cards",
       ],
     },
     {

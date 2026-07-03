@@ -76,6 +76,7 @@ import { DeviceMockup } from "@/components/ui/device-mockup";
 import { Globe } from "@/components/ui/globe";
 import { InfiniteGallery } from "@/components/ui/infinite-gallery";
 import { Preloader } from "@/components/ui/preloader";
+import { SwipeCards } from "@/components/ui/swipe-cards";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import {
   Card,
@@ -1212,6 +1213,16 @@ export const ui: Category = {
       tags: ["canvas", "drag", "3D"],
       frameClassName: "h-80 w-full px-0",
       preview: <Globe className="h-full w-full" />,
+    },
+    {
+      id: "swipe-cards",
+      name: "Swipe Deck",
+      description:
+        "A draggable card deck you fling left or right, with keyboard and button controls.",
+      sourcePath: "components/ui/swipe-cards.tsx",
+      tags: ["motion", "drag", "a11y"],
+      frameClassName: "min-h-[28rem] w-full items-center justify-center p-6",
+      preview: <SwipeCards />,
     },
   ],
 };
