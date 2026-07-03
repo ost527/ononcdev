@@ -58,19 +58,19 @@ export function StepsFlow({
       <ol className="mt-12 flex flex-col items-stretch justify-center gap-3 lg:flex-row lg:items-center">
         {steps.map((step, i) => (
           <Fragment key={i}>
-            <li className="flex items-center gap-3 rounded-2xl border border-border bg-surface px-5 py-4 transition-colors hover:border-border-strong lg:flex-col lg:gap-2 lg:px-6 lg:text-center">
+            <li className="flex flex-1 items-center gap-3 rounded-2xl border border-border bg-surface px-5 py-4 transition-colors hover:border-border-strong lg:flex-col lg:gap-2 lg:px-6 lg:text-center">
               <span className="grid size-8 shrink-0 place-items-center rounded-full border border-border bg-background text-xs font-semibold text-brand-ink">
                 {i + 1}
               </span>
               <span className="font-semibold">{step.title}</span>
             </li>
-            <li aria-hidden className="flex items-center justify-center text-muted-2">
+            <li aria-hidden className="flex shrink-0 items-center justify-center text-muted-2">
               <ArrowRight className="hidden size-5 shrink-0 lg:block" />
               <ArrowDown className="size-5 shrink-0 lg:hidden" />
             </li>
           </Fragment>
         ))}
-        <li className="flex items-center gap-3 rounded-2xl border border-brand/50 bg-brand/10 px-5 py-4 shadow-[0_0_40px_-18px_var(--brand)] lg:flex-col lg:gap-2 lg:px-6 lg:text-center">
+        <li className="flex flex-1 items-center gap-3 rounded-2xl border border-brand/50 bg-brand/10 px-5 py-4 shadow-[0_0_40px_-18px_var(--brand)] lg:flex-col lg:gap-2 lg:px-6 lg:text-center">
           <span className="grid size-8 shrink-0 place-items-center rounded-full bg-brand text-white">
             {outcome.icon}
           </span>

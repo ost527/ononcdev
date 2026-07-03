@@ -16,7 +16,7 @@ export default function CategoryLayout({ children }: { children: ReactNode }) {
   }));
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl gap-6 px-4 sm:px-6">
+    <div className="site-shell flex w-full gap-6">
       <Sidebar nav={nav} />
       <div className="min-w-0 flex-1">
         <MobileNav nav={nav} />

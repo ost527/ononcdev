@@ -1,8 +1,17 @@
 "use client";
 
-import { type KeyboardEvent, type ReactNode, useId, useState } from "react";
+import {
+  Fragment,
+  type KeyboardEvent,
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Code2, Eye, Moon, SlidersHorizontal } from "lucide-react";
+import { Code2, Eye, Moon, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { CodeBlock } from "@/components/showcase/code-block";
 import {
   VIEWPORT_WIDTHS,
@@ -26,6 +35,10 @@ export interface ComponentShowcaseProps {
   href?: string;
   /** Extra classes for the block-layout desktop preview wrapper (reserve height). */
   previewClassName?: string;
+  /** Extra inset around the block-layout preview frame, in pixels. */
+  previewPadding?: number;
+  /** Whether to draw the block-layout preview frame border. */
+  previewBorder?: boolean;
 }
 
 type Tab = "preview" | "code";
@@ -104,15 +117,137 @@ function Tags({ tags }: { tags?: string[] }) {
   if (!tags?.length) return null;
   return (
     <div className="flex flex-wrap gap-1.5">
-      {tags.map((tag) => (
+      {tags.map((tag, index) => (
         <span
-          key={tag}
+          key={`${tag}-${index}`}
           className="rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-muted"
         >
           {tag}
         </span>
       ))}
     </div>
+  );
+}
+
+function ViewportPreviewFrame({
+  children,
+  refreshKey,
+  onHeightChange,
+}: {
+  children: ReactNode;
+  refreshKey: number;
+  onHeightChange?: (height: number) => void;
+}) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
+  const [height, setHeight] = useState(1);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    const doc = iframe?.contentDocument;
+    if (!iframe || !doc) return;
+    doc.open();
+    doc.write(
+      '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body></body></html>',
+    );
+    doc.close();
+
+    const syncTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      doc.documentElement.classList.toggle("dark", isDark);
+      doc.body.classList.toggle("dark", isDark);
+    };
+
+    // Measure the body's scroll overflow only: documentElement.scrollHeight is
+    // clamped to the iframe viewport height, so once the frame grows (e.g. a
+    // mobile menu opens) it could never shrink back after the content collapsed.
+    const syncHeight = () => {
+      const nextHeight = Math.max(doc.body.scrollHeight, 1);
+      setHeight(nextHeight);
+      onHeightChange?.(nextHeight);
+    };
+
+    let heightFrame = 0;
+    const scheduleSyncHeight = () => {
+      cancelAnimationFrame(heightFrame);
+      heightFrame = requestAnimationFrame(syncHeight);
+    };
+
+    const charset = doc.createElement("meta");
+    charset.setAttribute("charset", "utf-8");
+    const viewport = doc.createElement("meta");
+    viewport.name = "viewport";
+    viewport.content = "width=device-width, initial-scale=1";
+    const frameStyle = doc.createElement("style");
+    frameStyle.textContent =
+      "html,body{-ms-overflow-style:none;scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}";
+    const styleNodes = Array.from(
+      document.querySelectorAll<HTMLLinkElement | HTMLStyleElement>(
+        'link[rel="stylesheet"], style',
+      ),
+      (node) => {
+        const clone = node.cloneNode(true) as HTMLLinkElement | HTMLStyleElement;
+        if (node instanceof HTMLLinkElement && clone instanceof HTMLLinkElement) {
+          clone.href = node.href;
+        }
+        return clone;
+      },
+    );
+    doc.head.replaceChildren(charset, viewport, ...styleNodes, frameStyle);
+    doc.documentElement.className = "";
+    doc.body.className = "";
+    doc.body.style.margin = "0";
+    doc.body.style.width = "100%";
+    doc.body.style.background = "transparent";
+    const mount = doc.createElement("div");
+    doc.body.replaceChildren(mount);
+
+    syncTheme();
+    setMountNode(mount);
+    syncHeight();
+
+    const resizeObserver =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(scheduleSyncHeight);
+    resizeObserver?.observe(doc.documentElement);
+    resizeObserver?.observe(doc.body);
+    resizeObserver?.observe(mount);
+
+    // Absolutely-positioned overlays (dropdown menus, popovers) change the
+    // body's scroll overflow without resizing any observed box, so DOM
+    // mutations must retrigger the measurement too.
+    const mutationObserver = new MutationObserver(scheduleSyncHeight);
+    mutationObserver.observe(doc.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+    });
+
+    const themeObserver = new MutationObserver(syncTheme);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    scheduleSyncHeight();
+
+    return () => {
+      resizeObserver?.disconnect();
+      mutationObserver.disconnect();
+      themeObserver.disconnect();
+      cancelAnimationFrame(heightFrame);
+    };
+  }, [onHeightChange, refreshKey]);
+
+  return (
+    <>
+      <iframe
+        ref={iframeRef}
+        title="Component preview"
+        className="block w-full border-0"
+        style={{ height }}
+      />
+      {mountNode && createPortal(<Fragment key={refreshKey}>{children}</Fragment>, mountNode)}
+    </>
   );
 }
 
@@ -208,10 +343,41 @@ export function ComponentShowcase({
   customizable,
   href,
   previewClassName,
+  previewPadding = 0,
+  previewBorder = false,
 }: ComponentShowcaseProps) {
   const baseId = useId();
   const [tab, setTab] = useState<Tab>("preview");
   const [viewport, setViewport] = useState<Viewport>("desktop");
+  const [refreshKey, setRefreshKey] = useState(0);
+  const desktopPreviewRef = useRef<HTMLDivElement>(null);
+  const [previewScale, setPreviewScale] = useState(1);
+  const [previewHeight, setPreviewHeight] = useState(1);
+
+  useEffect(() => {
+    if (layout !== "block") return;
+
+    const frame = desktopPreviewRef.current;
+    if (!frame) return;
+
+    const desktopPreviewWidth = 1024 + previewPadding * 2;
+    const syncScale = () => {
+      const availableWidth = frame.getBoundingClientRect().width;
+      setPreviewScale(
+        Math.min(1, availableWidth > 0 ? availableWidth / desktopPreviewWidth : 1),
+      );
+    };
+
+    syncScale();
+
+    const resizeObserver =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(syncScale);
+    resizeObserver?.observe(frame);
+
+    return () => {
+      resizeObserver?.disconnect();
+    };
+  }, [layout, previewPadding]);
 
   if (layout === "block") {
     const panelProps = {
@@ -220,41 +386,77 @@ export function ComponentShowcase({
       "aria-labelledby": `${baseId}-tab-${tab}`,
     };
     const width = VIEWPORT_WIDTHS[viewport];
+    const previewFrameWidth =
+      width === null ? 1024 + previewPadding * 2 : width + previewPadding * 2;
+    const previewBoxHeight = (previewHeight + previewPadding * 2) * previewScale;
+    const refreshPreview = () => setRefreshKey((key) => key + 1);
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-col gap-3">
           <div>
             <Heading href={href} name={name} className="text-lg font-medium" />
             <Summary href={href} description={description} />
           </div>
-          <div className="flex items-center gap-2">
-            {tab === "preview" && (
-              <ViewportToggle value={viewport} onChange={setViewport} />
-            )}
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <TabSwitch tab={tab} setTab={setTab} baseId={baseId} />
+            {tab === "preview" && (
+              <div className="flex items-center gap-2">
+                <ViewportToggle value={viewport} onChange={setViewport} />
+                <button
+                  type="button"
+                  onClick={refreshPreview}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface"
+                >
+                  <RotateCcw className="size-3.5" />
+                  <span>Refresh</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div {...panelProps}>
           {tab === "code" ? (
             <CodeBlock code={code} />
-          ) : width === null ? (
-            // Desktop: reserve space (previewClassName) so a downward-opening
-            // menu doesn't overlap the next block in the list.
-            previewClassName ? (
-              <div className={cn("relative", previewClassName)}>{preview}</div>
-            ) : (
-              preview
-            )
           ) : (
-            <div className="overflow-x-hidden">
+            <div
+              ref={desktopPreviewRef}
+              className={cn(
+                "relative overflow-hidden",
+                viewport === "desktop" && previewClassName,
+              )}
+            >
               <div
-                className={cn(
-                  "mx-auto overflow-hidden rounded-xl border border-border transition-[width] duration-300",
-                  previewClassName,
-                )}
-                style={{ width: `${width}px`, maxWidth: "100%" }}
+                className="relative"
+                style={{
+                  height: `${previewBoxHeight}px`,
+                }}
               >
-                {preview}
+                <div
+                  className="absolute inset-x-0 top-0 flex justify-center"
+                  style={{
+                    transform: previewScale < 1 ? `scale(${previewScale})` : undefined,
+                    transformOrigin: "top center",
+                  }}
+                >
+                  <div
+                    className={cn(
+                      "shrink-0 overflow-hidden transition-[width] duration-300",
+                      previewBorder && "rounded-xl border border-border",
+                    )}
+                    style={{
+                      width: previewFrameWidth,
+                      maxWidth: "none",
+                      padding: previewPadding,
+                    }}
+                  >
+                    <ViewportPreviewFrame
+                      refreshKey={refreshKey}
+                      onHeightChange={setPreviewHeight}
+                    >
+                      {preview}
+                    </ViewportPreviewFrame>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -272,7 +474,12 @@ export function ComponentShowcase({
           frameClassName ?? "h-64",
         )}
       >
-        {bleed ? <div className="absolute inset-0">{preview}</div> : preview}
+        {/* The preview must be the sole child of an element created in this
+            client component: the RSC-deserialized (lazy) preview element
+            loses its static-children validation mark, so rendering it bare
+            inside this multi-child array trips React's missing-"key" warning,
+            blamed on ComponentShowcase. `contents` keeps frame flex layout. */}
+        <div className={bleed ? "absolute inset-0" : "contents"}>{preview}</div>
         {customizable && (
           <div className="pointer-events-none absolute right-2 top-2 z-10">
             <CustomizeBadge />

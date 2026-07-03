@@ -70,14 +70,14 @@ export function PricingSavings({
         <p className="mt-3 text-pretty text-muted">{subheading}</p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 items-start gap-5 lg:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 items-stretch gap-5 pt-3 lg:grid-cols-3">
         {plans.map((plan) => {
           const savings = (plan.monthly - plan.yearly) * 12;
           return (
             <div
               key={plan.name}
-              className={cn(
-                "relative rounded-3xl p-px",
+            className={cn(
+                "relative h-full rounded-3xl p-px",
                 plan.popular
                   ? "bg-gradient-to-b from-brand via-brand-2/50 to-border shadow-[0_30px_80px_-50px_var(--brand)]"
                   : "bg-border",

@@ -57,7 +57,7 @@ export function Pricing({ plans = DEFAULT_PLANS, className }: PricingProps) {
   return (
     <div
       className={cn(
-        "grid grid-cols-1 items-start gap-4 md:grid-cols-3",
+        "grid grid-cols-1 items-stretch gap-4 pt-3 md:grid-cols-3",
         className,
       )}
     >

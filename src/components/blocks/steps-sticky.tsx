@@ -113,12 +113,12 @@ export function StepsSticky({
             <ol className="relative space-y-1">
               <span
                 aria-hidden
-                className="absolute bottom-3 left-4 top-3 w-px -translate-x-1/2 bg-border"
+                className="absolute bottom-3 left-6 top-3 w-px -translate-x-1/2 bg-border"
               />
               <motion.span
                 aria-hidden
                 style={{ scaleY: reduced ? 1 : railScale }}
-                className="absolute bottom-3 left-4 top-3 w-px -translate-x-1/2 origin-top bg-gradient-to-b from-brand via-brand-2 to-brand-3"
+                className="absolute bottom-3 left-6 top-3 w-px -translate-x-1/2 origin-top bg-gradient-to-b from-brand via-brand-2 to-brand-3"
               />
               {steps.map((step, i) => {
                 const reached = i <= active;

@@ -23,6 +23,10 @@ export interface RegistryItem {
    * positioned), so an open dropdown never overlaps the next block in the list.
    */
   previewClassName?: string;
+  /** Extra inset applied around the block-layout preview frame, in pixels. */
+  previewPadding?: number;
+  /** Whether the block-layout preview frame should draw its outer border. */
+  previewBorder?: boolean;
   /** When true the preview fills the frame edge-to-edge (backgrounds). */
   bleed?: boolean;
 }
@@ -50,6 +54,37 @@ export type ControlValue = string | number | boolean;
 /** Map of control `key` -> current value, passed to `PlaygroundSpec.render`. */
 export type PlaygroundValues = Record<string, ControlValue>;
 
+/**
+ * How a control is emitted into the generated "Usage" snippet. By default a
+ * control becomes an attribute named after its `key` with the raw value.
+ */
+export interface ControlCodeMeta {
+  /** Emit the value as the element's children instead of an attribute. */
+  children?: boolean;
+  /** Attribute name when it differs from the control key. */
+  prop?: string;
+  /** Skip the attribute when the value equals this sentinel. */
+  omitWhen?: ControlValue;
+  /** Never emit this control into the snippet. */
+  hidden?: boolean;
+  /**
+   * Map the raw control value to what is emitted: return a string / number /
+   * boolean to be quoted normally, or `{ raw }` for a verbatim attribute value
+   * (e.g. `{["a", "b"]}`).
+   */
+  format?: (value: ControlValue) => ControlValue | { raw: string };
+}
+
+/** Per-spec options for the generated "Usage" snippet. */
+export interface UsageMeta {
+  /** JSX tag name; defaults to the PascalCase of the component id. */
+  name?: string;
+  /** Literal attributes always appended verbatim, e.g. `className="w-80"`. */
+  extra?: string;
+  /** Replace the generated element entirely (the import line is kept). */
+  element?: (values: PlaygroundValues) => string;
+}
+
 interface BaseControl {
   /** Unique key within a spec; conventionally the prop name it maps to. */
   key: string;
@@ -57,6 +92,14 @@ interface BaseControl {
   label: string;
   /** Optional helper text rendered beneath the control. */
   hint?: string;
+  /**
+   * Titled section this control belongs to in the Customize panel (e.g.
+   * "Interaction"). Controls sharing a group cluster under one heading, in
+   * first-appearance order; ungrouped controls render first, untitled.
+   */
+  group?: string;
+  /** Usage-snippet emission overrides for this control. */
+  code?: ControlCodeMeta;
 }
 
 /** A numeric control rendered as a Slider (default) or a NumberInput. */
@@ -127,4 +170,6 @@ export interface PlaygroundSpec {
   render: (values: PlaygroundValues) => ReactNode;
   /** Props documentation rows for the Props tab. */
   props?: readonly PropDoc[];
+  /** Options for the generated live "Usage" snippet. */
+  usage?: UsageMeta;
 }

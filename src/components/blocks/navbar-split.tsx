@@ -66,7 +66,7 @@ export function NavbarSplit({
       )}
     >
       {/* Desktop: three balanced columns */}
-      <div className="hidden items-center px-6 py-4 md:grid md:grid-cols-3">
+      <div className="hidden items-center px-6 py-4 lg:grid lg:grid-cols-3">
         <div className="flex items-center gap-6">
           {leftItems.map((item) => (
             <UnderlineLink key={item.label} {...item} />
@@ -103,7 +103,7 @@ export function NavbarSplit({
       </div>
 
       {/* Mobile: centered brand + toggle */}
-      <div className="flex items-center justify-between px-4 py-3 md:hidden">
+      <div className="flex items-center justify-between px-4 py-3 lg:hidden">
         <button
           type="button"
           aria-label="Toggle menu"
@@ -129,7 +129,7 @@ export function NavbarSplit({
       </div>
 
       {open && (
-        <div className="flex flex-col gap-1 border-t border-border px-4 py-3 md:hidden">
+        <div className="flex flex-col gap-1 border-t border-border px-4 py-3 lg:hidden">
           {allItems.map((item) => (
             <a
               key={item.label}

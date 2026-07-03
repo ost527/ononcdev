@@ -85,7 +85,7 @@ export function NavbarScrollspy({
       role="region"
       aria-label="Scrollspy navbar demo — scroll to track sections"
       className={cn(
-        "relative h-[26rem] overflow-y-auto rounded-2xl border border-border bg-background",
+        "relative h-[26rem] overflow-y-auto rounded-2xl border border-border bg-background [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         className,
       )}
     >
@@ -100,7 +100,7 @@ export function NavbarScrollspy({
             </span>
             {brand}
           </span>
-          <div className="flex flex-1 items-center gap-0.5 overflow-x-auto">
+          <div className="flex flex-1 items-center gap-0.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {sections.map((section, i) => (
               <button
                 key={section.id}
@@ -116,7 +116,7 @@ export function NavbarScrollspy({
                   <motion.span
                     layoutId={`${baseId}-spy`}
                     aria-hidden
-                    className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-brand to-brand-2"
+                    className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-gradient-to-r from-brand to-brand-2"
                     transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}

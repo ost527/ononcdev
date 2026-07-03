@@ -71,7 +71,7 @@ export function PricingSplit({
         </div>
 
         {/* Card */}
-        <div className="relative rounded-3xl bg-gradient-to-b from-brand via-brand-2/50 to-border p-px shadow-[0_30px_80px_-50px_var(--brand)]">
+        <div className="relative mt-3 rounded-3xl bg-gradient-to-b from-brand via-brand-2/50 to-border p-px shadow-[0_30px_80px_-50px_var(--brand)]">
           <span className="absolute -top-3 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white shadow-sm">
             <Sparkles className="size-3.5" />
             Best value

@@ -12,7 +12,6 @@ import { Waves } from "@/components/backgrounds/waves";
 import { FlowingLines } from "@/components/backgrounds/flowing-lines";
 import { SpotlightCursor } from "@/components/backgrounds/spotlight-cursor";
 import { MatrixRain } from "@/components/backgrounds/matrix-rain";
-import { Ripple } from "@/components/backgrounds/ripple";
 import { FlowField } from "@/components/backgrounds/flow-field";
 import { AuroraRibbons } from "@/components/backgrounds/aurora-ribbons";
 import { GridBeams } from "@/components/backgrounds/grid-beams";
@@ -617,15 +616,6 @@ export const backgrounds: Category = {
       tags: ["pointer", "mask"],
       bleed: true,
       preview: <SpotlightCursor className="h-full w-full" />,
-    },
-    {
-      id: "ripple",
-      name: "Ripple",
-      description: "Click anywhere to emit an expanding concentric ring.",
-      sourcePath: "components/backgrounds/ripple.tsx",
-      tags: ["pointer", "interactive"],
-      bleed: true,
-      preview: <Ripple className="h-full w-full" />,
     },
     {
       id: "matrix-rain",

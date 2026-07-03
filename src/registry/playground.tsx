@@ -3,6 +3,25 @@
 import { Alert, type AlertVariant } from "@/components/ui/alert";
 import { Avatar, type AvatarStatus } from "@/components/ui/avatar";
 import { Badge, type BadgeTone, type BadgeVariant } from "@/components/ui/badge";
+import { ChromaCard } from "@/components/ui/chroma-card";
+import {
+  DeviceMockup,
+  type DeviceFrame,
+  type DeviceVariant,
+  type PhoneNotch,
+} from "@/components/ui/device-mockup";
+import { Globe } from "@/components/ui/globe";
+import { InfiniteGallery } from "@/components/ui/infinite-gallery";
+import {
+  Preloader,
+  type PreloaderBackdrop,
+  type PreloaderReveal,
+  type PreloaderVariant,
+} from "@/components/ui/preloader";
+import {
+  SmoothCursor,
+  type SmoothCursorVariant,
+} from "@/components/ui/smooth-cursor";
 import { BlurInText } from "@/components/text/blur-in-text";
 import { BreathingText } from "@/components/text/breathing-text";
 import { ClipDrawText } from "@/components/text/clip-draw-text";
@@ -73,10 +92,70 @@ import { Spinner, type SpinnerSize } from "@/components/ui/spinner";
 import { StatCard } from "@/components/ui/stat-card";
 import { Switch } from "@/components/ui/switch";
 import { AuroraBackground } from "@/components/backgrounds/aurora-background";
+import { AuroraCurtains } from "@/components/backgrounds/aurora-curtains";
+import { AuroraRibbons } from "@/components/backgrounds/aurora-ribbons";
+import { Boids } from "@/components/backgrounds/boids";
+import { Bokeh } from "@/components/backgrounds/bokeh";
+import { Bubbles } from "@/components/backgrounds/bubbles";
+import { Caustics } from "@/components/backgrounds/caustics";
+import { Cells } from "@/components/backgrounds/cells";
+import { ClothFlag } from "@/components/backgrounds/cloth-flag";
+import { Comets } from "@/components/backgrounds/comets";
+import { Confetti } from "@/components/backgrounds/confetti";
+import { DataStream } from "@/components/backgrounds/data-stream";
+import { DnaHelix } from "@/components/backgrounds/dna-helix";
 import { DotMatrix } from "@/components/backgrounds/dot-matrix";
+import { Embers } from "@/components/backgrounds/embers";
+import { Equalizer } from "@/components/backgrounds/equalizer";
+import { Fireflies } from "@/components/backgrounds/fireflies";
+import { Fireworks } from "@/components/backgrounds/fireworks";
+import { FlowField } from "@/components/backgrounds/flow-field";
+import { FlowGrid } from "@/components/backgrounds/flow-grid";
+import { FlowingLines } from "@/components/backgrounds/flowing-lines";
+import { GodRays } from "@/components/backgrounds/god-rays";
+import { GridBeams } from "@/components/backgrounds/grid-beams";
+import { Halftone } from "@/components/backgrounds/halftone";
+import { HexGrid } from "@/components/backgrounds/hex-grid";
+import { InkDrops } from "@/components/backgrounds/ink-drops";
+import { Kaleidoscope } from "@/components/backgrounds/kaleidoscope";
+import { LightBeams } from "@/components/backgrounds/light-beams";
+import { Lightning } from "@/components/backgrounds/lightning";
+import { LiquidBlob } from "@/components/backgrounds/liquid-blob";
+import { MagneticField } from "@/components/backgrounds/magnetic-field";
+import { MatrixRain } from "@/components/backgrounds/matrix-rain";
+import { MeshWave } from "@/components/backgrounds/mesh-wave";
+import { Metaballs } from "@/components/backgrounds/metaballs";
+import { Meteors } from "@/components/backgrounds/meteors";
+import { NeonTunnel } from "@/components/backgrounds/neon-tunnel";
+import { OrbitingDots } from "@/components/backgrounds/orbiting-dots";
+import { Oscilloscope } from "@/components/backgrounds/oscilloscope";
 import { ParticleField } from "@/components/backgrounds/particle-field";
+import { PerlinClouds } from "@/components/backgrounds/perlin-clouds";
+import { Pinwheel } from "@/components/backgrounds/pinwheel";
+import { Plexus } from "@/components/backgrounds/plexus";
+import { PulseRings } from "@/components/backgrounds/pulse-rings";
+import { RadarSweep } from "@/components/backgrounds/radar-sweep";
+import { Rain } from "@/components/backgrounds/rain";
+import { Scanlines } from "@/components/backgrounds/scanlines";
+import { Smoke } from "@/components/backgrounds/smoke";
+import { Snowfall } from "@/components/backgrounds/snowfall";
+import { Sparkles } from "@/components/backgrounds/sparkles";
+import { SpiralGalaxy } from "@/components/backgrounds/spiral-galaxy";
+import { SpotlightCursor } from "@/components/backgrounds/spotlight-cursor";
 import { Starfield } from "@/components/backgrounds/starfield";
-import type { PlaygroundSpec, PlaygroundValues } from "@/registry/types";
+import { TopographicLines } from "@/components/backgrounds/topographic-lines";
+import { Triangles } from "@/components/backgrounds/triangles";
+import { TronTrails } from "@/components/backgrounds/tron-trails";
+import { VoronoiFill } from "@/components/backgrounds/voronoi-fill";
+import { Vortex } from "@/components/backgrounds/vortex";
+import { WarpStars } from "@/components/backgrounds/warp-stars";
+import { WaveInterference } from "@/components/backgrounds/wave-interference";
+import { Waves } from "@/components/backgrounds/waves";
+import type {
+  ControlValue,
+  PlaygroundSpec,
+  PlaygroundValues,
+} from "@/registry/types";
 
 /* Small typed accessors so render functions stay terse. */
 const n = (v: PlaygroundValues, k: string) => Number(v[k]);
@@ -90,6 +169,39 @@ function hexRgb(hex: string): string {
   const int = parseInt(m[1], 16);
   return `${(int >> 16) & 255},${(int >> 8) & 255},${int & 255}`;
 }
+
+/* ------------------- Usage-snippet emission shorthands -------------------
+ * `code` metadata consumed by `buildUsage` (src/lib/playground.ts): how each
+ * control maps into the generated live Usage snippet.
+ */
+
+/** The control value is the element's children, not an attribute. */
+const asChildren = { children: true } as const;
+
+/** Hex color control that the component consumes as an "r,g,b" triplet. */
+const rgb = {
+  format: (value: ControlValue) => hexRgb(String(value)),
+} as const;
+
+const splitList = (value: ControlValue) =>
+  String(value)
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+/** Comma-separated text control emitted as a `string[]` attribute. */
+const list = (prop: string) =>
+  ({
+    prop,
+    format: (value: ControlValue) => ({
+      raw: `{[${splitList(value)
+        .map((part) => JSON.stringify(part))
+        .join(", ")}]}`,
+    }),
+  }) as const;
+
+/** "#rrggbb" -> "r, g, b" for `[number, number, number]` tuple props. */
+const hexTuple = (hex: string) => hexRgb(hex).split(",").join(", ");
 
 const SIZE_OPTIONS = [
   { label: "sm", value: "sm" },
@@ -108,7 +220,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
   /* ----------------------------- Components ----------------------------- */
   badge: {
     controls: [
-      { type: "text", key: "text", label: "Label", default: "Badge" },
+      { type: "text", key: "text", label: "Label", default: "Badge", code: asChildren },
       {
         type: "select",
         key: "variant",
@@ -169,9 +281,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
         ],
       },
       { type: "text", key: "title", label: "Title", default: "Payment received" },
-      { type: "text", key: "body", label: "Body", default: "Your invoice has been paid in full." },
+      { type: "text", key: "body", label: "Body", default: "Your invoice has been paid in full.", code: asChildren },
       { type: "boolean", key: "dismissible", label: "Dismissible", default: true },
     ],
+    usage: { extra: 'className="w-80"' },
     render: (v) => (
       <Alert
         className="w-80"
@@ -209,7 +322,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   switch: {
     controls: [
-      { type: "boolean", key: "checked", label: "Checked", default: true },
+      { type: "boolean", key: "checked", label: "Checked", default: true, code: { prop: "defaultChecked" } },
       { type: "boolean", key: "disabled", label: "Disabled", default: false },
       { type: "text", key: "label", label: "Accessible label", default: "Enable notifications" },
     ],
@@ -232,11 +345,12 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   slider: {
     controls: [
-      { type: "number", key: "value", label: "Default value", min: 0, max: 100, default: 60 },
+      { type: "number", key: "value", label: "Default value", min: 0, max: 100, default: 60, code: { prop: "defaultValue" } },
       { type: "number", key: "min", label: "Min", min: 0, max: 50, default: 0, variant: "stepper" },
       { type: "number", key: "max", label: "Max", min: 50, max: 200, default: 100, variant: "stepper" },
       { type: "number", key: "step", label: "Step", min: 1, max: 25, default: 1, variant: "stepper" },
     ],
+    usage: { extra: 'aria-label="Value" className="w-64"' },
     render: (v) => (
       <Slider
         aria-label="Value"
@@ -281,6 +395,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { type: "text", key: "label", label: "Label", default: "Storage" },
       { type: "boolean", key: "showValue", label: "Show value", default: true },
     ],
+    usage: { extra: 'className="w-72"' },
     render: (v) => (
       <ProgressBar
         className="w-72"
@@ -300,7 +415,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
   rating: {
     controls: [
       { type: "number", key: "max", label: "Max stars", min: 3, max: 10, default: 5, variant: "stepper" },
-      { type: "number", key: "value", label: "Default value", min: 0, max: 10, default: 3, variant: "stepper" },
+      { type: "number", key: "value", label: "Default value", min: 0, max: 10, default: 3, variant: "stepper", code: { prop: "defaultValue" } },
     ],
     render: (v) => <Rating max={n(v, "max")} defaultValue={n(v, "value")} />,
     props: [
@@ -321,6 +436,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
         label: "Status",
         default: "online",
         variant: "select",
+        code: { omitWhen: "none" },
         options: [
           { label: "None", value: "none" },
           { label: "Online", value: "online" },
@@ -363,6 +479,12 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       },
       { type: "text", key: "label", label: "Label (horizontal)", default: "OR" },
     ],
+    usage: {
+      element: (v) =>
+        s(v, "orientation") === "vertical"
+          ? '<Separator orientation="vertical" className="h-12" />'
+          : `<Separator${s(v, "label") ? ` label=${JSON.stringify(s(v, "label"))}` : ""} />`,
+    },
     render: (v) => {
       const orientation = s(v, "orientation") as "horizontal" | "vertical";
       if (orientation === "vertical") {
@@ -395,6 +517,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
         label: "Options (comma-separated)",
         default: "Day, Week, Month",
         hint: "The first option is selected by default.",
+        code: list("options"),
       },
     ],
     render: (v) => {
@@ -421,6 +544,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { type: "number", key: "delta", label: "Delta", min: -100, max: 100, unit: "%", default: 12 },
       { type: "text", key: "hint", label: "Hint", default: "vs last week" },
     ],
+    usage: { extra: "data={[8, 12, 9, 15, 13, 19, 17, 24]}" },
     render: (v) => (
       <StatCard
         label={s(v, "label")}
@@ -442,7 +566,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   kbd: {
     controls: [
-      { type: "text", key: "keys", label: "Keys (comma-separated)", default: "⌘, K" },
+      { type: "text", key: "keys", label: "Keys (comma-separated)", default: "⌘, K", code: list("keys") },
     ],
     render: (v) => {
       const keys = s(v, "keys")
@@ -459,11 +583,12 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "number-input": {
     controls: [
-      { type: "number", key: "value", label: "Default value", min: 0, max: 100, default: 2, variant: "stepper" },
+      { type: "number", key: "value", label: "Default value", min: 0, max: 100, default: 2, variant: "stepper", code: { prop: "defaultValue" } },
       { type: "number", key: "min", label: "Min", min: 0, max: 50, default: 0, variant: "stepper" },
       { type: "number", key: "max", label: "Max", min: 1, max: 100, default: 10, variant: "stepper" },
       { type: "number", key: "step", label: "Step", min: 1, max: 10, default: 1, variant: "stepper" },
     ],
+    usage: { extra: 'aria-label="Quantity"' },
     render: (v) => (
       <NumberInput
         aria-label="Quantity"
@@ -486,9 +611,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
   /* ------------------------------- Text -------------------------------- */
   "gradient-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Gradient text" },
+      { type: "text", key: "text", label: "Text", default: "Gradient text", code: asChildren },
       { type: "number", key: "speed", label: "Speed", min: 2, max: 20, unit: "s", default: 8 },
     ],
+    usage: { extra: 'className="text-4xl font-bold"' },
     render: (v) => (
       <GradientText speed={n(v, "speed")} className="text-4xl font-bold">
         {s(v, "text") || "Gradient text"}
@@ -504,9 +630,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "shiny-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Shiny text" },
+      { type: "text", key: "text", label: "Text", default: "Shiny text", code: asChildren },
       { type: "number", key: "speed", label: "Speed", min: 1, max: 10, unit: "s", default: 3 },
     ],
+    usage: { extra: 'className="text-4xl font-bold"' },
     render: (v) => (
       <ShinyText speed={n(v, "speed")} className="text-4xl font-bold">
         {s(v, "text") || "Shiny text"}
@@ -526,6 +653,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { type: "number", key: "pauseTime", label: "Pause", min: 300, max: 3000, step: 100, unit: "ms", default: 1400 },
       { type: "boolean", key: "loop", label: "Loop", default: true },
     ],
+    usage: {
+      extra:
+        'words={["build interfaces", "ship faster", "delight users"]} className="text-3xl font-semibold"',
+    },
     render: (v) => (
       <Typewriter
         className="text-3xl font-semibold"
@@ -679,7 +810,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "text-reveal": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Wiped into view" },
+      { type: "text", key: "text", label: "Text", default: "Wiped into view", code: asChildren },
       {
         type: "select",
         key: "direction",
@@ -694,6 +825,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       },
       { type: "number", key: "duration", label: "Duration", min: 0.3, max: 2.5, step: 0.1, unit: "s", default: 0.9 },
     ],
+    usage: { extra: 'className="text-4xl font-bold"' },
     render: (v) => (
       <TextReveal
         key={`${s(v, "direction")}:${n(v, "duration")}`}
@@ -720,6 +852,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { type: "text", key: "line2", label: "Line 2", default: "revealed in sequence." },
       { type: "number", key: "stagger", label: "Stagger", min: 0.05, max: 0.5, step: 0.05, unit: "s", default: 0.15 },
     ],
+    usage: {
+      element: (v) =>
+        `<LineReveal\n  lines={[${JSON.stringify(s(v, "line1"))}, ${JSON.stringify(s(v, "line2"))}]}\n  stagger={${n(v, "stagger")}}\n  className="text-4xl font-bold"\n/>`,
+    },
     render: (v) => (
       <LineReveal
         key={n(v, "stagger")}
@@ -739,9 +875,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "tracking-in": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Tracking in" },
+      { type: "text", key: "text", label: "Text", default: "Tracking in", code: asChildren },
       { type: "number", key: "duration", label: "Duration", min: 0.4, max: 3, step: 0.1, unit: "s", default: 1 },
     ],
+    usage: { extra: 'className="text-4xl font-bold"' },
     render: (v) => (
       <TrackingIn key={n(v, "duration")} duration={n(v, "duration")} className="text-4xl font-bold">
         {s(v, "text") || "Tracking in"}
@@ -807,7 +944,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "rotating-text": {
     controls: [
-      { type: "text", key: "words", label: "Words (comma-separated)", default: "designers, developers, founders" },
+      { type: "text", key: "words", label: "Words (comma-separated)", default: "designers, developers, founders", code: list("words") },
       { type: "number", key: "interval", label: "Interval", min: 800, max: 4000, step: 100, unit: "ms", default: 2200 },
     ],
     render: (v) => {
@@ -867,7 +1004,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "focus-text": {
     controls: [
-      { type: "text", key: "words", label: "Words (comma-separated)", default: "Design, Build, Ship, Repeat" },
+      { type: "text", key: "words", label: "Words (comma-separated)", default: "Design, Build, Ship, Repeat", code: list("words") },
       { type: "number", key: "interval", label: "Interval", min: 600, max: 3000, step: 100, unit: "ms", default: 1500 },
     ],
     render: (v) => {
@@ -926,7 +1063,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "highlight-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "highlight" },
+      { type: "text", key: "text", label: "Text", default: "highlight", code: asChildren },
       { type: "color", key: "color", label: "Marker color", default: "#c4b5fd" },
       { type: "number", key: "delay", label: "Delay", min: 0, max: 2, step: 0.1, unit: "s", default: 0.1 },
     ],
@@ -948,8 +1085,9 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "gradient-underline": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Hover this link" },
+      { type: "text", key: "text", label: "Text", default: "Hover this link", code: asChildren },
     ],
+    usage: { extra: 'href="#" className="text-3xl"' },
     render: (v) => (
       <GradientUnderline href="#" className="text-3xl">
         {s(v, "text") || "Hover this link"}
@@ -999,7 +1137,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "underline-draw": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "important" },
+      { type: "text", key: "text", label: "Text", default: "important", code: asChildren },
       { type: "number", key: "duration", label: "Duration", min: 0.3, max: 2.5, step: 0.1, unit: "s", default: 0.8 },
     ],
     render: (v) => (
@@ -1045,9 +1183,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "holographic-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "HOLOGRAM" },
+      { type: "text", key: "text", label: "Text", default: "HOLOGRAM", code: asChildren },
       { type: "number", key: "speed", label: "Speed", min: 1, max: 10, step: 0.5, unit: "s", default: 3.5 },
     ],
+    usage: { extra: 'className="text-5xl font-bold"' },
     render: (v) => (
       <HolographicText key={n(v, "speed")} speed={n(v, "speed")} className="text-5xl font-bold">
         {s(v, "text") || "HOLOGRAM"}
@@ -1062,9 +1201,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "shadow-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "SHADOW" },
+      { type: "text", key: "text", label: "Text", default: "SHADOW", code: asChildren },
       { type: "color", key: "color", label: "Glow color", default: "#8b5cf6" },
     ],
+    usage: { extra: 'className="text-5xl font-bold"' },
     render: (v) => (
       <ShadowText key={s(v, "color")} color={s(v, "color")} className="text-5xl font-bold">
         {s(v, "text") || "SHADOW"}
@@ -1079,10 +1219,11 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "breathing-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Breathe" },
+      { type: "text", key: "text", label: "Text", default: "Breathe", code: asChildren },
       { type: "number", key: "duration", label: "Duration", min: 1, max: 8, step: 0.5, unit: "s", default: 4 },
       { type: "number", key: "scale", label: "Scale", min: 1.01, max: 1.2, step: 0.01, default: 1.04 },
     ],
+    usage: { extra: 'className="text-5xl font-bold"' },
     render: (v) => (
       <BreathingText
         key={n(v, "duration") + ":" + n(v, "scale")}
@@ -1123,10 +1264,11 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "glow-pulse-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Pulse" },
+      { type: "text", key: "text", label: "Text", default: "Pulse", code: asChildren },
       { type: "color", key: "color", label: "Glow color", default: "#8b5cf6" },
       { type: "number", key: "duration", label: "Duration", min: 1, max: 5, step: 0.2, unit: "s", default: 2.2 },
     ],
+    usage: { extra: 'className="text-5xl font-bold"' },
     render: (v) => (
       <GlowPulseText
         key={s(v, "color") + ":" + n(v, "duration")}
@@ -1147,7 +1289,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "ticker-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Breaking - UPDATES - rolling - continuously -" },
+      { type: "text", key: "text", label: "Text", default: "Breaking - UPDATES - rolling - continuously -", code: asChildren },
       { type: "number", key: "speed", label: "Speed", min: 6, max: 40, step: 2, unit: "s", default: 18 },
       {
         type: "select",
@@ -1161,6 +1303,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       },
       { type: "boolean", key: "pauseOnHover", label: "Pause on hover", default: true },
     ],
+    usage: { extra: 'className="w-full text-3xl font-semibold"' },
     render: (v) => (
       <TickerText
         key={n(v, "speed") + ":" + s(v, "direction") + ":" + bool(v, "pauseOnHover")}
@@ -1189,6 +1332,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { type: "color", key: "colorA", label: "Color 1", default: "#8b5cf6" },
       { type: "color", key: "colorB", label: "Color 2", default: "#22d3ee" },
     ],
+    usage: {
+      element: (v) =>
+        `<StripedText\n  colors={[${JSON.stringify(s(v, "colorA"))}, ${JSON.stringify(s(v, "colorB"))}]}\n  angle={${n(v, "angle")}}\n  speed={${n(v, "speed")}}\n  className="text-5xl font-bold"\n>\n  ${s(v, "text")}\n</StripedText>`,
+    },
     render: (v) => (
       <StripedText
         key={n(v, "angle") + ":" + n(v, "speed") + ":" + s(v, "colorA") + ":" + s(v, "colorB")}
@@ -1323,7 +1470,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "morphing-text": {
     controls: [
-      { type: "text", key: "words", label: "Words (comma-separated)", default: "fluid, smooth, elegant" },
+      { type: "text", key: "words", label: "Words (comma-separated)", default: "fluid, smooth, elegant", code: list("words") },
       { type: "number", key: "interval", label: "Interval", min: 1000, max: 5000, step: 200, unit: "ms", default: 2600 },
     ],
     render: (v) => {
@@ -1349,7 +1496,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "split-flap": {
     controls: [
-      { type: "text", key: "words", label: "Words (comma-separated)", default: "DEPARTING, ARRIVING, BOARDING" },
+      { type: "text", key: "words", label: "Words (comma-separated)", default: "DEPARTING, ARRIVING, BOARDING", code: list("words") },
       { type: "number", key: "interval", label: "Interval", min: 1200, max: 5000, step: 200, unit: "ms", default: 2800 },
     ],
     render: (v) => {
@@ -1487,10 +1634,11 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 
   "pulse-wave-text": {
     controls: [
-      { type: "text", key: "text", label: "Text", default: "Wave passing through" },
+      { type: "text", key: "text", label: "Text", default: "Wave passing through", code: asChildren },
       { type: "color", key: "color", label: "Wave color", default: "#22d3ee" },
       { type: "number", key: "duration", label: "Duration", min: 1, max: 6, step: 0.2, unit: "s", default: 3 },
     ],
+    usage: { extra: 'className="text-4xl font-bold text-muted"' },
     render: (v) => (
       <PulseWaveText
         key={s(v, "color") + ":" + n(v, "duration")}
@@ -1800,7 +1948,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
     controls: [
       { type: "number", key: "density", label: "Density", min: 2, max: 24, default: 9 },
       { type: "number", key: "linkDistance", label: "Link distance", min: 60, max: 220, unit: "px", default: 130 },
-      { type: "color", key: "color", label: "Color", default: "#8ba0ff" },
+      { type: "color", key: "color", label: "Color", default: "#8ba0ff", code: rgb },
     ],
     render: (v) => (
       <ParticleField
@@ -1824,7 +1972,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { type: "number", key: "gap", label: "Gap", min: 14, max: 60, unit: "px", default: 28 },
       { type: "number", key: "dotRadius", label: "Dot radius", min: 0.5, max: 4, step: 0.1, unit: "px", default: 1.3 },
       { type: "number", key: "reach", label: "Cursor reach", min: 60, max: 260, unit: "px", default: 130 },
-      { type: "color", key: "color", label: "Color", default: "#96aaff" },
+      { type: "color", key: "color", label: "Color", default: "#96aaff", code: rgb },
     ],
     render: (v) => (
       <DotMatrix
@@ -1847,7 +1995,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
   starfield: {
     controls: [
       { type: "number", key: "density", label: "Density", min: 4, max: 40, default: 14 },
-      { type: "color", key: "color", label: "Color", default: "#d2dcff" },
+      { type: "color", key: "color", label: "Color", default: "#d2dcff", code: rgb },
     ],
     render: (v) => (
       <Starfield
@@ -1871,6 +2019,10 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { type: "color", key: "colorB", label: "Color 2", default: "#22d3ee" },
       { type: "color", key: "colorC", label: "Color 3", default: "#fb7185" },
     ],
+    usage: {
+      element: (v) =>
+        `<AuroraBackground\n  blur={${n(v, "blur")}}\n  colors={[${JSON.stringify(s(v, "colorA"))}, ${JSON.stringify(s(v, "colorB"))}, ${JSON.stringify(s(v, "colorC"))}]}\n  className="h-full w-full"\n/>`,
+    },
     render: (v) => (
       <AuroraBackground
         className="h-full w-full"
@@ -1883,6 +2035,1189 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { name: "blur", type: "number", default: "80", description: "Strength of the blur halo in pixels." },
       { name: "children", type: "ReactNode", description: "Content layered above the halos." },
       { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  "flow-field": {
+    controls: [
+      { type: "number", key: "density", label: "Density", min: 2, max: 24, default: 9 },
+    ],
+    render: (v) => (
+      <FlowField density={n(v, "density")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "density", type: "number", default: "9", description: "Approx. particles per 100k px² (capped)." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Trail colors as r,g,b (cycled per particle)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  "aurora-ribbons": {
+    controls: [
+      { type: "color", key: "colorA", label: "Color 1", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<AuroraRibbons colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <AuroraRibbons colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Ribbon colors as r,g,b (back to front)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  "warp-stars": {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 40, max: 400, step: 20, default: 120 },
+      { type: "color", key: "color", label: "Color", default: "#d2dcff", code: rgb },
+    ],
+    render: (v) => (
+      <WarpStars count={n(v, "count")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "120", description: "Number of stars." },
+      { name: "color", type: "string", default: '"210,220,255"', description: "Star color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  vortex: {
+    controls: [
+      { type: "number", key: "count", label: "Particles", min: 20, max: 200, step: 10, default: 80 },
+    ],
+    render: (v) => (
+      <Vortex count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "80", description: "Number of orbiting particles." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  "grid-beams": {
+    controls: [
+      { type: "number", key: "size", label: "Cell size", min: 30, max: 120, step: 5, unit: "px", default: 65 },
+    ],
+    render: (v) => (
+      <GridBeams size={n(v, "size")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "size", type: "number", default: "65", description: "Grid cell size in pixels." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  "hex-grid": {
+    controls: [
+      { type: "number", key: "size", label: "Radius", min: 12, max: 48, step: 2, unit: "px", default: 24 },
+      { type: "color", key: "color", label: "Color", default: "#8ba0ff", code: rgb },
+    ],
+    render: (v) => (
+      <HexGrid size={n(v, "size")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "size", type: "number", default: "24", description: "Hexagon radius in pixels." },
+      { name: "color", type: "string", default: '"139,160,255"', description: "Cell color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  embers: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 10, max: 120, step: 5, default: 50 },
+    ],
+    render: (v) => (
+      <Embers count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "50", description: "Number of embers." },
+      { name: "colors", type: "string[]", default: "warm tones", description: "Ember colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  fireflies: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 8, max: 80, step: 4, default: 30 },
+    ],
+    render: (v) => (
+      <Fireflies count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "30", description: "Number of fireflies." },
+      { name: "colors", type: "string[]", default: "warm glow", description: "Firefly colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  bokeh: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 4, max: 30, step: 2, default: 12 },
+    ],
+    render: (v) => (
+      <Bokeh count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "12", description: "Number of orbs." },
+      { name: "colors", type: "string[]", default: "brand tones", description: "Orb colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  snowfall: {
+    controls: [
+      { type: "number", key: "density", label: "Density", min: 2, max: 30, default: 12 },
+    ],
+    render: (v) => (
+      <Snowfall density={n(v, "density")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "density", type: "number", default: "12", description: "Approx. flakes per 100k px² (capped)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  rain: {
+    controls: [
+      { type: "number", key: "density", label: "Density", min: 4, max: 40, default: 18 },
+      { type: "color", key: "color", label: "Color", default: "#a5cfff", code: rgb },
+    ],
+    render: (v) => (
+      <Rain density={n(v, "density")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "density", type: "number", default: "18", description: "Approx. drops per 100k px² (capped)." },
+      { name: "color", type: "string", default: '"165,207,255"', description: "Streak color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "spiral-galaxy": {
+    controls: [
+      { type: "number", key: "count", label: "Particles", min: 100, max: 800, step: 50, default: 300 },
+    ],
+    render: (v) => (
+      <SpiralGalaxy count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "300", description: "Number of particles." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  metaballs: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 3, max: 20, step: 1, default: 8 },
+    ],
+    render: (v) => (
+      <Metaballs count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "8", description: "Number of metaballs." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Ball colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  sparkles: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 10, max: 120, step: 5, default: 50 },
+    ],
+    render: (v) => (
+      <Sparkles count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "50", description: "Number of sparkles." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Sparkle colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  confetti: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 10, max: 100, step: 5, default: 40 },
+    ],
+    render: (v) => (
+      <Confetti count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "40", description: "Number of confetti pieces." },
+      { name: "colors", type: "string[]", default: "rainbow", description: "Piece colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  comets: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 2, max: 20, step: 1, default: 8 },
+    ],
+    render: (v) => (
+      <Comets count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "8", description: "Number of comets." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Comet colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  fireworks: {
+    controls: [
+      { type: "color", key: "colorA", label: "Color 1", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<Fireworks colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Fireworks colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Spark colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "matrix-rain": {
+    controls: [
+      { type: "number", key: "fontSize", label: "Font size", min: 10, max: 28, step: 2, unit: "px", default: 14 },
+      { type: "color", key: "color", label: "Color", default: "#22d3ee", code: rgb },
+    ],
+    render: (v) => (
+      <MatrixRain fontSize={n(v, "fontSize")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "fontSize", type: "number", default: "14", description: "Font size (px) — also the column width." },
+      { name: "color", type: "string", default: '"34,211,238"', description: "Glyph color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "god-rays": {
+    controls: [
+      { type: "number", key: "rays", label: "Rays", min: 2, max: 16, step: 1, default: 7 },
+      { type: "color", key: "color", label: "Color", default: "#ffe8a0", code: rgb },
+    ],
+    render: (v) => (
+      <GodRays rays={n(v, "rays")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "rays", type: "number", default: "7", description: "Number of light shafts." },
+      { name: "color", type: "string", default: '"255,232,160"', description: "Ray color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "neon-tunnel": {
+    controls: [
+      { type: "number", key: "layers", label: "Layers", min: 3, max: 20, step: 1, default: 10 },
+      { type: "color", key: "from", label: "Inner color", default: "#8b5cf6" },
+      { type: "color", key: "to", label: "Outer color", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<NeonTunnel layers={${n(v, "layers")}} from={[${hexTuple(s(v, "from"))}]} to={[${hexTuple(s(v, "to"))}]} className="h-full w-full" />`,
+    },
+    render: (v) => {
+      const fb = s(v, "from").replace("#", ""); const tb = s(v, "to").replace("#", "");
+      return <NeonTunnel layers={n(v, "layers")} from={[parseInt(fb.slice(0,2),16),parseInt(fb.slice(2,4),16),parseInt(fb.slice(4,6),16)]} to={[parseInt(tb.slice(0,2),16),parseInt(tb.slice(2,4),16),parseInt(tb.slice(4,6),16)]} className="h-full w-full" />;
+    },
+    props: [
+      { name: "layers", type: "number", default: "10", description: "Number of concentric layers." },
+      { name: "from", type: "[number, number, number]", default: "brand violet", description: "Inner color as [r,g,b]." },
+      { name: "to", type: "[number, number, number]", default: "brand cyan", description: "Outer color as [r,g,b]." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "mesh-wave": {
+    controls: [
+      { type: "number", key: "cols", label: "Cols", min: 6, max: 40, step: 2, default: 16 },
+      { type: "number", key: "rows", label: "Rows", min: 6, max: 30, step: 2, default: 14 },
+      { type: "color", key: "color", label: "Color", default: "#a0a8ff", code: rgb },
+    ],
+    render: (v) => (
+      <MeshWave cols={n(v, "cols")} rows={n(v, "rows")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "cols", type: "number", default: "16", description: "Grid columns." },
+      { name: "rows", type: "number", default: "14", description: "Grid rows." },
+      { name: "color", type: "string", default: '"160,168,255"', description: "Line color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  bubbles: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 4, max: 30, step: 2, default: 14 },
+      { type: "color", key: "color", label: "Color", default: "#a0c8ff", code: rgb },
+    ],
+    render: (v) => (
+      <Bubbles count={n(v, "count")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "14", description: "Number of bubbles." },
+      { name: "color", type: "string", default: '"160,200,255"', description: "Bubble color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "liquid-blob": {
+    controls: [
+      { type: "color", key: "colorA", label: "Color 1", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<LiquidBlob colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <LiquidBlob colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "colors", type: "[string, string]", default: "['139,92,246','34,211,238']", description: "The two blob colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  meteors: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 4, max: 30, step: 2, default: 14 },
+    ],
+    render: (v) => (
+      <Meteors count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "14", description: "Number of meteors." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "light-beams": {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 3, max: 20, step: 1, default: 9 },
+    ],
+    render: (v) => (
+      <LightBeams count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "9", description: "Number of beams." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "pulse-rings": {
+    controls: [
+      { type: "number", key: "rings", label: "Rings", min: 2, max: 12, step: 1, default: 5 },
+    ],
+    render: (v) => (
+      <PulseRings rings={n(v, "rings")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "rings", type: "number", default: "5", description: "Number of concentric rings in flight." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "spotlight-cursor": {
+    controls: [
+      { type: "number", key: "radius", label: "Radius", min: 60, max: 400, step: 20, unit: "px", default: 180 },
+    ],
+    render: (v) => (
+      <SpotlightCursor radius={n(v, "radius")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "radius", type: "number", default: "180", description: "Spotlight radius in pixels." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  waves: {
+    controls: [
+      { type: "color", key: "colorA", label: "Color 1", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<Waves colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Waves colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Wave layer colors as r,g,b (back to front)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "topographic-lines": {
+    controls: [
+      { type: "number", key: "gap", label: "Gap", min: 10, max: 60, step: 2, unit: "px", default: 28 },
+      { type: "color", key: "color", label: "Line color", default: "#8ba0ff", code: rgb },
+      { type: "color", key: "accent", label: "Accent color", default: "#c4b5fd", code: rgb },
+    ],
+    render: (v) => (
+      <TopographicLines gap={n(v, "gap")} color={hexRgb(s(v, "color"))} accent={hexRgb(s(v, "accent"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "gap", type: "number", default: "28", description: "Vertical gap between contour lines in pixels." },
+      { name: "color", type: "string", default: '"139,160,255"', description: "Line color as r,g,b." },
+      { name: "accent", type: "string", default: '"196,181,253"', description: "Accent color (every 5th line) as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "wave-interference": {
+    controls: [
+      { type: "number", key: "gap", label: "Gap", min: 10, max: 50, step: 2, unit: "px", default: 24 },
+      { type: "color", key: "color", label: "Dot color", default: "#8ba0ff", code: rgb },
+    ],
+    render: (v) => (
+      <WaveInterference gap={n(v, "gap")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "gap", type: "number", default: "24", description: "Dot grid spacing in pixels." },
+      { name: "color", type: "string", default: '"139,160,255"', description: "Dot color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "orbiting-dots": {
+    controls: [
+      { type: "color", key: "colorA", label: "Color 1", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<OrbitingDots colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <OrbitingDots colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Orbit colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "dna-helix": {
+    controls: [
+      { type: "color", key: "colorA", label: "Strand 1", default: "#8b7cff" },
+      { type: "color", key: "colorB", label: "Strand 2", default: "#5eeaff" },
+    ],
+    usage: {
+      element: (v) =>
+        `<DnaHelix colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <DnaHelix colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "colors", type: "[string, string]", default: "['139,124,255','94,234,255']", description: "The two strand colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "radar-sweep": {
+    controls: [
+      { type: "color", key: "color", label: "Sweep color", default: "#22d3ee", code: rgb },
+    ],
+    render: (v) => (
+      <RadarSweep color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "color", type: "string", default: '"34,211,238"', description: "Sweep color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  halftone: {
+    controls: [
+      { type: "number", key: "gap", label: "Gap", min: 6, max: 40, step: 2, unit: "px", default: 16 },
+      { type: "color", key: "color", label: "Dot color", default: "#8ba0ff", code: rgb },
+    ],
+    render: (v) => (
+      <Halftone gap={n(v, "gap")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "gap", type: "number", default: "16", description: "Dot grid spacing in pixels." },
+      { name: "color", type: "string", default: '"139,160,255"', description: "Dot color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  lightning: {
+    controls: [
+      { type: "color", key: "color", label: "Bolt color", default: "#c4b5fd", code: rgb },
+    ],
+    render: (v) => (
+      <Lightning color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "color", type: "string", default: '"196,181,253"', description: "Bolt glow color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  cells: {
+    controls: [
+      { type: "number", key: "seeds", label: "Seeds", min: 6, max: 40, step: 2, default: 15 },
+    ],
+    render: (v) => (
+      <Cells seeds={n(v, "seeds")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "seeds", type: "number", default: "15", description: "Number of Voronoi seeds." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Cell colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  equalizer: {
+    controls: [
+      { type: "number", key: "barWidth", label: "Bar width", min: 10, max: 50, step: 2, unit: "px", default: 24 },
+      { type: "color", key: "colorA", label: "Top color", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Bottom color", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<Equalizer barWidth={${n(v, "barWidth")}} colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Equalizer barWidth={n(v, "barWidth")} colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "barWidth", type: "number", default: "24", description: "Approximate bar width (incl. gap) in pixels." },
+      { name: "colors", type: "[string, string]", default: "brand spectrum", description: "Top and bottom gradient colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  smoke: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 2, max: 16, step: 1, default: 6 },
+      { type: "color", key: "color", label: "Fog color", default: "#c4b5fd", code: rgb },
+    ],
+    render: (v) => (
+      <Smoke count={n(v, "count")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "6", description: "Number of smoke puffs." },
+      { name: "color", type: "string", default: '"196,181,253"', description: "Fog color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  caustics: {
+    controls: [
+      { type: "number", key: "step", label: "Step", min: 4, max: 24, step: 1, unit: "px", default: 10 },
+      { type: "color", key: "color", label: "Color", default: "#8ba0ff", code: rgb },
+    ],
+    render: (v) => (
+      <Caustics step={n(v, "step")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "step", type: "number", default: "10", description: "Grid step in pixels (smaller = finer, heavier)." },
+      { name: "color", type: "string", default: '"139,160,255"', description: "Light color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "magnetic-field": {
+    controls: [
+      { type: "number", key: "lines", label: "Lines", min: 4, max: 30, step: 2, default: 14 },
+      { type: "color", key: "color", label: "Color", default: "#8b5cf6", code: rgb },
+    ],
+    render: (v) => (
+      <MagneticField lines={n(v, "lines")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "lines", type: "number", default: "14", description: "Number of field lines traced from the + pole." },
+      { name: "color", type: "string", default: '"139,92,246"', description: "Field-line color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  triangles: {
+    controls: [
+      { type: "number", key: "size", label: "Cell size", min: 30, max: 120, step: 5, unit: "px", default: 60 },
+    ],
+    render: (v) => (
+      <Triangles size={n(v, "size")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "size", type: "number", default: "60", description: "Cell size in pixels." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Triangle colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  kaleidoscope: {
+    controls: [
+      { type: "number", key: "segments", label: "Segments", min: 4, max: 20, step: 1, default: 8 },
+    ],
+    render: (v) => (
+      <Kaleidoscope segments={n(v, "segments")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "segments", type: "number", default: "8", description: "Number of mirrored segments." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Petal colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "tron-trails": {
+    controls: [
+      { type: "number", key: "heads", label: "Heads", min: 2, max: 20, step: 1, default: 8 },
+      { type: "number", key: "cell", label: "Cell", min: 20, max: 80, step: 5, unit: "px", default: 40 },
+    ],
+    render: (v) => (
+      <TronTrails heads={n(v, "heads")} cell={n(v, "cell")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "heads", type: "number", default: "8", description: "Number of moving heads." },
+      { name: "cell", type: "number", default: "40", description: "Grid cell size in pixels." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Trail colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  oscilloscope: {
+    controls: [
+      { type: "color", key: "colorA", label: "Wave 1", default: "#22d3ee" },
+      { type: "color", key: "colorB", label: "Wave 2", default: "#8b5cf6" },
+    ],
+    usage: {
+      element: (v) =>
+        `<Oscilloscope colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Oscilloscope colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Waveform colors as r,g,b (one line each)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  pinwheel: {
+    controls: [
+      { type: "number", key: "sectors", label: "Sectors", min: 3, max: 18, step: 1, default: 8 },
+    ],
+    render: (v) => (
+      <Pinwheel sectors={n(v, "sectors")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "sectors", type: "number", default: "8", description: "Number of sectors (blades)." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Blade colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  plexus: {
+    controls: [
+      { type: "number", key: "density", label: "Density", min: 4, max: 30, default: 12 },
+      { type: "color", key: "color", label: "Color", default: "#8ba0ff", code: rgb },
+    ],
+    render: (v) => (
+      <Plexus density={n(v, "density")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "density", type: "number", default: "12", description: "Approx. nodes per 100k px² (capped)." },
+      { name: "color", type: "string", default: '"139,160,255"', description: "Node + line color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "perlin-clouds": {
+    controls: [
+      { type: "number", key: "step", label: "Step", min: 3, max: 20, step: 1, unit: "px", default: 8 },
+      { type: "color", key: "color", label: "Cloud color", default: "#8b5cf6", code: rgb },
+    ],
+    render: (v) => (
+      <PerlinClouds step={n(v, "step")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "step", type: "number", default: "8", description: "Grid step in pixels." },
+      { name: "color", type: "string", default: '"139,92,246"', description: "Cloud color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "ink-drops": {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 2, max: 16, step: 1, default: 7 },
+    ],
+    render: (v) => (
+      <InkDrops count={n(v, "count")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "7", description: "Number of ink drops." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Drop colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "data-stream": {
+    controls: [
+      { type: "number", key: "gap", label: "Gap", min: 16, max: 60, step: 2, unit: "px", default: 32 },
+    ],
+    render: (v) => (
+      <DataStream gap={n(v, "gap")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "gap", type: "number", default: "32", description: "Lane spacing in pixels." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Lane colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  scanlines: {
+    controls: [
+      { type: "number", key: "bands", label: "Bands", min: 2, max: 16, step: 1, default: 6 },
+    ],
+    render: (v) => (
+      <Scanlines bands={n(v, "bands")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "bands", type: "number", default: "6", description: "Number of glitch bands." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  boids: {
+    controls: [
+      { type: "number", key: "count", label: "Count", min: 10, max: 120, step: 5, default: 50 },
+      { type: "color", key: "color", label: "Color", default: "#8ba0ff", code: rgb },
+    ],
+    render: (v) => (
+      <Boids count={n(v, "count")} color={hexRgb(s(v, "color"))} className="h-full w-full" />
+    ),
+    props: [
+      { name: "count", type: "number", default: "50", description: "Number of boids." },
+      { name: "color", type: "string", default: '"139,160,255"', description: "Boid color as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "aurora-curtains": {
+    controls: [
+      { type: "color", key: "colorA", label: "Color 1", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<AuroraCurtains colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <AuroraCurtains colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]} className="h-full w-full" />
+    ),
+    props: [
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Curtain colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "cloth-flag": {
+    controls: [
+      { type: "number", key: "cols", label: "Cols", min: 20, max: 100, step: 5, default: 50 },
+      { type: "number", key: "rows", label: "Rows", min: 20, max: 80, step: 5, default: 40 },
+      { type: "color", key: "from", label: "Left color", default: "#8b5cf6" },
+      { type: "color", key: "to", label: "Right color", default: "#22d3ee" },
+    ],
+    usage: {
+      element: (v) =>
+        `<ClothFlag cols={${n(v, "cols")}} rows={${n(v, "rows")}} from={[${hexTuple(s(v, "from"))}]} to={[${hexTuple(s(v, "to"))}]} className="h-full w-full" />`,
+    },
+    render: (v) => {
+      const fb = s(v, "from").replace("#", ""); const tb = s(v, "to").replace("#", "");
+      return <ClothFlag cols={n(v, "cols")} rows={n(v, "rows")} from={[parseInt(fb.slice(0,2),16),parseInt(fb.slice(2,4),16),parseInt(fb.slice(4,6),16)]} to={[parseInt(tb.slice(0,2),16),parseInt(tb.slice(2,4),16),parseInt(tb.slice(4,6),16)]} className="h-full w-full" />;
+    },
+    props: [
+      { name: "cols", type: "number", default: "50", description: "Grid columns." },
+      { name: "rows", type: "number", default: "40", description: "Grid rows." },
+      { name: "from", type: "[number, number, number]", default: "brand violet", description: "Left edge color as [r,g,b]." },
+      { name: "to", type: "[number, number, number]", default: "brand cyan", description: "Right edge color as [r,g,b]." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "voronoi-fill": {
+    controls: [
+      { type: "number", key: "seeds", label: "Seeds", min: 6, max: 40, step: 2, default: 17 },
+      { type: "number", key: "step", label: "Step", min: 4, max: 20, step: 1, unit: "px", default: 8 },
+    ],
+    render: (v) => (
+      <VoronoiFill seeds={n(v, "seeds")} step={n(v, "step")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "seeds", type: "number", default: "17", description: "Number of Voronoi seeds." },
+      { name: "step", type: "number", default: "8", description: "Grid step in pixels." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Cell colors as r,g,b." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "flow-grid": {
+    controls: [
+      { type: "number", key: "size", label: "Cell size", min: 30, max: 120, step: 5, unit: "px", default: 56 },
+      { type: "color", key: "lineColor", label: "Line color", default: "#8b5cf6" },
+    ],
+    render: (v) => (
+      <FlowGrid size={n(v, "size")} lineColor={s(v, "lineColor")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "size", type: "number", default: "56", description: "Grid cell size in pixels." },
+      { name: "lineColor", type: "string", default: "brand violet", description: "Line color (CSS color string)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  "flowing-lines": {
+    controls: [
+      { type: "number", key: "lines", label: "Lines", min: 4, max: 40, step: 2, default: 16 },
+    ],
+    render: (v) => (
+      <FlowingLines lines={n(v, "lines")} className="h-full w-full" />
+    ),
+    props: [
+      { name: "lines", type: "number", default: "16", description: "Number of flowing lines." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Line colors as r,g,b (cycled)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+    ],
+  },
+
+  /* ---------------------- Interactive showcase (ui) ---------------------- */
+
+  "chroma-card": {
+    controls: [
+      { type: "number", key: "sheen", label: "Sheen strength", group: "Effect", min: 0, max: 1, step: 0.05, default: 0.55 },
+      { type: "number", key: "hueRange", label: "Hue travel", group: "Effect", min: 0, max: 360, step: 10, unit: "°", default: 220, hint: "How far the sheen hue shifts across the card." },
+      { type: "number", key: "rgbShift", label: "RGB shift", group: "Effect", min: 0, max: 14, step: 1, unit: "px", default: 5 },
+      { type: "boolean", key: "glare", label: "Specular glare", group: "Effect", default: true },
+      { type: "number", key: "tilt", label: "Tilt", group: "Interaction", min: 0, max: 25, step: 1, unit: "°", default: 10 },
+      { type: "number", key: "scale", label: "Hover scale", group: "Interaction", min: 1, max: 1.15, step: 0.01, default: 1.03 },
+      { type: "number", key: "duration", label: "Settle duration", group: "Interaction", min: 0.1, max: 1.5, step: 0.1, unit: "s", default: 0.5 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Card", min: 0, max: 36, step: 2, unit: "px", default: 20 },
+      { type: "boolean", key: "glow", label: "Drop glow", group: "Card", default: true },
+      { type: "color", key: "glowColor", label: "Glow color", group: "Card", default: "#8b5cf6" },
+    ],
+    usage: {
+      element: (v) =>
+        `<ChromaCard tilt={${n(v, "tilt")}} scale={${n(v, "scale")}} rgbShift={${n(v, "rgbShift")}} sheen={${n(v, "sheen")}} hueRange={${n(v, "hueRange")}} radius={${n(v, "radius")}} glare={${bool(v, "glare")}} glow={${bool(v, "glow")}} glowColor="${s(v, "glowColor")}" duration={${n(v, "duration")}} className="w-72 p-6">
+  Your card content
+</ChromaCard>`,
+    },
+    render: (v) => (
+      <ChromaCard
+        tilt={n(v, "tilt")}
+        scale={n(v, "scale")}
+        rgbShift={n(v, "rgbShift")}
+        sheen={n(v, "sheen")}
+        hueRange={n(v, "hueRange")}
+        radius={n(v, "radius")}
+        glare={bool(v, "glare")}
+        glow={bool(v, "glow")}
+        glowColor={s(v, "glowColor")}
+        duration={n(v, "duration")}
+        className="w-72 p-6"
+      >
+        <p className="text-xs font-medium uppercase tracking-widest text-muted-2">
+          Holo pass
+        </p>
+        <h3 className="mt-2 text-xl font-semibold">Aurora Nine</h3>
+        <p className="mt-1 text-sm text-muted">
+          Tilt me — the sheen shifts hue with the pointer.
+        </p>
+        <div className="mt-5 flex items-center justify-between text-xs text-muted-2">
+          <span className="font-mono">#0042</span>
+          <span className="rounded-full bg-brand/15 px-2 py-0.5 font-medium text-brand-ink">
+            Rare
+          </span>
+        </div>
+      </ChromaCard>
+    ),
+    props: [
+      { name: "tilt", type: "number", default: "10", description: "Max tilt toward the pointer, in degrees." },
+      { name: "scale", type: "number", default: "1.03", description: "Scale applied while hovered." },
+      { name: "rgbShift", type: "number", default: "5", description: "Chromatic red/cyan fringe offset on hover, in pixels." },
+      { name: "sheen", type: "number", default: "0.55", description: "Holographic sheen strength (0–1)." },
+      { name: "hueRange", type: "number", default: "220", description: "How far the sheen hue travels with the pointer, in degrees." },
+      { name: "radius", type: "number", default: "20", description: "Corner radius in pixels." },
+      { name: "glare", type: "boolean", default: "true", description: "Pointer-tracking specular highlight." },
+      { name: "glow", type: "boolean", default: "true", description: "Soft colored drop glow beneath the card while hovered." },
+      { name: "glowColor", type: "string", default: '"var(--brand)"', description: "Glow color (any CSS color)." },
+      { name: "duration", type: "number", default: "0.5", description: "Settle transition on pointer enter/leave, in seconds." },
+      { name: "children", type: "ReactNode", description: "Card content.", required: true },
+    ],
+  },
+
+  "device-mockup": {
+    controls: [
+      { type: "select", key: "variant", label: "Device", group: "Device", options: [
+        { label: "Phone", value: "phone" },
+        { label: "Tablet", value: "tablet" },
+        { label: "Browser", value: "browser" },
+      ], default: "phone" },
+      { type: "number", key: "width", label: "Width", group: "Device", min: 160, max: 560, step: 10, unit: "px", default: 240 },
+      { type: "select", key: "notch", label: "Camera cutout", group: "Screen", options: [
+        { label: "Island", value: "island" },
+        { label: "Notch", value: "notch" },
+        { label: "None", value: "none" },
+      ], default: "island", hint: "Phone frames only." },
+      { type: "text", key: "url", label: "Address bar", group: "Screen", default: "ononc.dev", hint: "Browser frames only." },
+      { type: "boolean", key: "glare", label: "Glass glare", group: "Screen", default: true },
+      { type: "select", key: "frame", label: "Finish", group: "Finish", options: [
+        { label: "Graphite", value: "graphite" },
+        { label: "Silver", value: "silver" },
+        { label: "Midnight", value: "midnight" },
+      ], default: "graphite" },
+      { type: "boolean", key: "shadow", label: "Drop shadow", group: "Finish", default: true },
+    ],
+    render: (v) => (
+      <DeviceMockup
+        variant={s(v, "variant") as DeviceVariant}
+        frame={s(v, "frame") as DeviceFrame}
+        notch={s(v, "notch") as PhoneNotch}
+        url={s(v, "url")}
+        width={n(v, "width")}
+        shadow={bool(v, "shadow")}
+        glare={bool(v, "glare")}
+      />
+    ),
+    props: [
+      { name: "variant", type: '"phone" | "browser" | "tablet"', default: '"phone"', description: "Which device chrome to draw." },
+      { name: "frame", type: '"graphite" | "silver" | "midnight"', default: '"graphite"', description: "Hardware finish of the frame." },
+      { name: "notch", type: '"island" | "notch" | "none"', default: '"island"', description: "Camera cutout style (phone only)." },
+      { name: "url", type: "string", default: '"ononc.dev"', description: "Address-bar text (browser only)." },
+      { name: "width", type: "number", default: "per device", description: "Frame width in pixels; height follows the device aspect ratio." },
+      { name: "shadow", type: "boolean", default: "true", description: "Soft drop shadow beneath the device." },
+      { name: "glare", type: "boolean", default: "false", description: "Diagonal glass reflection across the screen." },
+      { name: "children", type: "ReactNode", description: "Screen content; a neutral placeholder renders when omitted." },
+    ],
+  },
+
+  "infinite-gallery": {
+    controls: [
+      { type: "number", key: "tileWidth", label: "Tile width", group: "Tiles", min: 100, max: 260, step: 4, unit: "px", default: 168 },
+      { type: "number", key: "tileHeight", label: "Tile height", group: "Tiles", min: 72, max: 200, step: 4, unit: "px", default: 112 },
+      { type: "number", key: "gap", label: "Gap", group: "Tiles", min: 4, max: 32, step: 2, unit: "px", default: 12 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Tiles", min: 0, max: 28, step: 2, unit: "px", default: 14 },
+      { type: "boolean", key: "hoverLift", label: "Lift on hover", group: "Tiles", default: true },
+      { type: "number", key: "cols", label: "Pattern columns", group: "Pattern", min: 2, max: 6, step: 1, default: 4 },
+      { type: "number", key: "rows", label: "Pattern rows", group: "Pattern", min: 2, max: 5, step: 1, default: 3 },
+      { type: "number", key: "speed", label: "Drift speed", group: "Motion", min: 0, max: 120, step: 4, unit: "px/s", default: 24 },
+      { type: "number", key: "angle", label: "Drift angle", group: "Motion", min: 0, max: 360, step: 15, unit: "°", default: 135 },
+      { type: "number", key: "friction", label: "Throw friction", group: "Motion", min: 0.8, max: 0.98, step: 0.01, default: 0.92, hint: "Higher glides further after release." },
+    ],
+    usage: { extra: 'className="h-96 w-full"' },
+    render: (v) => (
+      <div className="h-[380px] w-[560px] overflow-hidden rounded-2xl border border-border">
+        <InfiniteGallery
+          tileWidth={n(v, "tileWidth")}
+          tileHeight={n(v, "tileHeight")}
+          gap={n(v, "gap")}
+          radius={n(v, "radius")}
+          hoverLift={bool(v, "hoverLift")}
+          cols={n(v, "cols")}
+          rows={n(v, "rows")}
+          speed={n(v, "speed")}
+          angle={n(v, "angle")}
+          friction={n(v, "friction")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "items", type: "ReactNode[]", default: "gradient set", description: "Tile faces, cycled across the wall (rendered decoratively)." },
+      { name: "tileWidth", type: "number", default: "168", description: "Tile width in pixels." },
+      { name: "tileHeight", type: "number", default: "112", description: "Tile height in pixels." },
+      { name: "gap", type: "number", default: "12", description: "Gap between tiles in pixels." },
+      { name: "cols", type: "number", default: "4", description: "Base pattern columns, tiled infinitely." },
+      { name: "rows", type: "number", default: "3", description: "Base pattern rows, tiled infinitely." },
+      { name: "speed", type: "number", default: "24", description: "Idle drift speed in px/s (0 disables)." },
+      { name: "angle", type: "number", default: "135", description: "Idle drift direction in degrees." },
+      { name: "friction", type: "number", default: "0.92", description: "Inertia decay per frame after a throw (0–0.99)." },
+      { name: "radius", type: "number", default: "14", description: "Tile corner radius in pixels." },
+      { name: "hoverLift", type: "boolean", default: "true", description: "Scale tiles up slightly on hover." },
+      { name: "label", type: "string", default: '"Infinite gallery"', description: "Accessible name for the pannable region." },
+    ],
+  },
+
+  "smooth-cursor": {
+    controls: [
+      { type: "select", key: "variant", label: "Parts", group: "Cursor", options: [
+        { label: "Dot + ring", value: "both" },
+        { label: "Ring", value: "ring" },
+        { label: "Dot", value: "dot" },
+      ], default: "both" },
+      { type: "number", key: "size", label: "Ring size", group: "Cursor", min: 16, max: 72, step: 2, unit: "px", default: 34 },
+      { type: "number", key: "dotSize", label: "Dot size", group: "Cursor", min: 3, max: 14, step: 1, unit: "px", default: 6 },
+      { type: "color", key: "color", label: "Color", group: "Style", default: "#8b5cf6" },
+      { type: "boolean", key: "blend", label: "Difference blend", group: "Style", default: false },
+      { type: "boolean", key: "hideNative", label: "Hide native cursor", group: "Style", default: true },
+      { type: "number", key: "smooth", label: "Smoothing", group: "Motion", min: 0.04, max: 0.4, step: 0.02, default: 0.14, hint: "Lower floats further behind the pointer." },
+      { type: "number", key: "trail", label: "Trail ghosts", group: "Motion", min: 0, max: 8, step: 1, default: 4 },
+      { type: "number", key: "growScale", label: "Hover growth", group: "Motion", min: 1, max: 3, step: 0.1, default: 1.8, unit: "×" },
+    ],
+    usage: {
+      element: (v) =>
+        `<SmoothCursor variant="${s(v, "variant")}" size={${n(v, "size")}} dotSize={${n(v, "dotSize")}} smooth={${n(v, "smooth")}} trail={${n(v, "trail")}} growScale={${n(v, "growScale")}} blend={${bool(v, "blend")}} color="${s(v, "color")}" hideNative={${bool(v, "hideNative")}} className="h-96">
+  Your hover area
+</SmoothCursor>`,
+    },
+    render: (v) => (
+      <div className="h-[360px] w-[560px] overflow-hidden rounded-2xl border border-border bg-background">
+        <SmoothCursor
+          variant={s(v, "variant") as SmoothCursorVariant}
+          size={n(v, "size")}
+          dotSize={n(v, "dotSize")}
+          smooth={n(v, "smooth")}
+          trail={n(v, "trail")}
+          growScale={n(v, "growScale")}
+          blend={bool(v, "blend")}
+          color={s(v, "color")}
+          hideNative={bool(v, "hideNative")}
+        >
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+            <p className="text-sm text-muted">Move around, then hover a target.</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium"
+              >
+                Hover me
+              </button>
+              <button
+                type="button"
+                className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
+              >
+                Or me
+              </button>
+            </div>
+          </div>
+        </SmoothCursor>
+      </div>
+    ),
+    props: [
+      { name: "variant", type: '"both" | "ring" | "dot"', default: '"both"', description: "Which cursor parts to draw." },
+      { name: "size", type: "number", default: "34", description: "Ring diameter in pixels." },
+      { name: "dotSize", type: "number", default: "6", description: "Dot diameter in pixels." },
+      { name: "smooth", type: "number", default: "0.14", description: "Ring follow smoothing (0.02 = floaty, 0.4 = tight)." },
+      { name: "trail", type: "number", default: "0", description: "Number of ghost dots trailing the cursor (0 disables)." },
+      { name: "growScale", type: "number", default: "1.8", description: "Ring growth over links, buttons and [data-cursor-hover]." },
+      { name: "blend", type: "boolean", default: "false", description: "Blend the cursor with what's underneath (difference)." },
+      { name: "color", type: "string", default: '"var(--brand)"', description: "Cursor color (any CSS color)." },
+      { name: "hideNative", type: "boolean", default: "true", description: "Hide the native cursor inside the area." },
+      { name: "children", type: "ReactNode", description: "The hover area the cursor lives in.", required: true },
+    ],
+  },
+
+  preloader: {
+    controls: [
+      { type: "number", key: "duration", label: "Duration", group: "Loading", min: 0.5, max: 6, step: 0.1, unit: "s", default: 2.2, hint: "Use Refresh Preview to replay." },
+      { type: "select", key: "variant", label: "Readout", group: "Loading", options: [
+        { label: "Counter", value: "counter" },
+        { label: "Bar", value: "bar" },
+        { label: "Dots", value: "dots" },
+      ], default: "counter" },
+      { type: "text", key: "label", label: "Label", group: "Loading", default: "Loading" },
+      { type: "boolean", key: "showPercent", label: "Show percent", group: "Loading", default: true },
+      { type: "select", key: "reveal", label: "Curtain exit", group: "Reveal", options: [
+        { label: "Up", value: "up" },
+        { label: "Down", value: "down" },
+        { label: "Split", value: "split" },
+        { label: "Fade", value: "fade" },
+      ], default: "up" },
+      { type: "select", key: "backdrop", label: "Backdrop", group: "Style", options: [
+        { label: "Ink", value: "ink" },
+        { label: "Surface", value: "surface" },
+        { label: "Brand", value: "brand" },
+      ], default: "ink" },
+      { type: "color", key: "accent", label: "Accent", group: "Style", default: "#8b5cf6" },
+    ],
+    usage: {
+      element: (v) =>
+        `<Preloader duration={${n(v, "duration")}} variant="${s(v, "variant")}" reveal="${s(v, "reveal")}" backdrop="${s(v, "backdrop")}" accent="${s(v, "accent")}" label={${JSON.stringify(s(v, "label"))}} showPercent={${bool(v, "showPercent")}} />`,
+    },
+    render: (v) => (
+      <div className="relative h-[360px] w-[560px] overflow-hidden rounded-2xl border border-border bg-background">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+          <h3 className="text-xl font-semibold">Page content</h3>
+          <p className="text-sm text-muted">Revealed when loading completes.</p>
+        </div>
+        <Preloader
+          duration={n(v, "duration")}
+          variant={s(v, "variant") as PreloaderVariant}
+          reveal={s(v, "reveal") as PreloaderReveal}
+          backdrop={s(v, "backdrop") as PreloaderBackdrop}
+          accent={s(v, "accent")}
+          label={s(v, "label")}
+          showPercent={bool(v, "showPercent")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "duration", type: "number", default: "2.2", description: "Simulated load time in seconds." },
+      { name: "variant", type: '"counter" | "bar" | "dots"', default: '"counter"', description: "Progress readout style." },
+      { name: "reveal", type: '"up" | "down" | "split" | "fade"', default: '"up"', description: "How the curtain exits once loading completes." },
+      { name: "backdrop", type: '"ink" | "surface" | "brand"', default: '"ink"', description: "Curtain surface." },
+      { name: "accent", type: "string", default: '"var(--brand)"', description: "Accent color for the counter / bar / dots." },
+      { name: "label", type: "string", default: '"Loading"', description: "Status label announced to assistive tech." },
+      { name: "showPercent", type: "boolean", default: "true", description: "Show the numeric percentage." },
+      { name: "onComplete", type: "() => void", description: "Called once, when the curtain starts revealing." },
+    ],
+  },
+
+  globe: {
+    controls: [
+      { type: "number", key: "dots", label: "Dots", group: "Sphere", min: 120, max: 1200, step: 20, default: 520 },
+      { type: "number", key: "dotSize", label: "Dot size", group: "Sphere", min: 0.8, max: 3, step: 0.1, unit: "px", default: 1.6 },
+      { type: "color", key: "color", label: "Dot color", group: "Sphere", default: "#8ba0ff", code: rgb },
+      { type: "boolean", key: "atmosphere", label: "Atmosphere", group: "Sphere", default: true },
+      { type: "number", key: "arcs", label: "Arcs", group: "Arcs", min: 0, max: 14, step: 1, default: 6 },
+      { type: "color", key: "accent", label: "Arc color", group: "Arcs", default: "#c4b5fd", code: rgb },
+      { type: "number", key: "speed", label: "Spin speed", group: "Motion", min: 0, max: 60, step: 2, unit: "°/s", default: 14 },
+      { type: "number", key: "tilt", label: "Tilt", group: "Motion", min: 0, max: 45, step: 1, unit: "°", default: 18 },
+      { type: "boolean", key: "draggable", label: "Drag to spin", group: "Motion", default: true },
+    ],
+    usage: { extra: 'className="size-96"' },
+    render: (v) => (
+      <Globe
+        dots={n(v, "dots")}
+        dotSize={n(v, "dotSize")}
+        color={hexRgb(s(v, "color"))}
+        atmosphere={bool(v, "atmosphere")}
+        arcs={n(v, "arcs")}
+        accent={hexRgb(s(v, "accent"))}
+        speed={n(v, "speed")}
+        tilt={n(v, "tilt")}
+        draggable={bool(v, "draggable")}
+        className="h-[380px] w-[380px]"
+      />
+    ),
+    props: [
+      { name: "dots", type: "number", default: "520", description: "Number of surface dots." },
+      { name: "dotSize", type: "number", default: "1.6", description: "Dot radius in pixels." },
+      { name: "speed", type: "number", default: "14", description: "Auto-rotation speed in degrees per second." },
+      { name: "tilt", type: "number", default: "18", description: "Axial tilt in degrees." },
+      { name: "color", type: "string", default: '"139,160,255"', description: "Dot color as r,g,b." },
+      { name: "accent", type: "string", default: '"196,181,253"', description: "Arc color as r,g,b." },
+      { name: "arcs", type: "number", default: "6", description: "Number of animated connection arcs (0 disables)." },
+      { name: "atmosphere", type: "boolean", default: "true", description: "Soft atmosphere glow and rim light." },
+      { name: "draggable", type: "boolean", default: "true", description: "Allow dragging to spin the globe (with inertia)." },
+      { name: "label", type: "string", default: '"Rotating dotted globe"', description: "Accessible description of the visual." },
     ],
   },
 };

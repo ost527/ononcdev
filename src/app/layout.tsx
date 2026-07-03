@@ -47,7 +47,7 @@ export default function RootLayout({
         <ScrollProgress />
         <SiteHeader />
         {children}
-        <div className="mx-auto mt-auto w-full max-w-6xl px-4 pb-20 pt-24 sm:px-6">
+        <div className="site-shell mt-auto pb-20 pt-24">
           <FooterBlock brand="ONONC" />
         </div>
         <Toaster />

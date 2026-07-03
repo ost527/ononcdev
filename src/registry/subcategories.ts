@@ -88,7 +88,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       id: "waves",
       label: "Waves & pulses",
       slugs: [
-        "waves", "wave-interference", "pulse-rings", "ripple", "oscilloscope",
+        "waves", "wave-interference", "pulse-rings", "oscilloscope",
         "equalizer", "radar-sweep",
       ],
     },
@@ -157,6 +157,14 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       id: "cards",
       label: "Cards & surfaces",
       slugs: ["card", "tilt-card", "spotlight-card", "hover-card", "stat-card"],
+    },
+    {
+      id: "interactive",
+      label: "Interactive showcase",
+      slugs: [
+        "chroma-card", "device-mockup", "infinite-gallery", "smooth-cursor",
+        "preloader", "globe",
+      ],
     },
     {
       id: "inputs",

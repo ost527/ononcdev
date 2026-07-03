@@ -96,7 +96,7 @@ export function PricingFaq({
         <p className="mt-3 text-pretty text-muted">{subheading}</p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 items-start gap-5 md:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 items-stretch gap-5 pt-3 md:grid-cols-3">
         {plans.map((plan) => (
           <div
             key={plan.name}
@@ -106,7 +106,7 @@ export function PricingFaq({
             )}
           >
             {plan.popular && (
-              <span className="absolute -top-3 left-6 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
+              <span className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
                 Most popular
               </span>
             )}

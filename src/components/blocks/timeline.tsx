@@ -37,7 +37,7 @@ export function Timeline({
       <ol className="relative mt-8 border-l border-border">
         {entries.map((entry, i) => (
           <li key={i} className="relative ml-6 pb-8 last:pb-0">
-            <span className="absolute -left-[1.95rem] top-0.5 grid size-6 place-items-center rounded-full border border-border bg-surface text-brand-ink">
+            <span className="absolute -left-[2.25rem] top-0.5 grid size-6 place-items-center rounded-full border border-border bg-surface text-brand-ink">
               {entry.icon ?? (
                 <span className="size-2 rounded-full bg-brand" />
               )}

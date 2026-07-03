@@ -62,12 +62,12 @@ export function PricingDuo({
         <p className="mt-3 text-pretty text-muted">{subheading}</p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2">
+      <div className="mt-10 grid grid-cols-1 items-stretch gap-5 pt-3 sm:grid-cols-2">
         {plans.map((plan) => (
           <div
             key={plan.name}
             className={cn(
-              "relative rounded-3xl p-px",
+              "relative h-full rounded-3xl p-px",
               plan.highlighted
                 ? "bg-gradient-to-b from-brand via-brand-2/50 to-border shadow-[0_30px_80px_-50px_var(--brand)]"
                 : "bg-border",

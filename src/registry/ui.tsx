@@ -71,6 +71,12 @@ import { Resizable } from "@/components/ui/resizable";
 import { Toolbar } from "@/components/ui/toolbar";
 import { TreeView } from "@/components/ui/tree-view";
 import { Avatar } from "@/components/ui/avatar";
+import { ChromaCard } from "@/components/ui/chroma-card";
+import { DeviceMockup } from "@/components/ui/device-mockup";
+import { Globe } from "@/components/ui/globe";
+import { InfiniteGallery } from "@/components/ui/infinite-gallery";
+import { Preloader } from "@/components/ui/preloader";
+import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import {
   Card,
   CardContent,
@@ -1103,6 +1109,109 @@ export const ui: Category = {
       sourcePath: "components/ui/time-picker.tsx",
       tags: ["a11y", "form"],
       preview: <TimePicker defaultValue={{ hour: 9, minute: 30, period: "AM" }} />,
+    },
+    {
+      id: "chroma-card",
+      name: "Chroma Card",
+      description:
+        "3D tilt card with a hue-shifting holographic sheen and chromatic fringing.",
+      sourcePath: "components/ui/chroma-card.tsx",
+      tags: ["motion", "hover", "3D"],
+      frameClassName: "min-h-80 w-full items-center justify-center p-6",
+      preview: (
+        <ChromaCard className="w-64 p-6">
+          <p className="text-xs font-medium uppercase tracking-widest text-muted-2">
+            Holo pass
+          </p>
+          <h3 className="mt-2 text-xl font-semibold">Aurora Nine</h3>
+          <p className="mt-1 text-sm text-muted">
+            Tilt me — the sheen shifts hue with the pointer.
+          </p>
+          <div className="mt-5 flex items-center justify-between text-xs text-muted-2">
+            <span className="font-mono">#0042</span>
+            <span className="rounded-full bg-brand/15 px-2 py-0.5 font-medium text-brand-ink">
+              Rare
+            </span>
+          </div>
+        </ChromaCard>
+      ),
+    },
+    {
+      id: "device-mockup",
+      name: "Device Mockup",
+      description: "CSS-only phone, tablet and browser frames for screenshots.",
+      sourcePath: "components/ui/device-mockup.tsx",
+      tags: ["display", "CSS"],
+      frameClassName: "min-h-96 w-full items-center justify-center p-6",
+      preview: <DeviceMockup variant="phone" width={190} glare />,
+    },
+    {
+      id: "infinite-gallery",
+      name: "Infinite Gallery",
+      description:
+        "A drag-and-throw tile wall that wraps forever and drifts while idle.",
+      sourcePath: "components/ui/infinite-gallery.tsx",
+      tags: ["motion", "drag", "canvas-free"],
+      frameClassName: "h-80 w-full px-0",
+      preview: <InfiniteGallery className="rounded-none" />,
+    },
+    {
+      id: "smooth-cursor",
+      name: "Smooth Cursor",
+      description:
+        "Scoped dot-and-ring cursor that eases behind the pointer and grows over targets.",
+      sourcePath: "components/ui/smooth-cursor.tsx",
+      tags: ["motion", "pointer"],
+      frameClassName: "h-72 w-full px-0",
+      preview: (
+        <SmoothCursor trail={4}>
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+            <p className="text-sm text-muted">Move around, then hover a target.</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium"
+              >
+                Hover me
+              </button>
+              <button
+                type="button"
+                className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
+              >
+                Or me
+              </button>
+            </div>
+          </div>
+        </SmoothCursor>
+      ),
+    },
+    {
+      id: "preloader",
+      name: "Preloader",
+      description:
+        "Page-load curtain that counts up, holds a beat, then reveals the page.",
+      sourcePath: "components/ui/preloader.tsx",
+      tags: ["motion", "loading"],
+      frameClassName: "h-72 w-full px-0",
+      preview: (
+        <div className="relative h-full w-full">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+            <h3 className="text-xl font-semibold">Page content</h3>
+            <p className="text-sm text-muted">Revealed when loading completes.</p>
+          </div>
+          <Preloader />
+        </div>
+      ),
+    },
+    {
+      id: "globe",
+      name: "Globe",
+      description:
+        "Dotted canvas globe with comet connection arcs — drag to spin.",
+      sourcePath: "components/ui/globe.tsx",
+      tags: ["canvas", "drag", "3D"],
+      frameClassName: "h-80 w-full px-0",
+      preview: <Globe className="h-full w-full" />,
     },
   ],
 };

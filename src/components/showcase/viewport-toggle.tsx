@@ -50,9 +50,9 @@ export function ViewportToggle({
           title={label}
           onClick={() => onChange(mode)}
           className={cn(
-            "grid size-7 place-items-center rounded-md transition-colors",
+            "grid size-7 place-items-center rounded-md transition-[background-color,color,box-shadow] duration-150",
             value === mode
-              ? "bg-surface text-foreground shadow-sm"
+              ? "bg-surface-2 text-foreground shadow-sm ring-1 ring-inset ring-border-strong"
               : "text-muted hover:text-foreground",
           )}
         >

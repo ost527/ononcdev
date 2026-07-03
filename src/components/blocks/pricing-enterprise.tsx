@@ -78,7 +78,7 @@ export function PricingEnterprise({
         <p className="mt-3 text-pretty text-muted">{subheading}</p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 items-start gap-5 md:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 items-stretch gap-5 pt-3 md:grid-cols-3">
         {plans.map((plan) => (
           <div
             key={plan.name}

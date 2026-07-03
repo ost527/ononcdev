@@ -85,6 +85,8 @@ export default async function CategoryPage({
                     bleed={item.bleed}
                     customizable={detail}
                     previewClassName={item.previewClassName}
+                    previewPadding={item.previewPadding}
+                    previewBorder={item.previewBorder}
                     href={detail ? `/${found.id}/${item.id}` : undefined}
                   />
                 );

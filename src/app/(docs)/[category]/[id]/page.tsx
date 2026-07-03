@@ -83,6 +83,7 @@ export default async function ComponentDetailPage({
             name: item.name,
             description: item.description,
             tags: item.tags,
+            sourcePath: item.sourcePath,
             bleed: item.bleed,
           }}
           code={code}

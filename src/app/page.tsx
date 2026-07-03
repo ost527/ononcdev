@@ -22,7 +22,7 @@ export default function Home() {
     <main>
       <ShowcaseHero count={componentCount} />
 
-      <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-6">
+      <div className="site-shell pb-8">
         <section className="pt-16 sm:pt-20">
           <div className="text-center">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">

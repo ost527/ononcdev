@@ -238,7 +238,7 @@ export function FeatureSpotlight({
               <div className={cn(flip && "lg:order-1")}>
                 <div className="relative" aria-hidden>
                   <div
-                    className="pointer-events-none absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-brand/10 via-transparent to-brand-2/10 opacity-70 blur-2xl"
+                    className="pointer-events-none absolute inset-0 -z-10 rounded-[2rem] bg-gradient-to-br from-brand/10 via-transparent to-brand-2/10 opacity-70 blur-2xl"
                   />
                   <div className="relative overflow-hidden rounded-2xl border border-border bg-surface p-5 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.5)]">
                     <div

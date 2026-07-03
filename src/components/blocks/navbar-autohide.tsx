@@ -65,7 +65,7 @@ export function NavbarAutoHide({
       role="region"
       aria-label="Auto-hide navbar demo — scroll down to hide, up to reveal"
       className={cn(
-        "relative h-[26rem] overflow-y-auto rounded-2xl border border-border bg-background",
+        "relative h-[26rem] overflow-y-auto rounded-2xl border border-border bg-background [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         className,
       )}
     >

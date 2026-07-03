@@ -1,7 +1,7 @@
 "use client";
 
 import { type FormEvent, useEffect, useId, useRef, useState } from "react";
-import { Check, Tag, X } from "lucide-react";
+import { Check, Sparkles, Tag, X } from "lucide-react";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 
 export interface PromoPlan {
@@ -190,14 +190,14 @@ export function PricingPromo({
         )}
       </div>
 
-      <div className="mt-10 grid grid-cols-1 items-start gap-5 lg:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 items-stretch gap-5 pt-3 lg:grid-cols-3">
         {plans.map((plan) => {
           const discounted = plan.price * factor;
           return (
             <div
               key={plan.name}
               className={cn(
-                "relative rounded-3xl p-px",
+                "relative h-full rounded-3xl p-px",
                 plan.popular
                   ? "bg-gradient-to-b from-brand via-brand-2/50 to-border shadow-[0_30px_80px_-50px_var(--brand)]"
                   : "bg-border",
@@ -205,6 +205,7 @@ export function PricingPromo({
             >
               {plan.popular && (
                 <span className="absolute -top-3 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                  <Sparkles className="size-3.5" />
                   Most popular
                 </span>
               )}

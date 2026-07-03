@@ -139,7 +139,6 @@ export const blocks: Category = {
         "SaaS-grade bar with rich, categorized mega-menu dropdowns and a featured card.",
       sourcePath: "components/blocks/navbar-mega-menu.tsx",
       tags: ["composed", "a11y"],
-      previewClassName: "min-h-[22rem]",
       preview: <NavbarMegaMenu />,
     },
     {
@@ -167,7 +166,6 @@ export const blocks: Category = {
         "Product top bar with workspace switcher, search, notifications, and avatar menu.",
       sourcePath: "components/blocks/navbar-app.tsx",
       tags: ["composed", "a11y"],
-      previewClassName: "min-h-[22rem]",
       preview: <NavbarApp />,
     },
     {
@@ -195,7 +193,6 @@ export const blocks: Category = {
         "Search opens an inline command palette with full keyboard navigation.",
       sourcePath: "components/blocks/navbar-command.tsx",
       tags: ["composed", "a11y"],
-      previewClassName: "min-h-[28rem]",
       preview: <NavbarCommand />,
     },
     {
@@ -223,7 +220,6 @@ export const blocks: Category = {
         "Storefront header with search, account, and a cart badge with a mini-cart popover.",
       sourcePath: "components/blocks/navbar-commerce.tsx",
       tags: ["composed", "a11y"],
-      previewClassName: "min-h-[28rem]",
       preview: <NavbarCommerce />,
     },
     {
@@ -251,7 +247,6 @@ export const blocks: Category = {
         "Documentation header with a version switcher, search, theme toggle, and star count.",
       sourcePath: "components/blocks/navbar-docs.tsx",
       tags: ["composed", "a11y"],
-      previewClassName: "min-h-[22rem]",
       preview: <NavbarDocs />,
     },
     {
@@ -279,7 +274,6 @@ export const blocks: Category = {
         "Drill-down menu with nested submenus that slide between levels with a back trail.",
       sourcePath: "components/blocks/navbar-multilevel.tsx",
       tags: ["composed", "a11y"],
-      previewClassName: "min-h-[28rem]",
       preview: <NavbarMultiLevel />,
     },
     {
@@ -298,7 +292,6 @@ export const blocks: Category = {
         "Marketing bar with accessible language and currency switchers.",
       sourcePath: "components/blocks/navbar-locale.tsx",
       tags: ["composed", "a11y"],
-      previewClassName: "min-h-[22rem]",
       preview: <NavbarLocale />,
     },
     {
@@ -307,6 +300,7 @@ export const blocks: Category = {
       description: "Animated marketing hero over an aurora field.",
       sourcePath: "components/blocks/hero-block.tsx",
       tags: ["composed", "motion"],
+      previewPadding: 0,
       preview: <HeroBlock />,
     },
     {
@@ -316,6 +310,7 @@ export const blocks: Category = {
         "Asymmetric product hero with a tilting app-window mock, live chart, and floating stats.",
       sourcePath: "components/blocks/hero-split.tsx",
       tags: ["composed", "motion", "pointer"],
+      previewPadding: 0,
       preview: <HeroSplit />,
     },
     {
@@ -325,6 +320,7 @@ export const blocks: Category = {
         "Centered hero with a pointer-tracked spotlight over a dot grid and a trusted-by marquee.",
       sourcePath: "components/blocks/hero-spotlight.tsx",
       tags: ["composed", "pointer", "motion"],
+      previewPadding: 0,
       preview: <HeroSpotlight />,
     },
     {
@@ -334,6 +330,7 @@ export const blocks: Category = {
         "Centered hero with a drifting conic glow and an app screenshot fading into the page.",
       sourcePath: "components/blocks/hero-glow.tsx",
       tags: ["composed", "motion"],
+      previewPadding: 0,
       preview: <HeroGlow />,
     },
     {
@@ -343,6 +340,7 @@ export const blocks: Category = {
         "Typography-forward, left-aligned hero with hairline meta rows and a word-by-word reveal.",
       sourcePath: "components/blocks/hero-editorial.tsx",
       tags: ["composed", "motion", "a11y"],
+      previewPadding: 0,
       preview: <HeroEditorial />,
     },
     {
@@ -352,6 +350,7 @@ export const blocks: Category = {
         "Developer hero with a self-typing terminal window and a copy-to-clipboard install command.",
       sourcePath: "components/blocks/hero-terminal.tsx",
       tags: ["composed", "motion", "a11y"],
+      previewPadding: 0,
       preview: <HeroTerminal />,
     },
     {
@@ -361,6 +360,7 @@ export const blocks: Category = {
         "Launch hero over light beams with an accessible email capture (front-end only) and social proof.",
       sourcePath: "components/blocks/hero-waitlist.tsx",
       tags: ["composed", "form", "a11y"],
+      previewPadding: 0,
       preview: <HeroWaitlist />,
     },
     {
@@ -370,6 +370,7 @@ export const blocks: Category = {
         "Credibility-forward hero with a band of headline metrics that count up on view.",
       sourcePath: "components/blocks/hero-stats.tsx",
       tags: ["composed", "scroll", "motion"],
+      previewPadding: 0,
       preview: <HeroStats />,
     },
     {
@@ -379,6 +380,7 @@ export const blocks: Category = {
         "Clean centered hero whose headline swaps a key word on a loop over drifting orbs.",
       sourcePath: "components/blocks/hero-rotating.tsx",
       tags: ["composed", "motion"],
+      previewPadding: 0,
       preview: <HeroRotating />,
     },
     {
@@ -388,6 +390,7 @@ export const blocks: Category = {
         "Cinematic hero with a 16:9 media card and an accessible play/pause control (front-end only).",
       sourcePath: "components/blocks/hero-video.tsx",
       tags: ["composed", "motion", "a11y"],
+      previewPadding: 0,
       preview: <HeroVideo />,
     },
     {
@@ -397,6 +400,7 @@ export const blocks: Category = {
         "Mobile-app landing hero with a tilting phone mock, store buttons, and a star rating.",
       sourcePath: "components/blocks/hero-app.tsx",
       tags: ["composed", "motion", "pointer"],
+      previewPadding: 0,
       preview: <HeroApp />,
     },
     {
@@ -406,6 +410,7 @@ export const blocks: Category = {
         "Centered hero floating over rows of huge ghost-text wordmarks scrolling in opposing directions.",
       sourcePath: "components/blocks/hero-marquee.tsx",
       tags: ["composed", "loop", "motion"],
+      previewPadding: 0,
       preview: <HeroMarquee />,
     },
     {
@@ -415,6 +420,7 @@ export const blocks: Category = {
         "Split hero with a stacked screen deck that auto-cycles through product views, with dot controls.",
       sourcePath: "components/blocks/hero-showcase.tsx",
       tags: ["composed", "motion", "a11y"],
+      previewPadding: 0,
       preview: <HeroShowcase />,
     },
     {
@@ -423,6 +429,7 @@ export const blocks: Category = {
       description:
         "Launch hero with a hydration-safe live countdown ticking to a target date.",
       sourcePath: "components/blocks/hero-countdown.tsx",
+      previewPadding: 0,
       tags: ["composed", "motion"],
       preview: <HeroCountdown />,
     },
@@ -433,6 +440,7 @@ export const blocks: Category = {
         "AI-product hero with a prompt composer, suggestion chips, and a simulated reply (front-end only).",
       sourcePath: "components/blocks/hero-ai.tsx",
       tags: ["composed", "form", "a11y"],
+      previewPadding: 0,
       preview: <HeroAI />,
     },
     {
@@ -442,6 +450,7 @@ export const blocks: Category = {
         "Search-led landing hero with a prominent field and popular query chips (front-end only).",
       sourcePath: "components/blocks/hero-search.tsx",
       tags: ["composed", "form", "a11y"],
+      previewPadding: 0,
       preview: <HeroSearch />,
     },
     {
@@ -451,6 +460,7 @@ export const blocks: Category = {
         "Full-bleed gradient-scene hero with a legibility scrim and overlay copy; server-renderable.",
       sourcePath: "components/blocks/hero-image.tsx",
       tags: ["composed", "layout"],
+      previewPadding: 0,
       preview: <HeroImage />,
     },
     {
@@ -655,6 +665,7 @@ export const blocks: Category = {
         "Accessible scroll-snap pager of feature cards with bound-aware prev/next controls.",
       sourcePath: "components/blocks/feature-carousel.tsx",
       tags: ["pointer", "a11y"],
+      previewPadding: 0,
       preview: <FeatureCarousel />,
     },
     {

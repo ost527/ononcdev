@@ -43,9 +43,10 @@ export function NavbarSticky({
   const onScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
-    setScrolled(el.scrollTop > 12);
+    const top = el.scrollTop;
+    setScrolled((prev) => (prev ? top > 1 : top > 16));
     const max = el.scrollHeight - el.clientHeight;
-    setProgress(max > 0 ? (el.scrollTop / max) * 100 : 0);
+    setProgress(max > 0 ? (top / max) * 100 : 0);
   };
 
   return (
@@ -56,7 +57,7 @@ export function NavbarSticky({
       role="region"
       aria-label="Sticky navbar demo — scroll to condense the header"
       className={cn(
-        "relative h-[26rem] overflow-y-auto rounded-2xl border border-border bg-background",
+        "relative h-[26rem] overflow-y-auto rounded-2xl border border-border bg-background [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         className,
       )}
     >

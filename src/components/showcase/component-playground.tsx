@@ -11,7 +11,22 @@ import {
   useRef,
   useState,
 } from "react";
-import { Code2, Eye, RotateCcw } from "lucide-react";
+import {
+  Check,
+  Code2,
+  Eye,
+  Grip,
+  LayoutGrid,
+  Link2,
+  Moon,
+  RotateCcw,
+  Shuffle,
+  Square,
+  Sun,
+  SunMoon,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 import { CodeBlock } from "@/components/showcase/code-block";
 import {
   ControlField,
@@ -21,8 +36,15 @@ import {
   VIEWPORT_WIDTHS,
   ViewportToggle,
 } from "@/components/showcase/viewport-toggle";
+import {
+  buildUsage,
+  countModified,
+  decodePlaygroundState,
+  encodePlaygroundState,
+  randomizeValues,
+} from "@/lib/playground";
 import { playgrounds } from "@/registry/playground";
-import type { ControlValue, PlaygroundValues } from "@/registry/types";
+import type { Control, ControlValue, PlaygroundValues } from "@/registry/types";
 import { cn } from "@/lib/utils";
 
 export interface PlaygroundMeta {
@@ -32,6 +54,8 @@ export interface PlaygroundMeta {
   name: string;
   description: string;
   tags?: string[];
+  /** Source path relative to `src/`, used for the generated Usage import. */
+  sourcePath?: string;
   /** Full-bleed, dark-only background component. */
   bleed?: boolean;
 }
@@ -46,7 +70,8 @@ export interface ComponentPlaygroundProps {
 
 type View = "preview" | "code";
 type Mode = "mobile" | "tablet" | "desktop" | "custom";
-type PanelTab = "customize" | "props";
+type PreviewTheme = "site" | "light" | "dark";
+type Backdrop = "plain" | "dots" | "grid";
 
 /** Preset frame widths; `desktop` fills the available width. */
 const PRESETS = VIEWPORT_WIDTHS;
@@ -54,7 +79,27 @@ const MIN_WIDTH = 280;
 const STAGE_HEIGHT = 460;
 
 const VIEW_ORDER: View[] = ["preview", "code"];
-const PANEL_ORDER: PanelTab[] = ["customize", "props"];
+
+const THEME_ORDER: PreviewTheme[] = ["site", "light", "dark"];
+const THEME_META: Record<PreviewTheme, { label: string; icon: typeof Sun }> = {
+  site: { label: "Site theme", icon: SunMoon },
+  light: { label: "Light", icon: Sun },
+  dark: { label: "Dark", icon: Moon },
+};
+
+const BACKDROP_ORDER: Backdrop[] = ["plain", "dots", "grid"];
+const BACKDROP_META: Record<Backdrop, { label: string; icon: typeof Square }> = {
+  plain: { label: "Plain", icon: Square },
+  dots: { label: "Dots", icon: Grip },
+  grid: { label: "Grid", icon: LayoutGrid },
+};
+const BACKDROP_CLASS: Record<Exclude<Backdrop, "plain">, string> = {
+  dots: "[background-image:radial-gradient(var(--border-strong)_1px,transparent_1px)] [background-size:16px_16px]",
+  grid: "[background-image:linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] [background-size:24px_24px]",
+};
+
+const ZOOM_LEVELS = [0.5, 0.75, 1, 1.25, 1.5] as const;
+const ZOOM_DEFAULT = 2; // index of 1×
 
 /**
  * Roving-focus keyboard handler for a tablist (WAI-ARIA Tabs pattern):
@@ -86,10 +131,60 @@ function roveTabs<T extends string>(
 }
 
 /**
+ * Partition controls into titled sections by their `group`, preserving
+ * first-appearance order. Ungrouped controls form a leading untitled section.
+ */
+function groupControls(
+  controls: readonly Control[],
+): { title: string | null; controls: Control[] }[] {
+  const sections: { title: string | null; controls: Control[] }[] = [];
+  for (const control of controls) {
+    const title = control.group ?? null;
+    const last = sections.find((s) => s.title === title);
+    if (last) last.controls.push(control);
+    else sections.push({ title, controls: [control] });
+  }
+  return sections;
+}
+
+/** Small bordered icon button used in the stage + Customize toolbars. */
+function ToolButton({
+  label,
+  onClick,
+  disabled,
+  bordered = true,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+  bordered?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        "grid size-7 place-items-center rounded-md text-muted transition-colors hover:text-foreground",
+        bordered && "rounded-lg border border-border bg-background",
+        disabled && "cursor-default text-muted-2/50 hover:text-muted-2/50",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+/**
  * ComponentPlayground — the component detail experience: a Preview/Code stage
- * with PC / Tablet / Mobile viewport switching, a Refresh button that remounts
- * the preview, a draggable + keyboard-accessible resize handle, and a per-card
- * Customize panel (driven by `playgrounds`) alongside a Props table.
+ * with viewport presets, preview theme / backdrop / zoom tools, a Refresh
+ * button and a draggable + keyboard-accessible resize handle; alongside a
+ * sticky Customize rail (randomize, shareable URL state, per-control reset and
+ * a live generated Usage snippet) and the Props reference.
  */
 export function ComponentPlayground({
   meta,
@@ -109,12 +204,14 @@ export function ComponentPlayground({
   const [values, setValues] = useState<PlaygroundValues>(() =>
     initialValues(controls),
   );
-  const [panel, setPanel] = useState<PanelTab>(
-    controls.length ? "customize" : "props",
-  );
+  const [previewTheme, setPreviewTheme] = useState<PreviewTheme>("site");
+  const [backdrop, setBackdrop] = useState<Backdrop>("plain");
+  const [zoomIdx, setZoomIdx] = useState(ZOOM_DEFAULT);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
+  const copyTimer = useRef<number | null>(null);
 
   // Track the available width so presets can be clamped and the readout is live.
   useEffect(() => {
@@ -127,10 +224,33 @@ export function ComponentPlayground({
     return () => ro.disconnect();
   }, []);
 
+  // Hydrate shared state from the `?p=` param once (post-paint, keeps SSG HTML stable).
+  useEffect(() => {
+    if (!controls.length) return;
+    const id = requestAnimationFrame(() => {
+      const raw = new URLSearchParams(window.location.search).get("p");
+      if (!raw) return;
+      const decoded = decodePlaygroundState(controls, raw);
+      if (decoded) {
+        setValues(decoded);
+        setResetKey((k) => k + 1);
+      }
+    });
+    return () => cancelAnimationFrame(id);
+  }, [controls]);
+
+  useEffect(
+    () => () => {
+      if (copyTimer.current) window.clearTimeout(copyTimer.current);
+    },
+    [],
+  );
+
   const isFluid = mode === "desktop" || width === null;
   const clampedWidth =
     width === null ? maxWidth : Math.min(width, maxWidth || width);
-  const frameWidth = isFluid ? "100%" : `${clampedWidth}px`;
+  const frameMaxWidth =
+    maxWidth > 0 ? `${isFluid ? maxWidth : clampedWidth}px` : "100%";
   const effWidth = Math.round(isFluid ? maxWidth : clampedWidth);
 
   const setPreset = (next: "mobile" | "tablet" | "desktop") => {
@@ -144,6 +264,27 @@ export function ComponentPlayground({
     setValues(initialValues(controls));
     setResetKey((k) => k + 1);
     setRefreshKey((k) => k + 1);
+  };
+
+  const randomize = () => {
+    setValues((prev) => randomizeValues(controls, prev));
+    setResetKey((k) => k + 1);
+  };
+
+  const share = async () => {
+    const encoded = encodePlaygroundState(controls, values);
+    const url = new URL(window.location.href);
+    if (encoded) url.searchParams.set("p", encoded);
+    else url.searchParams.delete("p");
+    window.history.replaceState(null, "", url.toString());
+    try {
+      await navigator.clipboard.writeText(url.toString());
+    } catch {
+      /* clipboard unavailable (e.g. insecure context) */
+    }
+    setLinkCopied(true);
+    if (copyTimer.current) window.clearTimeout(copyTimer.current);
+    copyTimer.current = window.setTimeout(() => setLinkCopied(false), 1600);
   };
 
   const setValue = useCallback(
@@ -201,6 +342,33 @@ export function ComponentPlayground({
 
   const previewNode = spec ? spec.render(values) : fallbackPreview;
   const valuesHash = JSON.stringify(values);
+  const modifiedCount = countModified(controls, values);
+  const zoom = ZOOM_LEVELS[zoomIdx];
+  const usageCode = controls.length
+    ? buildUsage(
+        {
+          id: meta.id,
+          sourcePath: meta.sourcePath,
+          bleed: meta.bleed,
+          controls,
+          usage: spec?.usage,
+        },
+        values,
+      )
+    : null;
+
+  const cycleTheme = () =>
+    setPreviewTheme(
+      (t) => THEME_ORDER[(THEME_ORDER.indexOf(t) + 1) % THEME_ORDER.length],
+    );
+  const cycleBackdrop = () =>
+    setBackdrop(
+      (b) =>
+        BACKDROP_ORDER[(BACKDROP_ORDER.indexOf(b) + 1) % BACKDROP_ORDER.length],
+    );
+
+  const ThemeIcon = THEME_META[previewTheme].icon;
+  const BackdropIcon = BACKDROP_META[backdrop].icon;
 
   const tabBtn = (active: boolean) =>
     cn(
@@ -211,7 +379,7 @@ export function ComponentPlayground({
   return (
     <div className="space-y-6">
       {/* Preview / Code stage */}
-      <div className="overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="min-w-0 overflow-hidden rounded-2xl border border-border bg-surface">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-2">
           <div
             role="tablist"
@@ -248,12 +416,57 @@ export function ComponentPlayground({
           </div>
 
           {view === "preview" && (
-            <div className="flex items-center gap-2">
-              <ViewportToggle value={mode} onChange={setPreset} />
+            <div className="flex flex-wrap items-center gap-2">
               {maxWidth > 0 && (
                 <span className="hidden min-w-[3.5rem] text-right font-mono text-xs tabular-nums text-muted sm:inline">
                   {effWidth}px
                 </span>
+              )}
+              <ViewportToggle value={mode} onChange={setPreset} />
+              {!meta.bleed && (
+                <>
+                  <ToolButton
+                    label={`Preview theme: ${THEME_META[previewTheme].label}`}
+                    onClick={cycleTheme}
+                  >
+                    <ThemeIcon className="size-4" />
+                  </ToolButton>
+                  <ToolButton
+                    label={`Preview backdrop: ${BACKDROP_META[backdrop].label}`}
+                    onClick={cycleBackdrop}
+                  >
+                    <BackdropIcon className="size-4" />
+                  </ToolButton>
+                  <div className="inline-flex items-center rounded-lg border border-border bg-background p-0.5">
+                    <ToolButton
+                      label="Zoom out"
+                      bordered={false}
+                      disabled={zoomIdx === 0}
+                      onClick={() => setZoomIdx((z) => Math.max(0, z - 1))}
+                    >
+                      <ZoomOut className="size-4" />
+                    </ToolButton>
+                    <button
+                      type="button"
+                      aria-label="Reset zoom"
+                      title="Reset zoom"
+                      onClick={() => setZoomIdx(ZOOM_DEFAULT)}
+                      className="px-1 font-mono text-[11px] tabular-nums text-muted transition-colors hover:text-foreground"
+                    >
+                      {Math.round(zoom * 100)}%
+                    </button>
+                    <ToolButton
+                      label="Zoom in"
+                      bordered={false}
+                      disabled={zoomIdx === ZOOM_LEVELS.length - 1}
+                      onClick={() =>
+                        setZoomIdx((z) => Math.min(ZOOM_LEVELS.length - 1, z + 1))
+                      }
+                    >
+                      <ZoomIn className="size-4" />
+                    </ToolButton>
+                  </div>
+                </>
               )}
               <button
                 type="button"
@@ -276,7 +489,10 @@ export function ComponentPlayground({
           {view === "preview" ? (
             <div className="p-4 sm:p-6">
               <div ref={containerRef} className="relative w-full">
-                <div className="relative mx-auto" style={{ width: frameWidth }}>
+                <div
+                  className="relative mx-auto w-full transition-[max-width] duration-300 ease-out"
+                  style={{ maxWidth: frameMaxWidth }}
+                >
                   <div
                     className="relative overflow-hidden rounded-2xl border border-border bg-background"
                     style={{ height: STAGE_HEIGHT }}
@@ -287,10 +503,33 @@ export function ComponentPlayground({
                         "absolute inset-0",
                         meta.bleed
                           ? "dark"
-                          : "flex items-center justify-center overflow-auto p-6",
+                          : cn(
+                              "no-scrollbar flex items-center justify-center overflow-auto bg-background p-6 text-foreground",
+                              previewTheme !== "site" && previewTheme,
+                            ),
                       )}
                     >
-                      {previewNode}
+                      {!meta.bleed && backdrop !== "plain" && (
+                        <div
+                          aria-hidden
+                          className={cn(
+                            "pointer-events-none absolute inset-0",
+                            BACKDROP_CLASS[backdrop],
+                          )}
+                        />
+                      )}
+                      {meta.bleed ? (
+                        previewNode
+                      ) : (
+                        <div
+                          className="relative transition-transform duration-200"
+                          style={
+                            zoom !== 1 ? { transform: `scale(${zoom})` } : undefined
+                          }
+                        >
+                          {previewNode}
+                        </div>
+                      )}
                     </div>
                   </div>
                   {/* Resize handle (desktop pointer + keyboard). */}
@@ -314,96 +553,138 @@ export function ComponentPlayground({
               </div>
             </div>
           ) : (
-            <div className="p-3">
-              <CodeBlock code={code} />
+            <div className="space-y-5 p-3 sm:p-4">
+              {usageCode && (
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-1">
+                    <h3 className="text-sm font-semibold text-foreground">
+                      Usage
+                    </h3>
+                    <p className="text-xs text-muted">
+                      Reflects your Customize options — works once the component
+                      file below is in your project.
+                    </p>
+                  </div>
+                  <CodeBlock code={usageCode} />
+                </div>
+              )}
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-1">
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {meta.sourcePath ? (
+                      <code className="font-mono text-[13px]">
+                        src/{meta.sourcePath}
+                      </code>
+                    ) : (
+                      "Component source"
+                    )}
+                  </h3>
+                  <p className="text-xs text-muted">
+                    Copy this file into your project — no package install
+                    needed.
+                  </p>
+                </div>
+                <CodeBlock code={code} />
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Customize / Props panel */}
-      <div className="overflow-hidden rounded-2xl border border-border bg-surface">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-2">
-          <div
-            role="tablist"
-            aria-label="Component options"
-            onKeyDown={(e) =>
-              roveTabs(e, PANEL_ORDER, panel, setPanel, (v) => `${baseId}-tab-${v}`)
-            }
-            className="inline-flex rounded-lg border border-border bg-background p-0.5 text-xs"
-          >
-            <button
-              id={`${baseId}-tab-customize`}
-              role="tab"
-              aria-selected={panel === "customize"}
-              aria-controls={`${baseId}-panel`}
-              tabIndex={panel === "customize" ? 0 : -1}
-              onClick={() => setPanel("customize")}
-              className={tabBtn(panel === "customize")}
-            >
-              Customize
-            </button>
-            <button
-              id={`${baseId}-tab-props`}
-              role="tab"
-              aria-selected={panel === "props"}
-              aria-controls={`${baseId}-panel`}
-              tabIndex={panel === "props" ? 0 : -1}
-              onClick={() => setPanel("props")}
-              className={tabBtn(panel === "props")}
-            >
-              Props
-            </button>
-          </div>
-          {panel === "customize" && controls.length > 0 && (
-            <button
-              type="button"
-              onClick={reset}
-              className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-muted transition-colors hover:text-foreground"
-            >
-              <RotateCcw className="size-3.5" />
-              Reset
-            </button>
+      {/* Customize panel */}
+      <section
+        aria-label="Customize"
+        className="overflow-hidden rounded-2xl border border-border bg-surface"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border py-2 pl-4 pr-2">
+          <h2 className="text-sm font-semibold text-foreground">Customize</h2>
+          {controls.length > 0 && (
+            <div className="flex items-center gap-0.5">
+              <ToolButton
+                label="Randomize options"
+                bordered={false}
+                onClick={randomize}
+              >
+                <Shuffle className="size-3.5" />
+              </ToolButton>
+              <ToolButton
+                label={linkCopied ? "Link copied" : "Copy shareable link"}
+                bordered={false}
+                onClick={share}
+              >
+                {linkCopied ? (
+                  <Check className="size-3.5 text-brand-2" />
+                ) : (
+                  <Link2 className="size-3.5" />
+                )}
+              </ToolButton>
+              <button
+                type="button"
+                onClick={reset}
+                disabled={modifiedCount === 0}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
+                  modifiedCount > 0
+                    ? "text-muted hover:text-foreground"
+                    : "cursor-default text-muted-2/60",
+                )}
+              >
+                <RotateCcw className="size-3.5" />
+                Reset
+                {modifiedCount > 0 ? ` (${modifiedCount})` : ""}
+              </button>
+            </div>
           )}
         </div>
-
-        <div
-          role="tabpanel"
-          id={`${baseId}-panel`}
-          aria-labelledby={`${baseId}-tab-${panel}`}
-          className="p-4 sm:p-5"
-        >
-          {panel === "customize" ? (
-            controls.length > 0 ? (
-              <div key={resetKey} className="grid gap-5 sm:grid-cols-2">
-                {controls.map((control) => (
-                  <ControlField
-                    key={control.key}
-                    control={control}
-                    value={values[control.key]}
-                    onChange={(v) => setValue(control.key, v)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted">
-                This component has no live options to customize — it renders the
-                same in every state. See the{" "}
-                <button
-                  type="button"
-                  onClick={() => setPanel("props")}
-                  className="font-medium text-brand-ink underline-offset-2 hover:underline"
+        <div className="p-4 sm:p-5">
+          {controls.length > 0 ? (
+            <div key={resetKey} className="space-y-6">
+              {groupControls(controls).map((section, i) => (
+                <section
+                  key={section.title ?? `_${i}`}
+                  aria-label={section.title ?? undefined}
+                  className="space-y-3"
                 >
-                  Props
-                </button>{" "}
-                tab for its full API.
-              </p>
-            )
+                  {section.title && (
+                    <h3 className="text-[11px] font-semibold uppercase tracking-wide text-muted-2">
+                      {section.title}
+                    </h3>
+                  )}
+                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {section.controls.map((control) => (
+                      <ControlField
+                        key={control.key}
+                        control={control}
+                        value={values[control.key]}
+                        onChange={(v) => setValue(control.key, v)}
+                        onReset={() => setValue(control.key, control.default)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
           ) : (
-            <PropsTable id={meta.id} />
+            <p className="text-sm text-muted">
+              This component has no live options to customize — it renders the
+              same in every state. See the Props table for its full API.
+            </p>
           )}
         </div>
-      </div>
+      </section>
+
+      {/* Props reference */}
+      <section
+        aria-label="Props"
+        className="overflow-hidden rounded-2xl border border-border bg-surface"
+      >
+        <div className="border-b border-border px-4 py-2.5">
+          <h2 className="text-sm font-semibold text-foreground">Props</h2>
+        </div>
+        <div className="p-4 sm:p-5">
+          <PropsTable id={meta.id} />
+        </div>
+      </section>
     </div>
   );
 }

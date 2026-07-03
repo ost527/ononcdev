@@ -131,7 +131,7 @@ export function NavbarDashboard({
 
       <nav
         aria-label="Secondary"
-        className="flex items-center gap-1 overflow-x-auto border-t border-border px-2"
+        className="flex items-center gap-1 overflow-x-auto border-t border-border px-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {tabs.map((tab, i) => {
           const isActive = active === i;
