@@ -155,7 +155,99 @@ export function PricingCompareToggle({
         </span>
       </div>
 
-      <div className="mt-8 overflow-x-auto rounded-3xl border border-border">
+      {/* Mobile: stacked plan cards — a wide matrix scrolls awkwardly on phones. */}
+      <div className="mt-8 grid gap-4 md:hidden">
+        {plans.map((plan, i) => {
+          const featured = i === highlight;
+          const price = annual ? plan.yearly : plan.monthly;
+          const free = price === 0;
+          return (
+            <div
+              key={plan.name}
+              className={cn(
+                "rounded-3xl border p-5",
+                featured ? "border-brand bg-brand/5" : "border-border",
+              )}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-base font-semibold">{plan.name}</span>
+                {plan.popular && (
+                  <span className="rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-semibold text-white">
+                    Most popular
+                  </span>
+                )}
+              </div>
+              <div className="mt-1 flex items-baseline gap-1">
+                {free ? (
+                  <span className="text-2xl font-semibold tracking-tight">Free</span>
+                ) : (
+                  <>
+                    <span className="text-2xl font-semibold tracking-tight">
+                      <AnimatedAmount value={price} currency={currency} />
+                    </span>
+                    <span className="text-xs text-muted">/mo</span>
+                  </>
+                )}
+              </div>
+              {!free && (
+                <p className="mt-0.5 text-[11px] text-muted-2">
+                  {annual ? "billed yearly" : "billed monthly"}
+                </p>
+              )}
+              <button
+                type="button"
+                className={cn(
+                  "mt-4 w-full rounded-full px-4 py-2 text-xs font-semibold transition-colors",
+                  featured
+                    ? "bg-brand text-white hover:bg-brand/90"
+                    : "border border-border-strong text-foreground hover:bg-surface-2",
+                )}
+              >
+                {plan.cta ?? "Choose"}
+              </button>
+              <dl className="mt-5 space-y-4">
+                {groups.map((group) => (
+                  <div key={group.label}>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-2">
+                      {group.label}
+                    </p>
+                    <div className="mt-2 space-y-2">
+                      {group.rows.map((row) => (
+                        <div
+                          key={row.feature}
+                          className="flex items-center justify-between gap-4 border-t border-border pt-2 text-sm"
+                        >
+                          <dt className="text-foreground/90">{row.feature}</dt>
+                          <dd className="shrink-0">
+                            {typeof row.values[i] === "string" ? (
+                              <span className="text-foreground/90">{row.values[i]}</span>
+                            ) : row.values[i] ? (
+                              <Check
+                                className="size-4 text-brand-2"
+                                role="img"
+                                aria-label="Included"
+                              />
+                            ) : (
+                              <Minus
+                                className="size-4 text-muted-2"
+                                role="img"
+                                aria-label="Not included"
+                              />
+                            )}
+                          </dd>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop: full comparison matrix */}
+      <div className="mt-8 hidden overflow-x-auto rounded-3xl border border-border md:block">
         <table className="w-full min-w-[640px] border-collapse text-left">
           <caption className="sr-only">Plan comparison ({period} billing)</caption>
           <thead>

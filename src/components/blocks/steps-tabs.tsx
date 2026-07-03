@@ -102,7 +102,7 @@ export function StepsTabs({
       <div
         role="tablist"
         aria-label={heading}
-        className="mt-10 flex gap-1 overflow-x-auto border-b border-border"
+        className="mt-10 flex gap-1 overflow-x-auto border-b border-border [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {steps.map((step, i) => {
           const selected = i === active;

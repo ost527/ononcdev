@@ -74,10 +74,10 @@ export function StepsWizard({
       </div>
 
       {/* stepper */}
-      <ol className="relative mt-10 flex items-center justify-between">
+      <ol className="relative mt-10 flex items-center justify-between px-4">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-4 h-px -translate-y-1/2 bg-border"
+          className="absolute inset-x-4 top-4 h-px -translate-y-1/2 bg-border"
         />
         {steps.map((step, i) => {
           const isDone = done[i];

@@ -34,7 +34,7 @@ export function Timeline({
       <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
         {heading}
       </h2>
-      <ol className="relative mt-8 border-l border-border">
+      <ol className="relative mt-8 ml-4 border-l border-border">
         {entries.map((entry, i) => (
           <li key={i} className="relative ml-6 pb-8 last:pb-0">
             <span className="absolute -left-[2.25rem] top-0.5 grid size-6 place-items-center rounded-full border border-border bg-surface text-brand-ink">
