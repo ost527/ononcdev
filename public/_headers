@@ -1,0 +1,7 @@
+# Next static export emits the metadata OG/Twitter images as extensionless
+# files (out/opengraph-image, out/twitter-image). Static hosts infer
+# Content-Type from the extension, so set it explicitly for social crawlers.
+/opengraph-image
+  Content-Type: image/png
+/twitter-image
+  Content-Type: image/png

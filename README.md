@@ -30,6 +30,8 @@ src/
 │   ├── page.tsx                 # Landing: ShowcaseHero + category browse cards
 │   ├── ai-agents/
 │   │   └── page.tsx             # "For AI agents" docs page explaining why ONONC suits coding agents; links to llms.txt endpoints
+│   ├── resources/
+│   │   └── page.tsx             # "Recommended resources" board: curated external design systems & component libraries (10 sites with descriptions, tags, outbound links)
 │   ├── llms.txt/
 │   │   └── route.ts             # Static route handler serving machine-readable index of all components
 │   ├── llms-full.txt/
@@ -91,7 +93,7 @@ src/
 
 ## Components
 
-The registry defines 313 components across four categories (computed by `src/registry/index.ts`). Detail/playground pages are statically generated only for the customizable components — blocks and non-customizable components have no detail page. The component count is derived at build time from the registry and embedded in the landing page.
+The registry defines 318 components across four categories (computed by `src/registry/index.ts`). Detail/playground pages are statically generated only for the customizable components — blocks and non-customizable components have no detail page. The component count is derived at build time from the registry and embedded in the landing page.
 
 ### Backgrounds (67)
 Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
@@ -116,8 +118,11 @@ Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
 - **Squares** — An endlessly drifting grid of squares that lights up under the cursor (canvas, interactive)
 - **Letter Glitch** — A dense grid of monospace glyphs flickering through letters and colors (canvas)
 - **Ballpit** — A pit of colorful balls under gravity that scatter away from the cursor (canvas, interactive)
+- **Strands** — A glowing bundle of threads that flow like windblown hair and part around the cursor (canvas)
+- **Liquid Chrome** — A sheet of molten, mirror-bright metal that folds and drags beneath the cursor (canvas)
+- **Dither** — An animated plasma resolved into crisp retro bands through an ordered dither matrix (canvas)
 
-### Text Animations (23)
+### Text Animations (58)
 Typographic effects that remain screen-reader friendly.
 
 - **Gradient Text** — Living gradient panning across letters (CSS)
@@ -144,7 +149,7 @@ Typographic effects that remain screen-reader friendly.
 - **Text Pressure** — Letters swell and thicken toward the cursor (pointer)
 - **Underline Draw** — A hand-drawn gradient underline draws in beneath the text (motion)
 
-### Components (63)
+### Components (75)
 Interactive building blocks with pointer reactivity, keyboard support, and reduced-motion awareness.
 
 - **Magnetic Button** — Springs toward cursor, snaps back on leave (motion)
@@ -203,13 +208,18 @@ Interactive building blocks with pointer reactivity, keyboard support, and reduc
 - **Calendar** — Inline month grid for single or range selection (a11y, keyboard)
 - **Kbd** — Keyboard key caps for documenting shortcuts (display)
 - **Card** — Composable content surface with header, content, and footer (layout, display)
+- **Card Swap** — A 3D card stack that auto-cycles the front card to the back, pausing on hover (motion, loop, 3D)
 - **Avatar** — User image with initials fallback and an optional status dot (display)
+- **Chroma Grid** — A desaturated grid that reveals each tile's color under a pointer spotlight (pointer, hover, reveal)
+- **Circular Gallery** — A curved coverflow band you drag and throw; it bends along an arc and loops forever (motion, drag, 3D)
 - **Separator** — Thin divider, horizontal or vertical, with an optional label (layout)
 - **Collapsible** — A single show/hide disclosure with an animated height (a11y, disclosure)
 - **Scroll Area** — A bounded scroll container with a custom, themed scrollbar (pointer, layout)
 - **Empty State** — A centered placeholder for empty content with an action (display, feedback)
 - **Multi-Select** — Searchable multi-select with removable chips and keyboard navigation (a11y, form)
 - **Time Picker** — Pick an hour, minute, and AM/PM with spinbutton segments (a11y, form)
+- **Pixel Card** — A surface that dissolves a mosaic of pixels into view on hover or focus (canvas, hover, a11y)
+- **Rolling Gallery** — Cards mounted on a spinning 3D cylinder; drag to roll it, hover to pause (motion, drag, 3D)
 
 ### Section Blocks (17)
 Composed, drop-in page sections built from the primitives above.
@@ -258,15 +268,15 @@ Every component's real source is embedded in the showcase at build time via `src
 ### AI Coding Agents Support
 A machine-readable index and dedicated docs page enable LLM coding agents to discover and compose ONONC components. Registry data is generated at build time and served as static exports.
 
-- **/llms.txt** — Machine-readable component index (58 KB, 308 components). Lists each component with name, one-line description, absolute URL, source path, category tags, and one-command install command. Generated at build time from `src/lib/llms.ts` via the registry and served by `src/app/llms.txt/route.ts`
+- **/llms.txt** — Machine-readable component index (58 KB, 318 components). Lists each component with name, one-line description, absolute URL, source path, category tags, and one-command install command. Generated at build time from `src/lib/llms.ts` via the registry and served by `src/app/llms.txt/route.ts`
 - **/llms-full.txt** — Index plus full component source code inlined in ```tsx fences (1.28 MB). Reuses `src/lib/source.ts` for source extraction, served by `src/app/llms-full.txt/route.ts`
-- **/r/<id>.json** — shadcn-compatible static registry (308 items). Each component bundles its complete source plus all transitively imported internal files (@/lib helpers, sibling components) with correct shadcn `type` and `target` alias placeholders (@lib/ @ui/ @components/), and lists real npm dependencies (clsx, tailwind-merge, motion, lucide-react; react/react-dom/next are peers and omitted). Enables one-command install: `npx shadcn@latest add https://dev.ononc.com/r/<id>.json`. Generated at build time from `src/lib/registry-json.ts` and served by static route handler `src/app/r/[name]/route.ts`. Output emitted to `out/r/<id>.json` by `next build`
+- **/r/<id>.json** — shadcn-compatible static registry (318 items). Each component bundles its complete source plus all transitively imported internal files (@/lib helpers, sibling components) with correct shadcn `type` and `target` alias placeholders (@lib/ @ui/ @components/), and lists real npm dependencies (clsx, tailwind-merge, motion, lucide-react; react/react-dom/next are peers and omitted). Enables one-command install: `npx shadcn@latest add https://dev.ononc.com/r/<id>.json`. Generated at build time from `src/lib/registry-json.ts` and served by static route handler `src/app/r/[name]/route.ts`. Output emitted to `out/r/<id>.json` by `next build`
 - **/ai-agents** — Standalone docs page (`src/app/ai-agents/page.tsx`) explaining why ONONC suits LLM coding agents: real copy-paste source, plain React + Tailwind, predictable structure, machine-readable llms.txt, one-command shadcn install, no additional dependencies, and full reduced-motion/a11y support. Includes JSON-LD breadcrumb and links to all endpoints. Linked from the footer "Get started" section
 - **Copy for AI button** — `src/components/showcase/copy-for-ai.tsx` on each component detail page; copies a ready prompt including the install command, docs URL, and component source for immediate agent use
 - **Site configuration** — `src/lib/site.ts` defines `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, defaults to `https://dev.ononc.com`) and `absoluteUrl()` helper used for component links in llms.txt and registry URLs, and for `metadataBase` in `src/app/layout.tsx`. Production domain is `dev.ononc.com`. URLs are 404-safe: component links point to `/[category]/[id]` detail page only when generated (backgrounds/text/ui); blocks and non-customizable components link to their category page instead
-- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (147 URLs: home, ai-agents intro, llms.txt, all 4 categories, and all detail pages for backgrounds/text/ui components)
-- **Static export output** — Emitted to `out/llms.txt`, `out/llms-full.txt`, `out/ai-agents.html`, `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (308 files) by `next build` (with `output: "export"`)
-- **Tests** — Validated by `src/lib/llms.test.ts` (llms.txt/llms-full.txt generation) and `src/lib/registry-json.test.ts` (all 308 items, dependency validation against package.json, transitive import bundling)
+- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (~160 URLs: home, ai-agents intro, llms.txt, all 4 categories, and all detail pages for backgrounds/text/ui components)
+- **Static export output** — Emitted to `out/llms.txt`, `out/llms-full.txt`, `out/ai-agents.html`, `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (318 files) by `next build` (with `output: "export"`)
+- **Tests** — Validated by `src/lib/llms.test.ts` (llms.txt/llms-full.txt generation) and `src/lib/registry-json.test.ts` (all 318 items, dependency validation against package.json, transitive import bundling)
 
 ### Component Detail Playground
 Each component has a dedicated detail page (/[category]/[id]) with an interactive playground — explore variants, customize props live, and preview changes in real-time.
@@ -386,10 +396,10 @@ Reusable React hook for canvas-based components:
 ## Verification Status
 
 ✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
-✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + all backgrounds/text/ui detail pages + /_not-found; 158 total routes)  
+✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + all backgrounds/text/ui detail pages + /_not-found; ~481 total routes)  
 ✅ **Lint** — `npm run lint` = 0 errors (eslint flat config; 6 pre-existing warnings in src/components/text/*)  
-✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, /ai-agents, and component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 308 components; 404 for unknown categories; no hydration errors; all components present; category scoping confirmed  
-✅ **Tests** — `npm test` = 54 files, 182 tests passed (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated; component-playground interface tested)
+✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, /ai-agents, and component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 318 components; 404 for unknown categories; no hydration errors; all components present; category scoping confirmed  
+✅ **Tests** — `npm test` = 59 files, 202 tests passed (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated; component-playground interface tested)
 
 ---
 
@@ -403,6 +413,12 @@ All critical and minor issues resolved as of 2026-06-30:
 - ✅ **m4: Progress Ring ARIA** — Added `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`
 - ✅ **m5: Component Showcase tabs ARIA** — Tabs now have complete ARIA: `role=tablist/tab`, `tabpanel` with `id`/`aria-controls`/`aria-labelledby`
 - ✅ **m6: Segmented Control index-based IDs** — Uses index-based element IDs (`${baseId}-${i}`) so labels with spaces work correctly
+
+
+### v1.9 Batch (2026-07-05) — Recommended Resources Board
+- ✅ **Recommended resources page** — New `/resources` static route (`src/app/resources/page.tsx`) serving a curated board of 10 third-party design systems and component libraries (React Bits, React Bits Pro, Mantine UI, 21st.dev, Cloudscape, Primer React, Carbon Design System, Material Web, Fluent UI, Astryx), each with description, tags, and outbound links (target=_blank rel=noopener noreferrer). Data-driven via RESOURCES[] array for easy editing.
+- ✅ **Metadata & discoverability** — Includes BreadcrumbList + ItemList JSON-LD for SEO. Linked from footer 'Get started' column (`src/app/layout.tsx` footerColumns) and added to sitemap (`src/app/sitemap.ts`). Prerenders to `out/resources.html`.
+- ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors (my files), next build exit 0 (/resources prerendered to out/resources.html, included in out/sitemap.xml)
 
 ### v1.2 Batch (2026-07-01) — Component Detail Playground Feature
 - ✅ **Component detail playground** — New `/[category]/[id]` route with static generation of all backgrounds/text/ui components (157 total routes: home + _not-found + 4 category SSG routes + non-blocks detail pages); features Preview/Code tabs, viewport presets (Desktop/Tablet/Mobile), refresh button, draggable/keyboard-accessible resize handle, optional Customize panel, and Props table
@@ -446,6 +462,22 @@ All critical and minor issues resolved as of 2026-06-30:
 - ✅ **Component detail page** — `/backgrounds/ferrofluid` static route generated; `out/backgrounds/ferrofluid.html` (97,773 bytes) and `out/r/ferrofluid.json` (19,756 bytes) bundled with transitive deps + shadcn alias placeholders
 - ✅ **Subcategories** — Ferrofluid added to "Fields & flow" group in `src/registry/subcategories.ts`
 - ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors (6 pre-existing text warnings), 54 test files with 182/182 tests passing, next build exit 0 (158 total routes: +1 for /backgrounds/ferrofluid detail page)
+
+### v1.8 Batch (2026-07-05) — Strands, Liquid Chrome, Dither Background Components
+- ✅ **Strands background** — A luminous bundle of fine threads that flow like windblown hair; each strand is a superposition of two travelling sine waves with per-strand depth parallax (thickness/opacity/speed), additive 'lighter' glow, and the cursor gently parts the strands. Wired into backgrounds registry with grouped Customize + Props + /backgrounds/strands detail page + /r/strands.json; grouped in "Fields & flow" in `src/registry/subcategories.ts`; useCanvas hook with reduced-motion single-frame + off-screen pause
+- ✅ **Liquid Chrome background** — A sheet of molten, mirror-bright metal: coordinate space domain-warped through itself twice to fold smooth gradients into liquid ridges, with a sharpened specular highlight ramp; the cursor drags the surface beneath. Wired into backgrounds registry with grouped Customize + Props + /backgrounds/liquid-chrome detail page + /r/liquid-chrome.json; grouped in "Gradients & aurora"; useCanvas hook lifecycle
+- ✅ **Dither background** — An animated plasma pushed through an ordered Bayer 4x4 dither matrix, resolving the gradient into crisp retro bands of stippled pixels between two colours across quantised tones (non-interactive). Wired into backgrounds registry with grouped Customize + Props + /backgrounds/dither detail page + /r/dither.json; grouped in "Gradients & aurora"; useCanvas hook with reduced-motion single-frame
+- ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors (my files only), 66 tests passing in src/registry + src/lib, next build exit 0 (501 static pages; emitted out/backgrounds/{strands,liquid-chrome,dither}.html + out/r/{strands,liquid-chrome,dither}.json with full transitive deps + shadcn alias placeholders)
+
+### v1.7 Batch (2026-07-04) — Interactive Showcase UI Components (Circular Gallery, Rolling Gallery, Card Swap, Chroma Grid, Pixel Card)
+- ✅ **Circular Gallery** — A curved coverflow band you drag and throw; it bends along an arc and loops forever. Wired into ui registry with grouped Customize + Props + live Usage playground spec, a customizable id + "Interactive showcase" subcategory slug; full keyboard and reduced-motion awareness; canvas/rAF loops pause off-screen
+- ✅ **Rolling Gallery** — Cards mounted on a spinning 3D cylinder; drag to roll it, hover to pause. Wired into ui registry with grouped Customize + Props + live Usage playground spec, a customizable id + "Interactive showcase" subcategory slug; full keyboard and reduced-motion awareness; canvas/rAF loops pause off-screen
+- ✅ **Card Swap** — A 3D card stack that auto-cycles the front card to the back, pausing on hover. Wired into ui registry with grouped Customize + Props + live Usage playground spec, a customizable id + "Interactive showcase" subcategory slug; full keyboard and reduced-motion awareness
+- ✅ **Chroma Grid** — A desaturated grid that reveals each tile's color under a pointer spotlight. Wired into ui registry with grouped Customize + Props + live Usage playground spec, a customizable id + "Interactive showcase" subcategory slug; full keyboard and reduced-motion awareness; pointer reactivity
+- ✅ **Pixel Card** — A surface that dissolves a mosaic of pixels into view on hover or focus. Wired into ui registry with grouped Customize + Props + live Usage playground spec, a customizable id + "Interactive showcase" subcategory slug; canvas-driven with a11y smoke test; rAF loops pause off-screen and on reduced-motion
+- ✅ **Component detail pages** — All 5 routes statically generated at `/ui/{id}`, each emitting `out/ui/{id}.html` and `out/r/{id}.json` with full transitive deps + shadcn alias placeholders
+- ✅ **Component count** — Components (ui) category now has 75 items; total registry now 318 (Backgrounds 67 + Text 58 + UI 75 + Blocks 118)
+- ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors (6 pre-existing text/* warnings), 59 files with 202/202 tests passing, next build exit 0 (out/ contains ui/{circular-gallery,rolling-gallery,card-swap,chroma-grid,pixel-card}.html and out/r/{circular-gallery,rolling-gallery,card-swap,chroma-grid,pixel-card}.json)
 
 ### v1.1 Batch (2026-06-30) — 12 new components
 - ✅ **Ripple background** — Click-to-emit ring via CSS `ring` keyframe; `onAnimationEnd` cleanup leak-free under reduced motion

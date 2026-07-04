@@ -71,11 +71,20 @@ import { Resizable } from "@/components/ui/resizable";
 import { Toolbar } from "@/components/ui/toolbar";
 import { TreeView } from "@/components/ui/tree-view";
 import { Avatar } from "@/components/ui/avatar";
+import { BounceCards } from "@/components/ui/bounce-cards";
+import { CardSwap } from "@/components/ui/card-swap";
 import { ChromaCard } from "@/components/ui/chroma-card";
+import { ChromaGrid } from "@/components/ui/chroma-grid";
+import { CircularGallery } from "@/components/ui/circular-gallery";
 import { DeviceMockup } from "@/components/ui/device-mockup";
+import { GlassIcons } from "@/components/ui/glass-icons";
 import { Globe } from "@/components/ui/globe";
 import { InfiniteGallery } from "@/components/ui/infinite-gallery";
+import { MagicBento } from "@/components/ui/magic-bento";
+import { Masonry } from "@/components/ui/masonry";
+import { PixelCard } from "@/components/ui/pixel-card";
 import { Preloader } from "@/components/ui/preloader";
+import { RollingGallery } from "@/components/ui/rolling-gallery";
 import { SwipeCards } from "@/components/ui/swipe-cards";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import {
@@ -1223,6 +1232,106 @@ export const ui: Category = {
       tags: ["motion", "drag", "a11y"],
       frameClassName: "min-h-[28rem] w-full items-center justify-center p-6",
       preview: <SwipeCards />,
+    },
+    {
+      id: "circular-gallery",
+      name: "Circular Gallery",
+      description:
+        "A curved coverflow band you drag and throw; it bends along an arc and loops forever.",
+      sourcePath: "components/ui/circular-gallery.tsx",
+      tags: ["motion", "drag", "3D"],
+      frameClassName: "h-96 w-full px-0",
+      preview: <CircularGallery className="rounded-none" />,
+    },
+    {
+      id: "rolling-gallery",
+      name: "Rolling Gallery",
+      description:
+        "Cards mounted on a spinning 3D cylinder — drag to roll it, hover to pause.",
+      sourcePath: "components/ui/rolling-gallery.tsx",
+      tags: ["motion", "drag", "3D"],
+      frameClassName: "h-96 w-full px-0",
+      preview: <RollingGallery className="rounded-none" />,
+    },
+    {
+      id: "card-swap",
+      name: "Card Swap",
+      description:
+        "A 3D card stack that auto-cycles the front card to the back, pausing on hover.",
+      sourcePath: "components/ui/card-swap.tsx",
+      tags: ["motion", "loop", "3D"],
+      frameClassName: "min-h-[22rem] w-full items-center justify-center p-6",
+      preview: <CardSwap />,
+    },
+    {
+      id: "chroma-grid",
+      name: "Chroma Grid",
+      description:
+        "A desaturated grid that reveals each tile's color under a pointer spotlight.",
+      sourcePath: "components/ui/chroma-grid.tsx",
+      tags: ["pointer", "hover", "reveal"],
+      frameClassName: "w-full items-center justify-center p-6",
+      preview: <ChromaGrid className="w-full max-w-xl" />,
+    },
+    {
+      id: "pixel-card",
+      name: "Pixel Card",
+      description:
+        "A surface that dissolves a mosaic of pixels into view on hover or focus.",
+      sourcePath: "components/ui/pixel-card.tsx",
+      tags: ["canvas", "hover", "a11y"],
+      frameClassName: "min-h-72 w-full items-center justify-center p-6",
+      preview: (
+        <PixelCard className="h-64 w-56" label="Pixel card demo">
+          <div className="flex h-64 w-56 flex-col items-center justify-center gap-2 p-6 text-center">
+            <span className="rounded-full bg-brand/15 px-2.5 py-0.5 text-xs font-medium text-brand-ink">
+              Interactive
+            </span>
+            <p className="text-lg font-semibold">Pixel Pass</p>
+            <p className="text-sm text-muted">Hover to dissolve in.</p>
+          </div>
+        </PixelCard>
+      ),
+    },
+    {
+      id: "masonry",
+      name: "Masonry",
+      description:
+        "A responsive multi-column masonry grid with a staggered reveal on scroll.",
+      sourcePath: "components/ui/masonry.tsx",
+      tags: ["layout", "motion", "reveal"],
+      frameClassName: "w-full p-6",
+      preview: <Masonry className="mx-auto max-w-2xl" />,
+    },
+    {
+      id: "bounce-cards",
+      name: "Bounce Cards",
+      description:
+        "An overlapping card fan that springs in and spreads apart on hover or focus.",
+      sourcePath: "components/ui/bounce-cards.tsx",
+      tags: ["motion", "hover", "spring"],
+      frameClassName: "min-h-80 w-full items-center justify-center p-6",
+      preview: <BounceCards />,
+    },
+    {
+      id: "glass-icons",
+      name: "Glass Icons",
+      description:
+        "A grid of frosted-glass icon tiles that tilt toward the pointer and lift on hover.",
+      sourcePath: "components/ui/glass-icons.tsx",
+      tags: ["hover", "3D", "a11y"],
+      frameClassName: "min-h-72 w-full items-center justify-center p-6",
+      preview: <GlassIcons />,
+    },
+    {
+      id: "magic-bento",
+      name: "Magic Bento",
+      description:
+        "A bento grid with a pointer spotlight, proximity border glow, and tilt.",
+      sourcePath: "components/ui/magic-bento.tsx",
+      tags: ["pointer", "hover", "layout"],
+      frameClassName: "w-full p-6",
+      preview: <MagicBento className="mx-auto max-w-2xl" />,
     },
   ],
 };

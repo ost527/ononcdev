@@ -9,6 +9,9 @@ import { Plasma } from "@/components/backgrounds/plasma";
 import { PulseRings } from "@/components/backgrounds/pulse-rings";
 import { Starfield } from "@/components/backgrounds/starfield";
 import { Waves } from "@/components/backgrounds/waves";
+import { Strands } from "@/components/backgrounds/strands";
+import { LiquidChrome } from "@/components/backgrounds/liquid-chrome";
+import { Dither } from "@/components/backgrounds/dither";
 import { FlowingLines } from "@/components/backgrounds/flowing-lines";
 import { SpotlightCursor } from "@/components/backgrounds/spotlight-cursor";
 import { MatrixRain } from "@/components/backgrounds/matrix-rain";
@@ -65,6 +68,8 @@ import { Silk } from "@/components/backgrounds/silk";
 import { Squares } from "@/components/backgrounds/squares";
 import { LetterGlitch } from "@/components/backgrounds/letter-glitch";
 import { Ballpit } from "@/components/backgrounds/ballpit";
+import { LightRays } from "@/components/backgrounds/light-rays";
+import { Orb } from "@/components/backgrounds/orb";
 import type { Category } from "@/registry/types";
 
 export const backgrounds: Category = {
@@ -660,6 +665,33 @@ export const backgrounds: Category = {
       preview: <FlowingLines className="h-full w-full" />,
     },
     {
+      id: "strands",
+      name: "Strands",
+      description: "A luminous bundle of threads that flow like windblown hair and part around the cursor.",
+      sourcePath: "components/backgrounds/strands.tsx",
+      tags: ["canvas", "interactive"],
+      bleed: true,
+      preview: <Strands className="h-full w-full" />,
+    },
+    {
+      id: "liquid-chrome",
+      name: "Liquid Chrome",
+      description: "A sheet of molten, mirror-bright metal that folds and drags beneath the cursor.",
+      sourcePath: "components/backgrounds/liquid-chrome.tsx",
+      tags: ["canvas", "interactive"],
+      bleed: true,
+      preview: <LiquidChrome className="h-full w-full" />,
+    },
+    {
+      id: "dither",
+      name: "Dither",
+      description: "An animated plasma resolved into crisp retro bands through an ordered dither matrix.",
+      sourcePath: "components/backgrounds/dither.tsx",
+      tags: ["canvas", "retro"],
+      bleed: true,
+      preview: <Dither className="h-full w-full" />,
+    },
+    {
       id: "spotlight-cursor",
       name: "Spotlight Cursor",
       description: "A hidden dot grid revealed only inside a cursor spotlight.",
@@ -676,6 +708,25 @@ export const backgrounds: Category = {
       tags: ["canvas"],
       bleed: true,
       preview: <MatrixRain className="h-full w-full" />,
+    },
+    {
+      id: "light-rays",
+      name: "Light Rays",
+      description:
+        "Volumetric shafts of light streaming from an off-screen edge, fanning and swaying.",
+      sourcePath: "components/backgrounds/light-rays.tsx",
+      tags: ["canvas", "interactive"],
+      bleed: true,
+      preview: <LightRays className="h-full w-full" />,
+    },
+    {
+      id: "orb",
+      name: "Orb",
+      description: "A living plasma sphere that brightens and hue-shifts toward the cursor.",
+      sourcePath: "components/backgrounds/orb.tsx",
+      tags: ["canvas", "interactive"],
+      bleed: true,
+      preview: <Orb className="h-full w-full" />,
     },
   ],
 };

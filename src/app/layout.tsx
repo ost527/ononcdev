@@ -23,6 +23,7 @@ const footerColumns: FooterColumn[] = [
     links: [
       { label: "Introduction", href: "/introduction" },
       { label: "For AI agents", href: "/ai-agents" },
+      { label: "Resources", href: "/resources" },
       { label: "Overview", href: "/" },
     ],
   },
@@ -38,11 +39,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_TITLE = "ONONC — Original animated component library";
+const SITE_DESCRIPTION =
+  "An original, motion-first React component library for Next.js: animated backgrounds, text effects, interactive components, and section blocks.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "ONONC — Original animated component library",
-  description:
-    "An original, motion-first React component library for Next.js: animated backgrounds, text effects, interactive components, and section blocks.",
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  applicationName: "ONONC",
+  keywords: [
+    "React component library",
+    "Next.js components",
+    "Tailwind CSS",
+    "animated backgrounds",
+    "text animations",
+    "UI components",
+    "section blocks",
+    "Framer Motion",
+    "shadcn registry",
+    "ONONC",
+  ],
+  authors: [{ name: "ONONC" }],
+  creator: "ONONC",
+  openGraph: {
+    type: "website",
+    siteName: "ONONC",
+    url: SITE_URL,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

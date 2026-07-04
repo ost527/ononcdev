@@ -3,21 +3,30 @@
 import { Alert, type AlertVariant } from "@/components/ui/alert";
 import { Avatar, type AvatarStatus } from "@/components/ui/avatar";
 import { Badge, type BadgeTone, type BadgeVariant } from "@/components/ui/badge";
+import { BounceCards } from "@/components/ui/bounce-cards";
+import { CardSwap } from "@/components/ui/card-swap";
 import { ChromaCard } from "@/components/ui/chroma-card";
+import { ChromaGrid } from "@/components/ui/chroma-grid";
+import { CircularGallery } from "@/components/ui/circular-gallery";
 import {
   DeviceMockup,
   type DeviceFrame,
   type DeviceVariant,
   type PhoneNotch,
 } from "@/components/ui/device-mockup";
+import { GlassIcons } from "@/components/ui/glass-icons";
 import { Globe } from "@/components/ui/globe";
 import { InfiniteGallery } from "@/components/ui/infinite-gallery";
+import { MagicBento } from "@/components/ui/magic-bento";
+import { Masonry } from "@/components/ui/masonry";
+import { PixelCard } from "@/components/ui/pixel-card";
 import {
   Preloader,
   type PreloaderBackdrop,
   type PreloaderReveal,
   type PreloaderVariant,
 } from "@/components/ui/preloader";
+import { RollingGallery } from "@/components/ui/rolling-gallery";
 import {
   SmoothCursor,
   type SmoothCursorVariant,
@@ -110,9 +119,14 @@ import { Embers } from "@/components/backgrounds/embers";
 import { Equalizer } from "@/components/backgrounds/equalizer";
 import { Ferrofluid } from "@/components/backgrounds/ferrofluid";
 import { Silk } from "@/components/backgrounds/silk";
+import { Strands } from "@/components/backgrounds/strands";
+import { LiquidChrome } from "@/components/backgrounds/liquid-chrome";
+import { Dither } from "@/components/backgrounds/dither";
 import { Squares } from "@/components/backgrounds/squares";
 import { LetterGlitch } from "@/components/backgrounds/letter-glitch";
 import { Ballpit } from "@/components/backgrounds/ballpit";
+import { LightRays, type LightRaysOrigin } from "@/components/backgrounds/light-rays";
+import { Orb } from "@/components/backgrounds/orb";
 import { Fireflies } from "@/components/backgrounds/fireflies";
 import { Fireworks } from "@/components/backgrounds/fireworks";
 import { FlowField } from "@/components/backgrounds/flow-field";
@@ -1987,6 +2001,119 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
     ],
   },
 
+  strands: {
+    controls: [
+      { type: "number", key: "count", label: "Strands", group: "Strands", min: 4, max: 60, step: 1, default: 24 },
+      { type: "number", key: "thickness", label: "Thickness", group: "Strands", min: 0.4, max: 3, step: 0.1, default: 1 },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 0, max: 3, step: 0.1, default: 1 },
+      { type: "number", key: "amplitude", label: "Wave height", group: "Motion", min: 0, max: 2, step: 0.05, default: 1 },
+      { type: "number", key: "pointerPull", label: "Cursor parting", group: "Motion", min: 0, max: 2, step: 0.1, default: 1 },
+      { type: "color", key: "colorA", label: "Color 1", group: "Appearance", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", group: "Appearance", default: "#22d3ee" },
+      { type: "color", key: "colorC", label: "Color 3", group: "Appearance", default: "#fb7185" },
+      { type: "number", key: "glow", label: "Glow", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0.6 },
+    ],
+    usage: {
+      element: (v) =>
+        `<Strands count={${n(v, "count")}} speed={${n(v, "speed")}} amplitude={${n(v, "amplitude")}} thickness={${n(v, "thickness")}} glow={${n(v, "glow")}} pointerPull={${n(v, "pointerPull")}} colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}", "${hexRgb(s(v, "colorC"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Strands
+        className="h-full w-full"
+        count={n(v, "count")}
+        speed={n(v, "speed")}
+        amplitude={n(v, "amplitude")}
+        thickness={n(v, "thickness")}
+        glow={n(v, "glow")}
+        pointerPull={n(v, "pointerPull")}
+        colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB")), hexRgb(s(v, "colorC"))]}
+      />
+    ),
+    props: [
+      { name: "count", type: "number", default: "24", description: "Number of flowing strands in the bundle." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Strand colors as r,g,b, blended top to bottom." },
+      { name: "speed", type: "number", default: "1", description: "Flow speed multiplier (0 = frozen)." },
+      { name: "amplitude", type: "number", default: "1", description: "Wave height multiplier (0–2)." },
+      { name: "thickness", type: "number", default: "1", description: "Strand thickness multiplier." },
+      { name: "glow", type: "number", default: "0.6", description: "Additive glow strength (0–1)." },
+      { name: "pointerPull", type: "number", default: "1", description: "How strongly the cursor parts the strands (0–2)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  "liquid-chrome": {
+    controls: [
+      { type: "number", key: "scale", label: "Scale", group: "Flow", min: 0.3, max: 3, step: 0.1, default: 1 },
+      { type: "number", key: "warp", label: "Warp", group: "Flow", min: 0, max: 2, step: 0.05, default: 1 },
+      { type: "number", key: "detail", label: "Detail", group: "Flow", min: 4, max: 16, step: 1, unit: "px", default: 8, hint: "Smaller = smoother surface, heavier." },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 0, max: 3, step: 0.1, default: 1 },
+      { type: "number", key: "pointerWarp", label: "Cursor warp", group: "Motion", min: 0, max: 2, step: 0.1, default: 1 },
+      { type: "color", key: "color", label: "Metal tint", group: "Appearance", default: "#adbcd6", code: rgb },
+      { type: "number", key: "brightness", label: "Brightness", group: "Appearance", min: 0.2, max: 1.5, step: 0.05, default: 1 },
+    ],
+    render: (v) => (
+      <LiquidChrome
+        className="h-full w-full"
+        color={hexRgb(s(v, "color"))}
+        scale={n(v, "scale")}
+        warp={n(v, "warp")}
+        detail={n(v, "detail")}
+        speed={n(v, "speed")}
+        pointerWarp={n(v, "pointerWarp")}
+        brightness={n(v, "brightness")}
+      />
+    ),
+    props: [
+      { name: "color", type: "string", default: '"173,188,214"', description: "Metallic tint of the mid-tones as r,g,b." },
+      { name: "speed", type: "number", default: "1", description: "Flow speed multiplier (0 = frozen)." },
+      { name: "scale", type: "number", default: "1", description: "Pattern scale — higher spreads the bands wider." },
+      { name: "warp", type: "number", default: "1", description: "Domain-warp strength: how molten it looks (0–2)." },
+      { name: "brightness", type: "number", default: "1", description: "Brightness of the specular highlights (0–1.5)." },
+      { name: "detail", type: "number", default: "8", description: "Shading cell size in px (smaller = smoother, heavier)." },
+      { name: "pointerWarp", type: "number", default: "1", description: "How strongly the cursor drags the surface (0–2)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  dither: {
+    controls: [
+      { type: "number", key: "pixelSize", label: "Pixel size", group: "Grid", min: 2, max: 16, step: 1, unit: "px", default: 6 },
+      { type: "number", key: "levels", label: "Tones", group: "Grid", min: 2, max: 6, step: 1, default: 4 },
+      { type: "number", key: "scale", label: "Scale", group: "Pattern", min: 0.3, max: 3, step: 0.1, default: 1 },
+      { type: "number", key: "contrast", label: "Contrast", group: "Pattern", min: 0.5, max: 2, step: 0.05, default: 1 },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 0, max: 3, step: 0.1, default: 1 },
+      { type: "color", key: "colorA", label: "Shadow", group: "Appearance", default: "#0d0f1c" },
+      { type: "color", key: "colorB", label: "Highlight", group: "Appearance", default: "#8ba0ff" },
+    ],
+    usage: {
+      element: (v) =>
+        `<Dither colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} pixelSize={${n(v, "pixelSize")}} levels={${n(v, "levels")}} scale={${n(v, "scale")}} contrast={${n(v, "contrast")}} speed={${n(v, "speed")}} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Dither
+        className="h-full w-full"
+        colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]}
+        pixelSize={n(v, "pixelSize")}
+        levels={n(v, "levels")}
+        scale={n(v, "scale")}
+        contrast={n(v, "contrast")}
+        speed={n(v, "speed")}
+      />
+    ),
+    props: [
+      { name: "colors", type: "[string, string]", default: "['13,15,28','139,160,255']", description: "The [shadow, highlight] colours the ramp runs between, as r,g,b." },
+      { name: "pixelSize", type: "number", default: "6", description: "Size of each dither pixel in px (bigger = chunkier)." },
+      { name: "speed", type: "number", default: "1", description: "Flow speed multiplier (0 = frozen)." },
+      { name: "scale", type: "number", default: "1", description: "Pattern scale — higher spreads the plasma wider." },
+      { name: "levels", type: "number", default: "4", description: "Number of quantised tones the dither ramps through (2–6)." },
+      { name: "contrast", type: "number", default: "1", description: "Contrast of the gradient before dithering (0.5–2)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
   squares: {
     controls: [
       { type: "number", key: "size", label: "Square size", group: "Grid", min: 16, max: 100, step: 2, unit: "px", default: 44 },
@@ -3247,7 +3374,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
     ],
     usage: { extra: 'className="h-96 w-full"' },
     render: (v) => (
-      <div className="h-[380px] w-[560px] overflow-hidden rounded-2xl border border-border">
+      <div className="h-[380px] w-full overflow-hidden rounded-2xl border border-border">
         <InfiniteGallery
           tileWidth={n(v, "tileWidth")}
           tileHeight={n(v, "tileHeight")}
@@ -3301,7 +3428,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
 </SmoothCursor>`,
     },
     render: (v) => (
-      <div className="h-[360px] w-[560px] overflow-hidden rounded-2xl border border-border bg-background">
+      <div className="h-[360px] w-full overflow-hidden rounded-2xl border border-border bg-background">
         <SmoothCursor
           variant={s(v, "variant") as SmoothCursorVariant}
           size={n(v, "size")}
@@ -3377,6 +3504,375 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { name: "showControls", type: "boolean", default: "true", description: "Show the circular Pass/Keep buttons below the deck." },
       { name: "onSwipe", type: "(id, direction) => void", description: "Fires when a card leaves the deck, with its swipe direction." },
       { name: "label", type: "string", default: '"Swipeable card deck"', description: "Accessible name for the deck." },
+    ],
+  },
+
+  "circular-gallery": {
+    controls: [
+      { type: "number", key: "itemWidth", label: "Card width", group: "Layout", min: 100, max: 280, step: 4, unit: "px", default: 200 },
+      { type: "number", key: "itemHeight", label: "Card height", group: "Layout", min: 140, max: 320, step: 4, unit: "px", default: 260 },
+      { type: "number", key: "gap", label: "Spacing", group: "Layout", min: 0, max: 120, step: 4, unit: "px", default: 44 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Layout", min: 0, max: 40, step: 2, unit: "px", default: 20 },
+      { type: "number", key: "bend", label: "Bend", group: "Curve", min: 0, max: 70, step: 2, unit: "°", default: 42, hint: "Rotation of the edge cards toward the viewer." },
+      { type: "number", key: "arc", label: "Arc depth", group: "Curve", min: 0, max: 120, step: 2, unit: "px", default: 46 },
+      { type: "number", key: "minScale", label: "Edge scale", group: "Curve", min: 0.3, max: 1, step: 0.02, default: 0.62 },
+      { type: "number", key: "fade", label: "Edge fade", group: "Curve", min: 0, max: 1, step: 0.05, default: 0.55 },
+      { type: "number", key: "autoScroll", label: "Auto-rotate", group: "Motion", min: -80, max: 80, step: 2, unit: "px/s", default: 18, hint: "0 stops; negative reverses." },
+      { type: "number", key: "friction", label: "Throw friction", group: "Motion", min: 0.8, max: 0.98, step: 0.01, default: 0.92 },
+      { type: "boolean", key: "snap", label: "Snap to card", group: "Motion", default: false },
+    ],
+    usage: { extra: 'className="h-96 w-full"' },
+    render: (v) => (
+      <div className="h-[360px] w-full overflow-hidden rounded-2xl border border-border">
+        <CircularGallery
+          itemWidth={n(v, "itemWidth")}
+          itemHeight={n(v, "itemHeight")}
+          gap={n(v, "gap")}
+          radius={n(v, "radius")}
+          bend={n(v, "bend")}
+          arc={n(v, "arc")}
+          minScale={n(v, "minScale")}
+          fade={n(v, "fade")}
+          autoScroll={n(v, "autoScroll")}
+          friction={n(v, "friction")}
+          snap={bool(v, "snap")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "items", type: "CircularGalleryItem[]", default: "gradient set", description: "Cards along the arc ({ title, subtitle?, background? })." },
+      { name: "itemWidth", type: "number", default: "200", description: "Card width in pixels." },
+      { name: "itemHeight", type: "number", default: "260", description: "Card height in pixels." },
+      { name: "gap", type: "number", default: "44", description: "Extra spacing between card centers, in pixels." },
+      { name: "bend", type: "number", default: "42", description: "Max rotation of edge cards toward the viewer, in degrees." },
+      { name: "arc", type: "number", default: "46", description: "How far edge cards dip down the arc, in pixels." },
+      { name: "minScale", type: "number", default: "0.62", description: "Scale of the outermost cards (center is 1)." },
+      { name: "fade", type: "number", default: "0.55", description: "How much edge cards fade (0–1)." },
+      { name: "autoScroll", type: "number", default: "18", description: "Idle auto-rotation speed in px/s (0 disables; negative reverses)." },
+      { name: "friction", type: "number", default: "0.92", description: "Inertia decay per frame after a drag (0.8–0.98)." },
+      { name: "snap", type: "boolean", default: "false", description: "Snap to the nearest card when a drag ends." },
+      { name: "radius", type: "number", default: "20", description: "Card corner radius in pixels." },
+      { name: "label", type: "string", default: '"Circular gallery"', description: "Accessible name for the gallery region." },
+    ],
+  },
+
+  "rolling-gallery": {
+    controls: [
+      { type: "number", key: "faceWidth", label: "Face width", group: "Ring", min: 120, max: 260, step: 4, unit: "px", default: 190 },
+      { type: "number", key: "faceHeight", label: "Face height", group: "Ring", min: 160, max: 320, step: 4, unit: "px", default: 250 },
+      { type: "number", key: "spacing", label: "Face spacing", group: "Ring", min: 0, max: 0.6, step: 0.02, default: 0.18, hint: "Fraction of the radius added between faces." },
+      { type: "number", key: "tilt", label: "Tilt", group: "Ring", min: -20, max: 20, step: 1, unit: "°", default: 6 },
+      { type: "number", key: "perspective", label: "Perspective", group: "Ring", min: 600, max: 2000, step: 50, unit: "px", default: 1100 },
+      { type: "number", key: "speed", label: "Spin speed", group: "Motion", min: -60, max: 60, step: 2, unit: "°/s", default: 22, hint: "0 stops; negative reverses." },
+      { type: "number", key: "sensitivity", label: "Drag sensitivity", group: "Motion", min: 0.05, max: 0.6, step: 0.01, default: 0.22, unit: "°/px" },
+      { type: "number", key: "friction", label: "Throw friction", group: "Motion", min: 0.8, max: 0.98, step: 0.01, default: 0.94 },
+      { type: "boolean", key: "pauseOnHover", label: "Pause on hover", group: "Motion", default: true },
+      { type: "boolean", key: "dim", label: "Dim back faces", group: "Style", default: true },
+      { type: "number", key: "radius", label: "Corner radius", group: "Style", min: 0, max: 36, step: 2, unit: "px", default: 18 },
+    ],
+    usage: { extra: 'className="h-96 w-full"' },
+    render: (v) => (
+      <div className="grid h-[360px] w-full place-items-center overflow-hidden rounded-2xl border border-border">
+        <RollingGallery
+          faceWidth={n(v, "faceWidth")}
+          faceHeight={n(v, "faceHeight")}
+          spacing={n(v, "spacing")}
+          tilt={n(v, "tilt")}
+          perspective={n(v, "perspective")}
+          speed={n(v, "speed")}
+          sensitivity={n(v, "sensitivity")}
+          friction={n(v, "friction")}
+          pauseOnHover={bool(v, "pauseOnHover")}
+          dim={bool(v, "dim")}
+          radius={n(v, "radius")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "items", type: "RollingGalleryItem[]", default: "gradient set", description: "Faces around the cylinder ({ title, subtitle?, background? })." },
+      { name: "faceWidth", type: "number", default: "190", description: "Face width in pixels." },
+      { name: "faceHeight", type: "number", default: "250", description: "Face height in pixels." },
+      { name: "spacing", type: "number", default: "0.18", description: "Extra spacing between faces, as a fraction of the radius." },
+      { name: "speed", type: "number", default: "22", description: "Auto-spin speed in °/s (0 disables; negative reverses)." },
+      { name: "sensitivity", type: "number", default: "0.22", description: "Degrees of spin per pixel of horizontal drag." },
+      { name: "friction", type: "number", default: "0.94", description: "Inertia decay per frame after a drag (0.8–0.98)." },
+      { name: "pauseOnHover", type: "boolean", default: "true", description: "Pause the auto-spin while the pointer is over the ring." },
+      { name: "tilt", type: "number", default: "6", description: "Forward tilt of the whole cylinder, in degrees." },
+      { name: "perspective", type: "number", default: "1100", description: "Scene perspective in pixels (smaller = stronger 3D)." },
+      { name: "dim", type: "boolean", default: "true", description: "Dim faces as they rotate to the back." },
+      { name: "radius", type: "number", default: "18", description: "Face corner radius in pixels." },
+      { name: "label", type: "string", default: '"Rolling gallery"', description: "Accessible name for the gallery region." },
+    ],
+  },
+
+  "card-swap": {
+    controls: [
+      { type: "number", key: "cardWidth", label: "Card width", group: "Stack", min: 200, max: 420, step: 10, unit: "px", default: 320 },
+      { type: "number", key: "cardHeight", label: "Card height", group: "Stack", min: 140, max: 300, step: 10, unit: "px", default: 210 },
+      { type: "number", key: "offsetX", label: "X offset", group: "Stack", min: -60, max: 60, step: 2, unit: "px", default: 26 },
+      { type: "number", key: "offsetY", label: "Y offset", group: "Stack", min: 0, max: 60, step: 2, unit: "px", default: 22 },
+      { type: "number", key: "skew", label: "Rotation", group: "Stack", min: -15, max: 15, step: 1, unit: "°", default: -5 },
+      { type: "number", key: "scaleStep", label: "Scale step", group: "Stack", min: 0, max: 0.15, step: 0.01, default: 0.06 },
+      { type: "number", key: "delay", label: "Swap delay", group: "Motion", min: 1, max: 8, step: 0.5, unit: "s", default: 3 },
+      { type: "boolean", key: "pauseOnHover", label: "Pause on hover", group: "Motion", default: true },
+      { type: "number", key: "radius", label: "Corner radius", group: "Style", min: 0, max: 32, step: 2, unit: "px", default: 20 },
+    ],
+    usage: {
+      element: (v) =>
+        `<CardSwap cardWidth={${n(v, "cardWidth")}} cardHeight={${n(v, "cardHeight")}} delay={${n(v, "delay")}} offsetX={${n(v, "offsetX")}} offsetY={${n(v, "offsetY")}} skew={${n(v, "skew")}} scaleStep={${n(v, "scaleStep")}} pauseOnHover={${bool(v, "pauseOnHover")}} radius={${n(v, "radius")}} />`,
+    },
+    render: (v) => (
+      <CardSwap
+        cardWidth={n(v, "cardWidth")}
+        cardHeight={n(v, "cardHeight")}
+        offsetX={n(v, "offsetX")}
+        offsetY={n(v, "offsetY")}
+        skew={n(v, "skew")}
+        scaleStep={n(v, "scaleStep")}
+        delay={n(v, "delay")}
+        pauseOnHover={bool(v, "pauseOnHover")}
+        radius={n(v, "radius")}
+      />
+    ),
+    props: [
+      { name: "items", type: "CardSwapItem[]", default: "gradient set", description: "Cards in the stack, front to back ({ title, subtitle?, tag?, background? })." },
+      { name: "cardWidth", type: "number", default: "320", description: "Card width in pixels." },
+      { name: "cardHeight", type: "number", default: "210", description: "Card height in pixels." },
+      { name: "delay", type: "number", default: "3", description: "Seconds each card stays in front before advancing." },
+      { name: "offsetX", type: "number", default: "26", description: "Horizontal shift per card deeper in the stack, in pixels." },
+      { name: "offsetY", type: "number", default: "22", description: "Vertical shift per card deeper in the stack, in pixels." },
+      { name: "skew", type: "number", default: "-5", description: "Rotation per card deeper in the stack, in degrees." },
+      { name: "scaleStep", type: "number", default: "0.06", description: "Scale reduction per card deeper in the stack." },
+      { name: "pauseOnHover", type: "boolean", default: "true", description: "Pause the rotation while the pointer is over the stack." },
+      { name: "radius", type: "number", default: "20", description: "Card corner radius in pixels." },
+      { name: "label", type: "string", default: '"Auto-rotating card stack"', description: "Accessible name for the stack." },
+    ],
+  },
+
+  "chroma-grid": {
+    controls: [
+      { type: "number", key: "columns", label: "Columns", group: "Grid", min: 2, max: 5, step: 1, default: 3 },
+      { type: "number", key: "gap", label: "Gap", group: "Grid", min: 4, max: 32, step: 2, unit: "px", default: 14 },
+      { type: "number", key: "tileHeight", label: "Tile height", group: "Grid", min: 100, max: 240, step: 10, unit: "px", default: 150 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Grid", min: 0, max: 28, step: 2, unit: "px", default: 16 },
+      { type: "number", key: "spotlightSize", label: "Spotlight size", group: "Spotlight", min: 120, max: 500, step: 10, unit: "px", default: 260 },
+      { type: "number", key: "dim", label: "Resting brightness", group: "Spotlight", min: 0, max: 1, step: 0.05, default: 0.5 },
+      { type: "boolean", key: "grayscale", label: "Desaturate at rest", group: "Spotlight", default: true },
+      { type: "boolean", key: "glow", label: "Pointer glow", group: "Spotlight", default: true },
+    ],
+    usage: { extra: 'className="w-full max-w-xl"' },
+    render: (v) => (
+      <div className="w-full">
+        <ChromaGrid
+          columns={n(v, "columns")}
+          gap={n(v, "gap")}
+          tileHeight={n(v, "tileHeight")}
+          radius={n(v, "radius")}
+          spotlightSize={n(v, "spotlightSize")}
+          dim={n(v, "dim")}
+          grayscale={bool(v, "grayscale")}
+          glow={bool(v, "glow")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "items", type: "ChromaGridItem[]", default: "built-in set", description: "Tiles ({ title, subtitle?, background?, color? })." },
+      { name: "columns", type: "number", default: "3", description: "Number of columns." },
+      { name: "gap", type: "number", default: "14", description: "Gap between tiles in pixels." },
+      { name: "tileHeight", type: "number", default: "150", description: "Tile height in pixels." },
+      { name: "radius", type: "number", default: "16", description: "Tile corner radius in pixels." },
+      { name: "spotlightSize", type: "number", default: "260", description: "Diameter of the color-reveal spotlight in pixels." },
+      { name: "dim", type: "number", default: "0.5", description: "Brightness of the resting (desaturated) grid, 0–1." },
+      { name: "grayscale", type: "boolean", default: "true", description: "Drain color from the resting grid (vs. only dimming it)." },
+      { name: "glow", type: "boolean", default: "true", description: "Show a soft brand glow that trails the pointer." },
+      { name: "label", type: "string", default: '"Chroma grid"', description: "Accessible name for the grid region." },
+    ],
+  },
+
+  "pixel-card": {
+    controls: [
+      { type: "number", key: "pixelSize", label: "Pixel size", group: "Pixels", min: 4, max: 20, step: 1, unit: "px", default: 10 },
+      { type: "number", key: "gap", label: "Pixel gap", group: "Pixels", min: 0, max: 8, step: 1, unit: "px", default: 2 },
+      { type: "number", key: "speed", label: "Fill speed", group: "Pixels", min: 1, max: 10, step: 0.5, default: 4 },
+      { type: "number", key: "variance", label: "Variance", group: "Pixels", min: 0, max: 1, step: 0.05, default: 0.35, hint: "Randomness of per-pixel timing and shading." },
+      { type: "color", key: "color", label: "Color", group: "Style", default: "#8b5cf6" },
+      { type: "number", key: "radius", label: "Corner radius", group: "Style", min: 0, max: 32, step: 2, unit: "px", default: 16 },
+      { type: "boolean", key: "active", label: "Always on", group: "Style", default: false, hint: "Reveal without hover/focus." },
+    ],
+    usage: {
+      element: (v) =>
+        `<PixelCard color="${s(v, "color")}" pixelSize={${n(v, "pixelSize")}} gap={${n(v, "gap")}} speed={${n(v, "speed")}} variance={${n(v, "variance")}} active={${bool(v, "active")}} radius={${n(v, "radius")}} className="h-64 w-56">
+  Your card content
+</PixelCard>`,
+    },
+    render: (v) => (
+      <PixelCard
+        className="h-64 w-56"
+        label="Pixel card demo"
+        pixelSize={n(v, "pixelSize")}
+        gap={n(v, "gap")}
+        color={s(v, "color")}
+        speed={n(v, "speed")}
+        variance={n(v, "variance")}
+        active={bool(v, "active")}
+        radius={n(v, "radius")}
+      >
+        <div className="flex h-64 w-56 flex-col items-center justify-center gap-2 p-6 text-center">
+          <span className="rounded-full bg-brand/15 px-2.5 py-0.5 text-xs font-medium text-brand-ink">
+            Interactive
+          </span>
+          <p className="text-lg font-semibold">Pixel Pass</p>
+          <p className="text-sm text-muted">Hover to dissolve in.</p>
+        </div>
+      </PixelCard>
+    ),
+    props: [
+      { name: "children", type: "ReactNode", description: "Card content, layered above the pixel canvas.", required: true },
+      { name: "pixelSize", type: "number", default: "10", description: "Size of each pixel square, in pixels." },
+      { name: "gap", type: "number", default: "2", description: "Gap between pixels, in pixels." },
+      { name: "color", type: "string", default: '"#8b5cf6"', description: "Pixel fill color (hex)." },
+      { name: "speed", type: "number", default: "4", description: "Fill progress per second (higher fills faster)." },
+      { name: "variance", type: "number", default: "0.35", description: "Randomness of per-pixel timing and shading (0–1)." },
+      { name: "active", type: "boolean", default: "false", description: "Reveal the pixels without a pointer/focus (always on)." },
+      { name: "radius", type: "number", default: "16", description: "Corner radius in pixels." },
+      { name: "label", type: "string", description: "Accessible name for the card." },
+    ],
+  },
+
+  masonry: {
+    controls: [
+      { type: "number", key: "columns", label: "Columns", group: "Layout", min: 2, max: 5, step: 1, default: 3 },
+      { type: "number", key: "gap", label: "Gap", group: "Layout", min: 4, max: 40, step: 2, unit: "px", default: 16 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Layout", min: 0, max: 28, step: 2, unit: "px", default: 14 },
+      { type: "number", key: "minColumnWidth", label: "Min column width", group: "Layout", min: 140, max: 320, step: 10, unit: "px", default: 200, hint: "Columns drop below this width." },
+      { type: "number", key: "stagger", label: "Reveal stagger", group: "Motion", min: 0, max: 0.2, step: 0.01, unit: "s", default: 0.06 },
+      { type: "number", key: "hoverScale", label: "Hover scale", group: "Motion", min: 1, max: 1.1, step: 0.01, default: 1.03 },
+    ],
+    usage: { extra: 'className="w-full"' },
+    render: (v) => (
+      <div className="w-full">
+        <Masonry
+          columns={n(v, "columns")}
+          gap={n(v, "gap")}
+          radius={n(v, "radius")}
+          minColumnWidth={n(v, "minColumnWidth")}
+          stagger={n(v, "stagger")}
+          hoverScale={n(v, "hoverScale")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "items", type: "MasonryItem[]", default: "gradient set", description: "Tiles ({ title?, subtitle?, height?, background? })." },
+      { name: "columns", type: "number", default: "3", description: "Target number of columns at full width." },
+      { name: "gap", type: "number", default: "16", description: "Gap between tiles in pixels." },
+      { name: "minColumnWidth", type: "number", default: "200", description: "Column count drops on narrow containers below this width per column." },
+      { name: "radius", type: "number", default: "14", description: "Tile corner radius in pixels." },
+      { name: "hoverScale", type: "number", default: "1.03", description: "Scale applied to a tile on hover (1 disables)." },
+      { name: "stagger", type: "number", default: "0.06", description: "Seconds of delay added per column position during the reveal." },
+      { name: "label", type: "string", default: '"Masonry gallery"', description: "Accessible name for the grid." },
+    ],
+  },
+
+  "bounce-cards": {
+    controls: [
+      { type: "number", key: "cardWidth", label: "Card width", group: "Cards", min: 140, max: 260, step: 4, unit: "px", default: 200 },
+      { type: "number", key: "cardHeight", label: "Card height", group: "Cards", min: 180, max: 320, step: 4, unit: "px", default: 260 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Cards", min: 0, max: 32, step: 2, unit: "px", default: 20 },
+      { type: "number", key: "rotate", label: "Fan rotation", group: "Fan", min: 0, max: 20, step: 1, unit: "°", default: 8 },
+      { type: "number", key: "stackGap", label: "Resting overlap", group: "Fan", min: 10, max: 100, step: 2, unit: "px", default: 48 },
+      { type: "number", key: "spreadGap", label: "Spread spacing", group: "Fan", min: 60, max: 240, step: 5, unit: "px", default: 150 },
+    ],
+    render: (v) => (
+      <BounceCards
+        cardWidth={n(v, "cardWidth")}
+        cardHeight={n(v, "cardHeight")}
+        radius={n(v, "radius")}
+        rotate={n(v, "rotate")}
+        stackGap={n(v, "stackGap")}
+        spreadGap={n(v, "spreadGap")}
+      />
+    ),
+    props: [
+      { name: "items", type: "BounceCardItem[]", default: "gradient set", description: "Cards in the fan ({ title, subtitle?, background? })." },
+      { name: "cardWidth", type: "number", default: "200", description: "Card width in pixels." },
+      { name: "cardHeight", type: "number", default: "260", description: "Card height in pixels." },
+      { name: "rotate", type: "number", default: "8", description: "Fan rotation applied per card away from the center, in degrees." },
+      { name: "stackGap", type: "number", default: "48", description: "Horizontal overlap between cards while resting, in pixels." },
+      { name: "spreadGap", type: "number", default: "150", description: "Horizontal spacing between cards while spread (hover/focus), in pixels." },
+      { name: "radius", type: "number", default: "20", description: "Card corner radius in pixels." },
+      { name: "label", type: "string", default: '"Bounce cards"', description: "Accessible name for the fan." },
+    ],
+  },
+
+  "glass-icons": {
+    controls: [
+      { type: "number", key: "columns", label: "Columns", group: "Grid", min: 2, max: 5, step: 1, default: 3 },
+      { type: "number", key: "gap", label: "Gap", group: "Grid", min: 8, max: 32, step: 2, unit: "px", default: 16 },
+      { type: "number", key: "size", label: "Tile size", group: "Grid", min: 64, max: 140, step: 4, unit: "px", default: 96 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Grid", min: 8, max: 40, step: 2, unit: "px", default: 22 },
+      { type: "number", key: "tilt", label: "Pointer tilt", group: "Interaction", min: 0, max: 24, step: 1, unit: "°", default: 14 },
+    ],
+    render: (v) => (
+      <GlassIcons
+        columns={n(v, "columns")}
+        gap={n(v, "gap")}
+        size={n(v, "size")}
+        radius={n(v, "radius")}
+        tilt={n(v, "tilt")}
+      />
+    ),
+    props: [
+      { name: "items", type: "GlassIconItem[]", default: "lucide set", description: "Tiles ({ label, icon?, gradient? })." },
+      { name: "columns", type: "number", default: "3", description: "Number of columns." },
+      { name: "gap", type: "number", default: "16", description: "Gap between tiles in pixels." },
+      { name: "size", type: "number", default: "96", description: "Tile size (square) in pixels." },
+      { name: "radius", type: "number", default: "22", description: "Tile corner radius in pixels." },
+      { name: "tilt", type: "number", default: "14", description: "Max pointer tilt in degrees (0 disables)." },
+      { name: "onSelect", type: "(index: number) => void", description: "Fires with the selected tile index." },
+      { name: "label", type: "string", default: '"Glass icons"', description: "Accessible name for the group." },
+    ],
+  },
+
+  "magic-bento": {
+    controls: [
+      { type: "number", key: "columns", label: "Columns", group: "Grid", min: 2, max: 6, step: 1, default: 4 },
+      { type: "number", key: "rowHeight", label: "Row height", group: "Grid", min: 100, max: 200, step: 4, unit: "px", default: 132 },
+      { type: "number", key: "gap", label: "Gap", group: "Grid", min: 6, max: 28, step: 2, unit: "px", default: 14 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Grid", min: 0, max: 28, step: 2, unit: "px", default: 18 },
+      { type: "color", key: "color", label: "Glow color", group: "Glow", default: "#8b5cf6" },
+      { type: "number", key: "glowRadius", label: "Glow reach", group: "Glow", min: 150, max: 500, step: 10, unit: "px", default: 320 },
+      { type: "boolean", key: "spotlight", label: "Spotlight", group: "Glow", default: true },
+      { type: "boolean", key: "borderGlow", label: "Border glow", group: "Glow", default: true },
+      { type: "number", key: "tilt", label: "Pointer tilt", group: "Tilt", min: 0, max: 16, step: 1, unit: "°", default: 6 },
+    ],
+    usage: { extra: 'className="w-full"' },
+    render: (v) => (
+      <div className="w-full">
+        <MagicBento
+          columns={n(v, "columns")}
+          rowHeight={n(v, "rowHeight")}
+          gap={n(v, "gap")}
+          radius={n(v, "radius")}
+          color={s(v, "color")}
+          glowRadius={n(v, "glowRadius")}
+          spotlight={bool(v, "spotlight")}
+          borderGlow={bool(v, "borderGlow")}
+          tilt={n(v, "tilt")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "items", type: "MagicBentoItem[]", default: "built-in set", description: "Cards ({ title, subtitle?, c?, r? }) where c/r are column/row spans." },
+      { name: "columns", type: "number", default: "4", description: "Number of columns." },
+      { name: "rowHeight", type: "number", default: "132", description: "Height of one grid row in pixels." },
+      { name: "gap", type: "number", default: "14", description: "Gap between cards in pixels." },
+      { name: "radius", type: "number", default: "18", description: "Card corner radius in pixels." },
+      { name: "color", type: "string", default: '"#8b5cf6"', description: "Glow / spotlight color (hex)." },
+      { name: "glowRadius", type: "number", default: "320", description: "Pointer proximity (px) over which a card's glow fades in." },
+      { name: "spotlight", type: "boolean", default: "true", description: "Show the radial spotlight that follows the pointer inside each card." },
+      { name: "borderGlow", type: "boolean", default: "true", description: "Light each card's border as the pointer nears it." },
+      { name: "tilt", type: "number", default: "6", description: "Max pointer tilt in degrees (0 disables)." },
+      { name: "label", type: "string", default: '"Magic bento grid"', description: "Accessible name for the grid." },
     ],
   },
 
@@ -3474,6 +3970,113 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { name: "atmosphere", type: "boolean", default: "true", description: "Soft atmosphere glow and rim light." },
       { name: "draggable", type: "boolean", default: "true", description: "Allow dragging to spin the globe (with inertia)." },
       { name: "label", type: "string", default: '"Rotating dotted globe"', description: "Accessible description of the visual." },
+    ],
+  },
+
+  "light-rays": {
+    controls: [
+      {
+        type: "select",
+        key: "origin",
+        label: "Origin",
+        group: "Source",
+        variant: "select",
+        default: "top-center",
+        options: [
+          { label: "Top", value: "top-center" },
+          { label: "Top left", value: "top-left" },
+          { label: "Top right", value: "top-right" },
+          { label: "Left", value: "left" },
+          { label: "Right", value: "right" },
+          { label: "Bottom", value: "bottom-center" },
+          { label: "Bottom left", value: "bottom-left" },
+          { label: "Bottom right", value: "bottom-right" },
+        ],
+      },
+      { type: "number", key: "lightSpread", label: "Light spread", group: "Source", min: 0.2, max: 4, step: 0.1, default: 1, hint: "Lower = tighter, more focused cone." },
+      { type: "number", key: "rayLength", label: "Ray length", group: "Source", min: 0.5, max: 4, step: 0.1, default: 2 },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 0, max: 3, step: 0.1, default: 1 },
+      { type: "boolean", key: "pulsating", label: "Pulsating", group: "Motion", default: false },
+      { type: "color", key: "color", label: "Color", group: "Appearance", default: "#ffffff" },
+      { type: "number", key: "saturation", label: "Saturation", group: "Appearance", min: 0, max: 1, step: 0.05, default: 1 },
+      { type: "number", key: "fadeDistance", label: "Fade distance", group: "Appearance", min: 0.3, max: 2, step: 0.1, default: 1 },
+      { type: "number", key: "noiseAmount", label: "Noise", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0 },
+      { type: "number", key: "distortion", label: "Distortion", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0 },
+      { type: "number", key: "detail", label: "Detail", group: "Appearance", min: 4, max: 16, step: 1, unit: "px", default: 8, hint: "Smaller = smoother, heavier." },
+      { type: "boolean", key: "followMouse", label: "Follow cursor", group: "Interaction", default: true },
+      { type: "number", key: "mouseInfluence", label: "Cursor influence", group: "Interaction", min: 0, max: 1, step: 0.05, default: 0.1 },
+    ],
+    usage: {
+      element: (v) =>
+        `<LightRays origin="${s(v, "origin")}" color="${hexRgb(s(v, "color"))}" speed={${n(v, "speed")}} lightSpread={${n(v, "lightSpread")}} rayLength={${n(v, "rayLength")}} pulsating={${bool(v, "pulsating")}} fadeDistance={${n(v, "fadeDistance")}} saturation={${n(v, "saturation")}} followMouse={${bool(v, "followMouse")}} mouseInfluence={${n(v, "mouseInfluence")}} noiseAmount={${n(v, "noiseAmount")}} distortion={${n(v, "distortion")}} detail={${n(v, "detail")}} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <LightRays
+        className="h-full w-full"
+        origin={s(v, "origin") as LightRaysOrigin}
+        color={hexRgb(s(v, "color"))}
+        speed={n(v, "speed")}
+        lightSpread={n(v, "lightSpread")}
+        rayLength={n(v, "rayLength")}
+        pulsating={bool(v, "pulsating")}
+        fadeDistance={n(v, "fadeDistance")}
+        saturation={n(v, "saturation")}
+        followMouse={bool(v, "followMouse")}
+        mouseInfluence={n(v, "mouseInfluence")}
+        noiseAmount={n(v, "noiseAmount")}
+        distortion={n(v, "distortion")}
+        detail={n(v, "detail")}
+      />
+    ),
+    props: [
+      { name: "origin", type: '"top-center" | "top-left" | "top-right" | "left" | "right" | "bottom-center" | "bottom-left" | "bottom-right"', default: '"top-center"', description: "Which edge the rays stream from." },
+      { name: "color", type: "string", default: '"255,255,255"', description: "Ray tint as r,g,b (white lets the blue-weighted falloff show)." },
+      { name: "speed", type: "number", default: "1", description: "Animation speed multiplier (0 = frozen)." },
+      { name: "lightSpread", type: "number", default: "1", description: "Beam tightness — lower is a tighter, more focused cone." },
+      { name: "rayLength", type: "number", default: "2", description: "How far the rays reach, as a multiple of the width." },
+      { name: "pulsating", type: "boolean", default: "false", description: "Gently pulse the whole beam." },
+      { name: "fadeDistance", type: "number", default: "1", description: "Distance over which rays fade, as a multiple of the width." },
+      { name: "saturation", type: "number", default: "1", description: "Colour saturation (0 = greyscale, 1 = full)." },
+      { name: "followMouse", type: "boolean", default: "true", description: "Bend the rays toward the cursor." },
+      { name: "mouseInfluence", type: "number", default: "0.1", description: "How strongly the cursor bends the rays (0–1)." },
+      { name: "noiseAmount", type: "number", default: "0", description: "Animated grain mixed into the rays (0–1)." },
+      { name: "distortion", type: "number", default: "0", description: "Travelling wobble warping the rays (0–1)." },
+      { name: "detail", type: "number", default: "8", description: "Canvas shading cell size in px (smaller = smoother, heavier)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  orb: {
+    controls: [
+      { type: "number", key: "size", label: "Size", group: "Orb", min: 0.4, max: 1, step: 0.02, default: 0.72 },
+      { type: "color", key: "color", label: "Color", group: "Orb", default: "#8b5cf6" },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 0, max: 3, step: 0.1, default: 1 },
+      { type: "number", key: "glow", label: "Glow", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0.7 },
+      { type: "number", key: "hoverIntensity", label: "Hover intensity", group: "Interaction", min: 0, max: 1, step: 0.05, default: 0.6 },
+    ],
+    usage: {
+      element: (v) =>
+        `<Orb color="${hexRgb(s(v, "color"))}" size={${n(v, "size")}} speed={${n(v, "speed")}} glow={${n(v, "glow")}} hoverIntensity={${n(v, "hoverIntensity")}} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Orb
+        className="h-full w-full"
+        color={hexRgb(s(v, "color"))}
+        size={n(v, "size")}
+        speed={n(v, "speed")}
+        glow={n(v, "glow")}
+        hoverIntensity={n(v, "hoverIntensity")}
+      />
+    ),
+    props: [
+      { name: "color", type: "string", default: '"139,92,246"', description: "Base orb color as r,g,b — its hue drives the whole sphere." },
+      { name: "size", type: "number", default: "0.72", description: "Orb size as a fraction of the frame's smaller side (0.4–1)." },
+      { name: "speed", type: "number", default: "1", description: "Churn + spin speed multiplier (0 = frozen)." },
+      { name: "glow", type: "number", default: "0.7", description: "Outer corona glow strength (0–1)." },
+      { name: "hoverIntensity", type: "number", default: "0.6", description: "How strongly the orb reacts (brightens, swells, hue-shifts) toward the cursor (0–1)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
     ],
   },
 };

@@ -65,6 +65,8 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
         "aurora-background", "aurora-ribbons", "aurora-curtains", "gradient-mesh",
         "plasma", "mesh-wave", "perlin-clouds", "smoke", "liquid-blob", "silk",
         "god-rays", "light-beams", "caustics", "meteors",
+        "liquid-chrome", "dither",
+        "light-rays", "orb",
       ],
     },
     {
@@ -81,7 +83,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       label: "Fields & flow",
       slugs: [
         "flow-field", "flowing-lines", "magnetic-field", "ferrofluid", "vortex",
-        "tron-trails", "neon-tunnel", "dna-helix",
+        "tron-trails", "neon-tunnel", "dna-helix", "strands",
       ],
     },
     {
@@ -163,7 +165,9 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       label: "Interactive showcase",
       slugs: [
         "chroma-card", "device-mockup", "infinite-gallery", "smooth-cursor",
-        "preloader", "globe", "swipe-cards",
+        "preloader", "globe", "swipe-cards", "circular-gallery",
+        "rolling-gallery", "card-swap", "chroma-grid", "pixel-card",
+        "masonry", "bounce-cards", "glass-icons", "magic-bento",
       ],
     },
     {
@@ -213,7 +217,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
   ],
   blocks: [
     { id: "heroes", label: "Heroes", prefixes: ["hero"] },
-    { id: "navbars", label: "Navigation bars", prefixes: ["navbar"] },
+    { id: "navbars", label: "Navigation bars", prefixes: ["navbar"], slugs: ["gooey-nav"] },
     { id: "features", label: "Feature sections", prefixes: ["feature"] },
     { id: "bento", label: "Bento grids", prefixes: ["bento"] },
     { id: "pricing", label: "Pricing", prefixes: ["pricing"] },

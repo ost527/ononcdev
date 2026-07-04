@@ -35,7 +35,9 @@ describe("buildLlmsTxt", () => {
     for (const category of categories) {
       for (const item of category.items) {
         if (!componentHasDetailPage(category.id, item.id)) {
-          expect(txt).not.toContain(`${SITE_URL}/${category.id}/${item.id}`);
+          // Match the whole markdown-link URL `](…/cat/id)` so an id that is a
+          // prefix of another (e.g. `card` vs `card-swap`) isn't a false match.
+          expect(txt).not.toContain(`${SITE_URL}/${category.id}/${item.id})`);
         }
       }
     }

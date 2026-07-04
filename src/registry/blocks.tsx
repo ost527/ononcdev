@@ -45,6 +45,7 @@ import { HeroAI } from "@/components/blocks/hero-ai";
 import { HeroSearch } from "@/components/blocks/hero-search";
 import { HeroImage } from "@/components/blocks/hero-image";
 import { LogoCloud } from "@/components/blocks/logo-cloud";
+import { GooeyNav } from "@/components/blocks/gooey-nav";
 import { NavbarApp } from "@/components/blocks/navbar-app";
 import { NavbarBlock } from "@/components/blocks/navbar-block";
 import { NavbarDrawer } from "@/components/blocks/navbar-drawer";
@@ -131,6 +132,19 @@ export const blocks: Category = {
       sourcePath: "components/blocks/navbar-block.tsx",
       tags: ["composed", "responsive"],
       preview: <NavbarBlock />,
+    },
+    {
+      id: "gooey-nav",
+      name: "Gooey Nav",
+      description:
+        "A pill navigation whose active indicator morphs between items with a liquid goo effect.",
+      sourcePath: "components/blocks/gooey-nav.tsx",
+      tags: ["composed", "motion", "a11y"],
+      preview: (
+        <div className="flex w-full justify-center py-2">
+          <GooeyNav />
+        </div>
+      ),
     },
     {
       id: "navbar-mega-menu",
