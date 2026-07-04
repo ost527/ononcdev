@@ -53,9 +53,8 @@ export function FlowField({
       };
     },
     draw: ({ ctx, width, height }, state, t) => {
-      // Fade prior frame for silky trails (instead of clearing).
-      ctx.fillStyle = "rgba(6,7,13,0.07)";
-      ctx.fillRect(0, 0, width, height);
+      // Clear fully each frame so no trail residue is left behind.
+      ctx.clearRect(0, 0, width, height);
       ctx.globalCompositeOperation = "lighter";
       ctx.lineWidth = 1.1;
 

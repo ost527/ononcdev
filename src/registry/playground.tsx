@@ -108,6 +108,11 @@ import { DnaHelix } from "@/components/backgrounds/dna-helix";
 import { DotMatrix } from "@/components/backgrounds/dot-matrix";
 import { Embers } from "@/components/backgrounds/embers";
 import { Equalizer } from "@/components/backgrounds/equalizer";
+import { Ferrofluid } from "@/components/backgrounds/ferrofluid";
+import { Silk } from "@/components/backgrounds/silk";
+import { Squares } from "@/components/backgrounds/squares";
+import { LetterGlitch } from "@/components/backgrounds/letter-glitch";
+import { Ballpit } from "@/components/backgrounds/ballpit";
 import { Fireflies } from "@/components/backgrounds/fireflies";
 import { Fireworks } from "@/components/backgrounds/fireworks";
 import { FlowField } from "@/components/backgrounds/flow-field";
@@ -1945,6 +1950,223 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
   },
 
   /* ---------------------------- Backgrounds ---------------------------- */
+  silk: {
+    controls: [
+      { type: "number", key: "scale", label: "Fold size", group: "Weave", min: 0.3, max: 3, step: 0.1, default: 1 },
+      { type: "number", key: "warp", label: "Warp", group: "Weave", min: 0, max: 2, step: 0.05, default: 1 },
+      { type: "number", key: "detail", label: "Detail", group: "Weave", min: 4, max: 16, step: 1, unit: "px", default: 8, hint: "Smaller = smoother surface, heavier." },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 0, max: 3, step: 0.1, default: 1 },
+      { type: "color", key: "colorA", label: "Color 1", group: "Appearance", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", group: "Appearance", default: "#22d3ee" },
+      { type: "number", key: "sheen", label: "Sheen", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0.6 },
+    ],
+    usage: {
+      element: (v) =>
+        `<Silk colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}"]} scale={${n(v, "scale")}} speed={${n(v, "speed")}} sheen={${n(v, "sheen")}} warp={${n(v, "warp")}} detail={${n(v, "detail")}} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Silk
+        className="h-full w-full"
+        colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB"))]}
+        scale={n(v, "scale")}
+        speed={n(v, "speed")}
+        sheen={n(v, "sheen")}
+        warp={n(v, "warp")}
+        detail={n(v, "detail")}
+      />
+    ),
+    props: [
+      { name: "colors", type: "[string, string]", default: "['139,92,246','34,211,238']", description: "The two silk colors, blended across the folds, as r,g,b." },
+      { name: "scale", type: "number", default: "1", description: "Fold size — higher spreads the weave wider." },
+      { name: "speed", type: "number", default: "1", description: "Flow speed multiplier (0 = frozen)." },
+      { name: "sheen", type: "number", default: "0.6", description: "Sheen sharpness — tighter, brighter highlights (0–1)." },
+      { name: "warp", type: "number", default: "1", description: "How much the weave warps and ripples (0–2)." },
+      { name: "detail", type: "number", default: "8", description: "Shading cell size in px (smaller = smoother, heavier)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  squares: {
+    controls: [
+      { type: "number", key: "size", label: "Square size", group: "Grid", min: 16, max: 100, step: 2, unit: "px", default: 44 },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 0, max: 3, step: 0.1, default: 1 },
+      {
+        type: "select",
+        key: "direction",
+        label: "Direction",
+        group: "Motion",
+        default: "diagonal",
+        options: [
+          { label: "Diagonal", value: "diagonal" },
+          { label: "Up", value: "up" },
+          { label: "Down", value: "down" },
+          { label: "Left", value: "left" },
+          { label: "Right", value: "right" },
+        ],
+      },
+      { type: "color", key: "lineColor", label: "Line color", group: "Appearance", default: "#8ba0ff", code: rgb },
+      { type: "color", key: "hoverColor", label: "Hover color", group: "Appearance", default: "#c4b5fd", code: rgb },
+      { type: "number", key: "reach", label: "Cursor reach", group: "Interaction", min: 60, max: 300, step: 10, unit: "px", default: 150 },
+    ],
+    render: (v) => (
+      <Squares
+        className="h-full w-full"
+        size={n(v, "size")}
+        speed={n(v, "speed")}
+        direction={s(v, "direction") as "diagonal" | "up" | "down" | "left" | "right"}
+        lineColor={hexRgb(s(v, "lineColor"))}
+        hoverColor={hexRgb(s(v, "hoverColor"))}
+        reach={n(v, "reach")}
+      />
+    ),
+    props: [
+      { name: "size", type: "number", default: "44", description: "Square size in pixels." },
+      { name: "speed", type: "number", default: "1", description: "Drift speed (0 = still)." },
+      { name: "direction", type: '"diagonal" | "up" | "down" | "left" | "right"', default: '"diagonal"', description: "Direction the grid scrolls." },
+      { name: "lineColor", type: "string", default: '"139,160,255"', description: "Grid line color as r,g,b." },
+      { name: "hoverColor", type: "string", default: '"196,181,253"', description: "Fill color of squares lit near the cursor, as r,g,b." },
+      { name: "reach", type: "number", default: "150", description: "Cursor influence radius in px." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  "letter-glitch": {
+    controls: [
+      { type: "number", key: "fontSize", label: "Font size", group: "Grid", min: 10, max: 40, step: 1, unit: "px", default: 18 },
+      { type: "number", key: "glitchSpeed", label: "Glitch speed", group: "Motion", min: 1, max: 60, step: 1, default: 18 },
+      { type: "color", key: "colorA", label: "Color 1", group: "Appearance", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", group: "Appearance", default: "#22d3ee" },
+      { type: "color", key: "colorC", label: "Color 3", group: "Appearance", default: "#fb7185" },
+      { type: "number", key: "glow", label: "Glow", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0.9 },
+      { type: "number", key: "vignette", label: "Vignette", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0.7 },
+    ],
+    usage: {
+      element: (v) =>
+        `<LetterGlitch colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}", "${hexRgb(s(v, "colorC"))}"]} fontSize={${n(v, "fontSize")}} glitchSpeed={${n(v, "glitchSpeed")}} glow={${n(v, "glow")}} vignette={${n(v, "vignette")}} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <LetterGlitch
+        className="h-full w-full"
+        colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB")), hexRgb(s(v, "colorC"))]}
+        fontSize={n(v, "fontSize")}
+        glitchSpeed={n(v, "glitchSpeed")}
+        glow={n(v, "glow")}
+        vignette={n(v, "vignette")}
+      />
+    ),
+    props: [
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Glyph colors as r,g,b (each cell picks one)." },
+      { name: "fontSize", type: "number", default: "18", description: "Monospace glyph size in px (drives the cell size)." },
+      { name: "glitchSpeed", type: "number", default: "18", description: "How frantically cells mutate (higher = more churn)." },
+      { name: "glow", type: "number", default: "0.9", description: "Glyph brightness / opacity (0–1)." },
+      { name: "vignette", type: "number", default: "0.7", description: "Edge darkening toward the corners (0–1)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  ballpit: {
+    controls: [
+      { type: "number", key: "count", label: "Balls", group: "Balls", min: 5, max: 80, step: 1, default: 40 },
+      { type: "number", key: "size", label: "Ball size", group: "Balls", min: 8, max: 40, step: 1, unit: "px", default: 18 },
+      { type: "number", key: "gravity", label: "Gravity", group: "Physics", min: 0, max: 3, step: 0.1, default: 1 },
+      { type: "number", key: "bounce", label: "Bounce", group: "Physics", min: 0, max: 1, step: 0.05, default: 0.75 },
+      { type: "number", key: "pointerForce", label: "Cursor force", group: "Physics", min: 0, max: 3, step: 0.1, default: 1 },
+      { type: "color", key: "colorA", label: "Color 1", group: "Appearance", default: "#8b5cf6" },
+      { type: "color", key: "colorB", label: "Color 2", group: "Appearance", default: "#22d3ee" },
+      { type: "color", key: "colorC", label: "Color 3", group: "Appearance", default: "#fb7185" },
+      { type: "number", key: "gloss", label: "Gloss", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0.7 },
+    ],
+    usage: {
+      element: (v) =>
+        `<Ballpit count={${n(v, "count")}} size={${n(v, "size")}} gravity={${n(v, "gravity")}} bounce={${n(v, "bounce")}} pointerForce={${n(v, "pointerForce")}} gloss={${n(v, "gloss")}} colors={["${hexRgb(s(v, "colorA"))}", "${hexRgb(s(v, "colorB"))}", "${hexRgb(s(v, "colorC"))}"]} className="h-full w-full" />`,
+    },
+    render: (v) => (
+      <Ballpit
+        className="h-full w-full"
+        count={n(v, "count")}
+        size={n(v, "size")}
+        gravity={n(v, "gravity")}
+        bounce={n(v, "bounce")}
+        pointerForce={n(v, "pointerForce")}
+        gloss={n(v, "gloss")}
+        colors={[hexRgb(s(v, "colorA")), hexRgb(s(v, "colorB")), hexRgb(s(v, "colorC"))]}
+      />
+    ),
+    props: [
+      { name: "count", type: "number", default: "40", description: "Number of balls (capped at 80)." },
+      { name: "gravity", type: "number", default: "1", description: "Downward gravity strength (0 = weightless)." },
+      { name: "bounce", type: "number", default: "0.75", description: "Bounciness of walls + collisions (0 = dead, 1 = elastic)." },
+      { name: "size", type: "number", default: "18", description: "Base ball radius in px." },
+      { name: "pointerForce", type: "number", default: "1", description: "How hard the cursor shoves nearby balls." },
+      { name: "colors", type: "string[]", default: "brand spectrum", description: "Ball colors as r,g,b." },
+      { name: "gloss", type: "number", default: "0.7", description: "Glossy top-lit shading strength (0–1)." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
+  ferrofluid: {
+    controls: [
+      { type: "number", key: "spikes", label: "Spikes", group: "Form", min: 0, max: 18, step: 1, default: 9 },
+      { type: "number", key: "spikeLength", label: "Spike length", group: "Form", min: 0, max: 1.5, step: 0.05, default: 0.55 },
+      { type: "number", key: "droplets", label: "Droplets", group: "Form", min: 0, max: 8, step: 1, default: 4 },
+      { type: "number", key: "coreSize", label: "Core size", group: "Form", min: 0.1, max: 0.4, step: 0.01, default: 0.22 },
+      { type: "number", key: "threshold", label: "Surface tension", group: "Form", min: 0.5, max: 1.6, step: 0.05, default: 1, hint: "Lower fuses blobs from farther apart." },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 0, max: 2.5, step: 0.1, default: 1 },
+      { type: "number", key: "wobble", label: "Wobble", group: "Motion", min: 0, max: 1, step: 0.05, default: 0.6 },
+      { type: "number", key: "spin", label: "Spin", group: "Motion", min: -1, max: 1, step: 0.05, unit: "turn/s", default: 0.12 },
+      { type: "boolean", key: "pointerReactive", label: "Follow pointer", group: "Magnet", default: true },
+      { type: "number", key: "magnetStrength", label: "Magnet strength", group: "Magnet", min: 0, max: 1, step: 0.05, default: 0.6 },
+      { type: "number", key: "magnetReach", label: "Magnet reach", group: "Magnet", min: 100, max: 500, step: 10, unit: "px", default: 260 },
+      { type: "color", key: "color", label: "Fluid color", group: "Appearance", default: "#8e74ff", code: rgb },
+      { type: "color", key: "highlight", label: "Highlight", group: "Appearance", default: "#bae6ff", code: rgb },
+      { type: "number", key: "glow", label: "Glow", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0.55 },
+      { type: "number", key: "sheen", label: "Sheen", group: "Appearance", min: 0, max: 1, step: 0.05, default: 0.6 },
+    ],
+    render: (v) => (
+      <Ferrofluid
+        className="h-full w-full"
+        spikes={n(v, "spikes")}
+        spikeLength={n(v, "spikeLength")}
+        droplets={n(v, "droplets")}
+        coreSize={n(v, "coreSize")}
+        threshold={n(v, "threshold")}
+        speed={n(v, "speed")}
+        wobble={n(v, "wobble")}
+        spin={n(v, "spin")}
+        pointerReactive={bool(v, "pointerReactive")}
+        magnetStrength={n(v, "magnetStrength")}
+        magnetReach={n(v, "magnetReach")}
+        color={hexRgb(s(v, "color"))}
+        highlight={hexRgb(s(v, "highlight"))}
+        glow={n(v, "glow")}
+        sheen={n(v, "sheen")}
+      />
+    ),
+    props: [
+      { name: "color", type: "string", default: '"142,116,255"', description: 'Body color of the fluid as "r,g,b".' },
+      { name: "highlight", type: "string", default: '"186,230,255"', description: 'Specular / rim sheen color as "r,g,b".' },
+      { name: "spikes", type: "number", default: "9", description: "Number of magnetic spikes growing from the core." },
+      { name: "spikeLength", type: "number", default: "0.55", description: "How far spikes reach past the core (fraction of its radius)." },
+      { name: "droplets", type: "number", default: "4", description: "Free droplets that orbit and merge back into the mass." },
+      { name: "coreSize", type: "number", default: "0.22", description: "Core radius as a fraction of the smaller canvas edge." },
+      { name: "threshold", type: "number", default: "1", description: "Metaball merge iso level; lower = gooier, higher = tighter." },
+      { name: "wobble", type: "number", default: "0.6", description: "How much each spike pulses in and out (0–1)." },
+      { name: "speed", type: "number", default: "1", description: "Master animation speed multiplier (0 = frozen)." },
+      { name: "spin", type: "number", default: "0.12", description: "Rotation of the spike crown, in turns per second." },
+      { name: "glow", type: "number", default: "0.55", description: "Outer glow / bloom intensity around the silhouette (0–1)." },
+      { name: "sheen", type: "number", default: "0.6", description: "Strength of the top-lit specular sheen (0–1)." },
+      { name: "pointerReactive", type: "boolean", default: "true", description: "Draw the fluid toward the pointer like a magnet." },
+      { name: "magnetStrength", type: "number", default: "0.6", description: "How hard the mass leans toward the pointer (0–1)." },
+      { name: "magnetReach", type: "number", default: "260", description: "Pointer distance (px) within which the tendril reaches out." },
+      { name: "children", type: "ReactNode", description: "Content layered above the canvas." },
+      { name: "className", type: "string", description: "Extra classes for the wrapper." },
+    ],
+  },
+
   "particle-field": {
     controls: [
       { type: "number", key: "density", label: "Density", min: 2, max: 24, default: 9 },

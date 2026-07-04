@@ -60,6 +60,11 @@ import { ClothFlag } from "@/components/backgrounds/cloth-flag";
 import { AuroraCurtains } from "@/components/backgrounds/aurora-curtains";
 import { VoronoiFill } from "@/components/backgrounds/voronoi-fill";
 import { Comets } from "@/components/backgrounds/comets";
+import { Ferrofluid } from "@/components/backgrounds/ferrofluid";
+import { Silk } from "@/components/backgrounds/silk";
+import { Squares } from "@/components/backgrounds/squares";
+import { LetterGlitch } from "@/components/backgrounds/letter-glitch";
+import { Ballpit } from "@/components/backgrounds/ballpit";
 import type { Category } from "@/registry/types";
 
 export const backgrounds: Category = {
@@ -68,6 +73,52 @@ export const backgrounds: Category = {
   blurb:
     "Ambient, animated canvases to sit behind your content. GPU-friendly and they pause when off-screen.",
   items: [
+    {
+      id: "ferrofluid",
+      name: "Ferrofluid",
+      description:
+        "A magnetic liquid-metal blob that grows spikes and reaches a tendril toward the cursor.",
+      sourcePath: "components/backgrounds/ferrofluid.tsx",
+      tags: ["canvas", "metaballs", "interactive"],
+      bleed: true,
+      preview: <Ferrofluid className="h-full w-full" />,
+    },
+    {
+      id: "silk",
+      name: "Silk",
+      description: "Flowing folds of satin catching the light as they drift.",
+      sourcePath: "components/backgrounds/silk.tsx",
+      tags: ["canvas", "ambient"],
+      bleed: true,
+      preview: <Silk className="h-full w-full" />,
+    },
+    {
+      id: "squares",
+      name: "Squares",
+      description: "An endlessly drifting grid of squares that lights up under the cursor.",
+      sourcePath: "components/backgrounds/squares.tsx",
+      tags: ["canvas", "grid", "interactive"],
+      bleed: true,
+      preview: <Squares className="h-full w-full" />,
+    },
+    {
+      id: "letter-glitch",
+      name: "Letter Glitch",
+      description: "A dense grid of monospace glyphs flickering through letters and colors.",
+      sourcePath: "components/backgrounds/letter-glitch.tsx",
+      tags: ["canvas", "code"],
+      bleed: true,
+      preview: <LetterGlitch className="h-full w-full" />,
+    },
+    {
+      id: "ballpit",
+      name: "Ballpit",
+      description: "A pit of colorful balls under gravity that scatter away from the cursor.",
+      sourcePath: "components/backgrounds/ballpit.tsx",
+      tags: ["canvas", "physics", "interactive"],
+      bleed: true,
+      preview: <Ballpit className="h-full w-full" />,
+    },
     {
       id: "flow-field",
       name: "Flow Field",

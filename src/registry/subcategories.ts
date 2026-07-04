@@ -55,7 +55,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
         "particle-field", "starfield", "warp-stars", "sparkles", "fireflies",
         "bokeh", "embers", "snowfall", "confetti", "comets", "fireworks",
         "ink-drops", "spiral-galaxy", "orbiting-dots", "plexus", "boids",
-        "metaballs", "bubbles", "dot-matrix",
+        "metaballs", "bubbles", "dot-matrix", "ballpit",
       ],
     },
     {
@@ -63,7 +63,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       label: "Gradients & aurora",
       slugs: [
         "aurora-background", "aurora-ribbons", "aurora-curtains", "gradient-mesh",
-        "plasma", "mesh-wave", "perlin-clouds", "smoke", "liquid-blob",
+        "plasma", "mesh-wave", "perlin-clouds", "smoke", "liquid-blob", "silk",
         "god-rays", "light-beams", "caustics", "meteors",
       ],
     },
@@ -73,15 +73,15 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       slugs: [
         "grid-beams", "flow-grid", "hex-grid", "topographic-lines", "halftone",
         "scanlines", "triangles", "voronoi-fill", "cells", "kaleidoscope",
-        "pinwheel", "spotlight-cursor",
+        "pinwheel", "spotlight-cursor", "squares",
       ],
     },
     {
       id: "fields",
       label: "Fields & flow",
       slugs: [
-        "flow-field", "flowing-lines", "magnetic-field", "vortex", "tron-trails",
-        "neon-tunnel", "dna-helix",
+        "flow-field", "flowing-lines", "magnetic-field", "ferrofluid", "vortex",
+        "tron-trails", "neon-tunnel", "dna-helix",
       ],
     },
     {
@@ -95,7 +95,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
     {
       id: "weather",
       label: "Weather & code",
-      slugs: ["rain", "lightning", "matrix-rain", "data-stream", "cloth-flag"],
+      slugs: ["rain", "lightning", "matrix-rain", "letter-glitch", "data-stream", "cloth-flag"],
     },
   ],
   text: [

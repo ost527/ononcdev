@@ -91,9 +91,9 @@ src/
 
 ## Components
 
-The registry defines 308 components across four categories (computed by `src/registry/index.ts`). Detail/playground pages are statically generated only for the customizable components — blocks and non-customizable components have no detail page. The component count is derived at build time from the registry and embedded in the landing page.
+The registry defines 313 components across four categories (computed by `src/registry/index.ts`). Detail/playground pages are statically generated only for the customizable components — blocks and non-customizable components have no detail page. The component count is derived at build time from the registry and embedded in the landing page.
 
-### Backgrounds (62)
+### Backgrounds (67)
 Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
 
 - **Aurora** — Soft gradient halos drifting like northern lights (CSS)
@@ -111,6 +111,11 @@ Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
 - **Spotlight Cursor** — A hidden dot grid revealed only inside a cursor spotlight (pointer)
 - **Ripple** — Click anywhere to emit an expanding concentric ring (pointer)
 - **Matrix Rain** — Columns of glyphs falling with glowing fading trails (canvas)
+- **Ferrofluid** — A magnetic liquid-metal blob with metaball spikes that reaches a tendril toward the cursor (canvas)
+- **Silk** — Flowing folds of satin catching the light as they drift (canvas)
+- **Squares** — An endlessly drifting grid of squares that lights up under the cursor (canvas, interactive)
+- **Letter Glitch** — A dense grid of monospace glyphs flickering through letters and colors (canvas)
+- **Ballpit** — A pit of colorful balls under gravity that scatter away from the cursor (canvas, interactive)
 
 ### Text Animations (23)
 Typographic effects that remain screen-reader friendly.
@@ -291,7 +296,7 @@ Vitest is configured for unit tests of helpers and component smoke tests. Run wi
 
 - **Config** — `vitest.config.ts` with jsdom environment and React import detection
 - **Setup** — `vitest.setup.ts` for test utilities and global mocks (e.g., IntersectionObserver)
-- **Coverage** — 46 test files, 182 tests passing:
+- **Coverage** — 54 test files, 182 tests passing:
   - `src/lib/utils.test.ts` — helpers (cn, clamp, mapRange, seededRandom, prefersReducedMotion)
   - `src/lib/llms.test.ts` — llms.txt/llms-full.txt generation validation
   - `src/lib/registry-json.test.ts` — registry-json generation (all 308 items, dependency validation against package.json, transitive import bundling)
@@ -381,10 +386,10 @@ Reusable React hook for canvas-based components:
 ## Verification Status
 
 ✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
-✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + all backgrounds/text/ui detail pages + /_not-found; 151 total routes)  
+✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + all backgrounds/text/ui detail pages + /_not-found; 158 total routes)  
 ✅ **Lint** — `npm run lint` = 0 errors (eslint flat config; 6 pre-existing warnings in src/components/text/*)  
 ✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, /ai-agents, and component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 308 components; 404 for unknown categories; no hydration errors; all components present; category scoping confirmed  
-✅ **Tests** — `npm test` = 46 files, 182 tests passed (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated; component-playground interface tested)
+✅ **Tests** — `npm test` = 54 files, 182 tests passed (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated; component-playground interface tested)
 
 ---
 
@@ -426,6 +431,21 @@ All critical and minor issues resolved as of 2026-06-30:
 - ✅ **Registry-json test suite** — New `src/lib/registry-json.test.ts` validates all 308 items, asserts every dependency is a real package in package.json, verifies transitive bundling
 - ✅ **Static export output** — Outputs emitted to `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (308 files) by `next build` with `output: "export"`
 - ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors, 46 test files with 182/182 tests passing, next build exit 0 (out/ contains llms.txt, llms-full.txt, ai-agents.html, robots.txt, sitemap.xml, r/*.json ×308)
+
+### v1.6 Batch (2026-07-04) — Silk, Squares, Letter Glitch, Ballpit Background Components
+- ✅ **Silk background** — Flowing folds of satin catching the light as they drift; interference-field shading tinted between two colors with a sharpened highlight ramp. Wired into backgrounds registry with 7 Customize controls (3 Weave, 1 Motion, 3 Appearance groups) + Props table; detail page at `/backgrounds/silk`; grouped in "Gradients & aurora" in `src/registry/subcategories.ts`
+- ✅ **Squares background** — An endlessly drifting grid of squares that fades into the dark at the edges, with cells lighting up as the cursor passes over them; supports diagonal/up/down/left/right drift directions. Wired into backgrounds registry with 6 Customize controls (1 Grid, 2 Motion, 2 Appearance, 1 Interaction group) + Props table; detail page at `/backgrounds/squares`; grouped in "Grids & geometry"
+- ✅ **Letter Glitch background** — A dense grid of monospace glyphs continuously flipping to new letters and colors; only the handful of cells that change each frame are repainted over a baked, vignetted backdrop, and the whole grid is repainted fresh after every resize (or once under reduced motion) rather than reusing stale cell geometry. Wired into backgrounds registry with 7 Customize controls (1 Grid, 1 Motion, 5 Appearance groups) + Props table; detail page at `/backgrounds/letter-glitch`; grouped in "Weather & code"
+- ✅ **Ballpit background** — A pit of colorful balls under gravity that bounce off the walls and each other, and scatter away from the cursor; equal-mass elastic collisions resolved pairwise (ball count capped at 80 to keep the O(n²) pass cheap). Wired into backgrounds registry with 9 Customize controls (2 Balls, 3 Physics, 4 Appearance groups) + Props table; detail page at `/backgrounds/ballpit`; grouped in "Particles & stars"
+- ✅ **Contract checks** — All 4 playground specs verified: every control maps to its matching component prop; every number control satisfies min≤default≤max; hex color controls convert to "r,g,b" via the shared `hexRgb` helper; the multi-color specs (silk, letter-glitch, ballpit) emit a valid `colors` array in their Usage snippets
+- ✅ **Registry count** — Backgrounds category now has 67 items (up from 63); total registry across all 4 categories is 313 components (`componentCount` in `src/registry/index.ts`)
+- ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors (6 pre-existing text warnings), 54 test files with 182/182 tests passing, next build exit 0 (out/ contains `out/backgrounds/{silk,squares,letter-glitch,ballpit}.html` and `out/r/{silk,squares,letter-glitch,ballpit}.json`, each JSON bundling full component source plus transitive `@/lib` deps with only real npm dependencies)
+
+### v1.5 Batch (2026-07-04) — Ferrofluid Background Component
+- ✅ **Ferrofluid background** — Magnetic liquid-metal blob with metaball spikes that reaches a tendril toward the cursor; canvas-driven with pointer reactivity. Wired into backgrounds registry with 15 Customize controls (5 Form, 3 Motion, 3 Magnet, 4 Appearance groups) + Props table; 15 grouped playground controls satisfy min≤default≤max bounds; color conversion verified (hex→rgb); reduced-motion path renders valid single analytic frame; edge cases traced (spikes=0, droplets=0, threshold/magnetReach bounds, speed=0); all pass static checks
+- ✅ **Component detail page** — `/backgrounds/ferrofluid` static route generated; `out/backgrounds/ferrofluid.html` (97,773 bytes) and `out/r/ferrofluid.json` (19,756 bytes) bundled with transitive deps + shadcn alias placeholders
+- ✅ **Subcategories** — Ferrofluid added to "Fields & flow" group in `src/registry/subcategories.ts`
+- ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors (6 pre-existing text warnings), 54 test files with 182/182 tests passing, next build exit 0 (158 total routes: +1 for /backgrounds/ferrofluid detail page)
 
 ### v1.1 Batch (2026-06-30) — 12 new components
 - ✅ **Ripple background** — Click-to-emit ring via CSS `ring` keyframe; `onAnimationEnd` cleanup leak-free under reduced motion
