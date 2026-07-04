@@ -28,6 +28,16 @@ src/
 │   ├── globals.css              # Design tokens (@theme), keyframes, utilities, light/dark variants
 │   ├── layout.tsx               # Root layout: ScrollProgress + SiteHeader + {children} + FooterBlock + Toaster
 │   ├── page.tsx                 # Landing: ShowcaseHero + category browse cards
+│   ├── ai-agents/
+│   │   └── page.tsx             # "For AI agents" docs page explaining why ONONC suits coding agents; links to llms.txt endpoints
+│   ├── llms.txt/
+│   │   └── route.ts             # Static route handler serving machine-readable index of all components
+│   ├── llms-full.txt/
+│   │   └── route.ts             # Static route handler serving index + full component sources inlined
+│   ├── r/
+│   │   └── [name]/route.ts      # shadcn-compatible static registry: /r/<id>.json with bundled sources + dependencies
+│   ├── robots.ts                # robots.txt route handler (allow all, Host, Sitemap)
+│   ├── sitemap.ts               # sitemap.xml route handler (147 URLs: home, intro, ai-agents, llms.txt, categories, detail pages)
 │   └── [category]/
 │       ├── layout.tsx           # Sidebar + content split for all category routes
 │       ├── page.tsx             # Per-category view: renders ONLY that category's components
@@ -46,13 +56,17 @@ src/
 │       ├── component-showcase.tsx  # Preview + Code tabs for category pages (grid cards)
 │       ├── component-playground.tsx  # Detail page: tabs, viewport controls, resize handle, customize panel, props table
 │       ├── playground-controls.tsx   # Customize controls using library primitives (Slider, Switch, SegmentedControl, etc.)
+│       ├── copy-for-ai.tsx      # Button copying AI-ready install prompt on detail pages
 │       ├── theme-toggle.tsx     # Dark/light theme switcher
 │       └── other showcase support files
 ├── lib/
 │   ├── utils.ts                 # cn, clamp, mapRange, seededRandom, prefersReducedMotion
 │   ├── use-canvas.ts            # Reusable canvas rAF hook
 │   ├── use-hydrated.ts          # useSyncExternalStore mount guard for Next.js 16
-│   └── source.ts                # Build-time fs reader for component sources
+│   ├── source.ts                # Build-time fs reader for component sources
+│   ├── llms.ts                  # Build-time registry → llms.txt/llms-full.txt generator
+│   ├── registry-json.ts         # Build-time registry → /r/<id>.json shadcn-compatible registry generator
+│   └── site.ts                  # SITE_URL + absoluteUrl() for metadata and LLM endpoints
 └── registry/
     ├── types.ts                 # Component registry types + PlaygroundSpec, Control, PropDoc types
     ├── backgrounds.tsx          # Backgrounds registry (~32 items)
@@ -77,9 +91,9 @@ src/
 
 ## Components
 
-The showcase renders over 250 component detail pages (via static export), covering components across four categories computed by `src/registry/index.ts`. The component count is derived at build time from the registry and embedded in the landing page.
+The registry defines 308 components across four categories (computed by `src/registry/index.ts`). Detail/playground pages are statically generated only for the customizable components — blocks and non-customizable components have no detail page. The component count is derived at build time from the registry and embedded in the landing page.
 
-### Backgrounds (15)
+### Backgrounds (62)
 Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
 
 - **Aurora** — Soft gradient halos drifting like northern lights (CSS)
@@ -220,7 +234,7 @@ Composed, drop-in page sections built from the primitives above.
 - **Comparison Table** — Feature matrix comparing plans with a highlighted column (layout)
 - **Timeline** — A vertical rail-and-node timeline of milestones (layout)
 - **CTA Section** — Closing call-to-action over animated mesh (motion)
-- **Footer** — Four-region footer with brand, links, and socials (layout)
+- **Footer** — Brand and navigation links with optional socials row (layout)
 - **Banner** — Dismissible announcement bar with gradient wash and CTA (composed)
 - **Team Grid** — Responsive grid of team member cards with avatar and role (layout)
 
@@ -235,6 +249,19 @@ Every component's real source is embedded in the showcase at build time via `src
 - **Code Block Component** — `src/components/showcase/code-block.tsx` renders highlighted code with Prism and handles copy-to-clipboard
 - **Component Showcase** — `src/components/showcase/component-showcase.tsx` provides side-by-side Preview and Code tabs
 - **Page.tsx** — Async server component that orchestrates registry read and passes sources to showcase
+
+### AI Coding Agents Support
+A machine-readable index and dedicated docs page enable LLM coding agents to discover and compose ONONC components. Registry data is generated at build time and served as static exports.
+
+- **/llms.txt** — Machine-readable component index (58 KB, 308 components). Lists each component with name, one-line description, absolute URL, source path, category tags, and one-command install command. Generated at build time from `src/lib/llms.ts` via the registry and served by `src/app/llms.txt/route.ts`
+- **/llms-full.txt** — Index plus full component source code inlined in ```tsx fences (1.28 MB). Reuses `src/lib/source.ts` for source extraction, served by `src/app/llms-full.txt/route.ts`
+- **/r/<id>.json** — shadcn-compatible static registry (308 items). Each component bundles its complete source plus all transitively imported internal files (@/lib helpers, sibling components) with correct shadcn `type` and `target` alias placeholders (@lib/ @ui/ @components/), and lists real npm dependencies (clsx, tailwind-merge, motion, lucide-react; react/react-dom/next are peers and omitted). Enables one-command install: `npx shadcn@latest add https://dev.ononc.com/r/<id>.json`. Generated at build time from `src/lib/registry-json.ts` and served by static route handler `src/app/r/[name]/route.ts`. Output emitted to `out/r/<id>.json` by `next build`
+- **/ai-agents** — Standalone docs page (`src/app/ai-agents/page.tsx`) explaining why ONONC suits LLM coding agents: real copy-paste source, plain React + Tailwind, predictable structure, machine-readable llms.txt, one-command shadcn install, no additional dependencies, and full reduced-motion/a11y support. Includes JSON-LD breadcrumb and links to all endpoints. Linked from the footer "Get started" section
+- **Copy for AI button** — `src/components/showcase/copy-for-ai.tsx` on each component detail page; copies a ready prompt including the install command, docs URL, and component source for immediate agent use
+- **Site configuration** — `src/lib/site.ts` defines `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, defaults to `https://dev.ononc.com`) and `absoluteUrl()` helper used for component links in llms.txt and registry URLs, and for `metadataBase` in `src/app/layout.tsx`. Production domain is `dev.ononc.com`. URLs are 404-safe: component links point to `/[category]/[id]` detail page only when generated (backgrounds/text/ui); blocks and non-customizable components link to their category page instead
+- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (147 URLs: home, ai-agents intro, llms.txt, all 4 categories, and all detail pages for backgrounds/text/ui components)
+- **Static export output** — Emitted to `out/llms.txt`, `out/llms-full.txt`, `out/ai-agents.html`, `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (308 files) by `next build` (with `output: "export"`)
+- **Tests** — Validated by `src/lib/llms.test.ts` (llms.txt/llms-full.txt generation) and `src/lib/registry-json.test.ts` (all 308 items, dependency validation against package.json, transitive import bundling)
 
 ### Component Detail Playground
 Each component has a dedicated detail page (/[category]/[id]) with an interactive playground — explore variants, customize props live, and preview changes in real-time.
@@ -264,8 +291,10 @@ Vitest is configured for unit tests of helpers and component smoke tests. Run wi
 
 - **Config** — `vitest.config.ts` with jsdom environment and React import detection
 - **Setup** — `vitest.setup.ts` for test utilities and global mocks (e.g., IntersectionObserver)
-- **Coverage** — 44 test files, 109 tests passing:
+- **Coverage** — 46 test files, 182 tests passing:
   - `src/lib/utils.test.ts` — helpers (cn, clamp, mapRange, seededRandom, prefersReducedMotion)
+  - `src/lib/llms.test.ts` — llms.txt/llms-full.txt generation validation
+  - `src/lib/registry-json.test.ts` — registry-json generation (all 308 items, dependency validation against package.json, transitive import bundling)
   - `src/registry/registry.test.ts` — registry structure validation (asserts all entries and every sourcePath file exists)
   - `src/registry/playground.test.ts` — playground specs validation
   - `src/components/showcase/component-playground.test.tsx` — playground interface tests
@@ -352,10 +381,10 @@ Reusable React hook for canvas-based components:
 ## Verification Status
 
 ✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
-✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + all backgrounds/text/ui detail pages + /_not-found; 157 total routes)  
-✅ **Lint** — `npm run lint` = 0 (eslint flat config)  
-✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, and component detail routes; 404 for unknown categories; no hydration errors; all components present; category scoping confirmed  
-✅ **Tests** — `npm test` = 44 files, 107 tests passed (registry test validates all entries + sourcePath existence; playground specs validated; component-playground interface tested)
+✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + all backgrounds/text/ui detail pages + /_not-found; 151 total routes)  
+✅ **Lint** — `npm run lint` = 0 errors (eslint flat config; 6 pre-existing warnings in src/components/text/*)  
+✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, /ai-agents, and component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 308 components; 404 for unknown categories; no hydration errors; all components present; category scoping confirmed  
+✅ **Tests** — `npm test` = 46 files, 182 tests passed (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated; component-playground interface tested)
 
 ---
 
@@ -379,6 +408,24 @@ All critical and minor issues resolved as of 2026-06-30:
 - ✅ **Grid card updates** — UI/text/backgrounds grid cards show title + summary linking to detail page only; blocks render plain title/summary (no link) with inline Preview/Code tabs + ViewportToggle
 - ✅ **SegmentedControl a11y** — Now accepts optional `aria-label` / `aria-labelledby` props (backward compatible)
 - ✅ **New tests** — `src/registry/playground.test.ts` and `src/components/showcase/component-playground.test.tsx`; suite now 44 files, 109 tests
+
+### v1.3 Batch (2026-07-04) — AI Coding Agents Support (Phase 1)
+- ✅ **Machine-readable LLM index** — `/llms.txt` endpoint (58 KB, 308 components) generated at build time by `src/lib/llms.ts`, listing each component with name, one-line description, absolute URL, source path, and category tags. Served by static route handler `src/app/llms.txt/route.ts`
+- ✅ **LLM index with full source** — `/llms-full.txt` endpoint (1.28 MB) combines the llms.txt header with complete component source code inlined in ```tsx fences. Generated by `src/app/llms-full.txt/route.ts`, reusing `src/lib/source.ts` for extraction
+- ✅ **AI agents docs page** — New `/ai-agents` route (`src/app/ai-agents/page.tsx`) explains why ONONC suits coding agents (real copy-paste source, plain React + Tailwind, predictable structure, machine-readable index, no install dependencies, full reduced-motion/a11y support). Includes JSON-LD breadcrumb and links to both endpoints. Linked from footer "Get started" section
+- ✅ **Site configuration** — New `src/lib/site.ts` module defines `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, defaults to `https://dev.ononc.com`) and `absoluteUrl()` helper for generating component links in llms.txt and for `metadataBase` in `src/app/layout.tsx`. Production domain: `dev.ononc.com`
+- ✅ **404-safe URLs** — Component links point to `/[category]/[id]` detail page only when that page is generated (backgrounds/text/ui); blocks and non-customizable components link to their category page instead
+- ✅ **Static export support** — Outputs emitted to `out/llms.txt`, `out/llms-full.txt`, and `out/ai-agents.html` by `next build` with `output: "export"`
+- ✅ **Test coverage** — New `src/lib/llms.test.ts` validates llms.txt/llms-full.txt generation and structure
+- ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors, 45 test files with 177/177 tests passing, next build exit 0 (151 total static routes)
+
+### v1.4 Batch (2026-07-04) — AI Coding Agents Support (Phase 2)
+- ✅ **shadcn-compatible static registry** — `/r/<id>.json` endpoint (308 items) generated at build time by `src/lib/registry-json.ts`, serving each component with its complete source bundled alongside all transitively imported internal files (@/lib helpers, sibling components). Each item uses correct shadcn `type` and `target` alias placeholders (@lib/ @ui/ @components/) and lists real npm dependencies (clsx, tailwind-merge, motion, lucide-react; peers omitted). Served by static route handler `src/app/r/[name]/route.ts`, emitted to `out/r/<id>.json` by `next build`. Enables one-command install: `npx shadcn@latest add https://dev.ononc.com/r/<id>.json`. VERIFIED with real shadcn CLI (badge + hero-block component imports resolved correctly, deps added, styling intact)
+- ✅ **Per-component "Copy for AI" button** — New `src/components/showcase/copy-for-ai.tsx` on each detail page; copies a ready prompt with install command, docs URL, and component source for agent use. Every `/llms.txt` entry now carries its `npx shadcn@latest add …/r/<id>.json` install command for universal agent coverage
+- ✅ **Search engine metadata** — New `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap); new `src/app/sitemap.ts` serves sitemap.xml (147 URLs: home, ai-agents intro, llms.txt, all 4 categories, all detail pages for backgrounds/text/ui)
+- ✅ **Registry-json test suite** — New `src/lib/registry-json.test.ts` validates all 308 items, asserts every dependency is a real package in package.json, verifies transitive bundling
+- ✅ **Static export output** — Outputs emitted to `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (308 files) by `next build` with `output: "export"`
+- ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors, 46 test files with 182/182 tests passing, next build exit 0 (out/ contains llms.txt, llms-full.txt, ai-agents.html, robots.txt, sitemap.xml, r/*.json ×308)
 
 ### v1.1 Batch (2026-06-30) — 12 new components
 - ✅ **Ripple background** — Click-to-emit ring via CSS `ring` keyframe; `onAnimationEnd` cleanup leak-free under reduced motion

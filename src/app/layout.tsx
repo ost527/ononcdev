@@ -2,10 +2,31 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { FooterBlock } from "@/components/blocks/footer-block";
+import { FooterBlock, type FooterColumn } from "@/components/blocks/footer-block";
 import { SiteHeader } from "@/components/showcase/site-header";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { Toaster } from "@/components/ui/toast";
+import { categories } from "@/registry";
+import { SITE_URL } from "@/lib/site";
+
+/** Real, registry-synced footer navigation — every link resolves to a route. */
+const footerColumns: FooterColumn[] = [
+  {
+    heading: "Library",
+    links: categories.map((category) => ({
+      label: category.label,
+      href: `/${category.id}`,
+    })),
+  },
+  {
+    heading: "Get started",
+    links: [
+      { label: "Introduction", href: "/introduction" },
+      { label: "For AI agents", href: "/ai-agents" },
+      { label: "Overview", href: "/" },
+    ],
+  },
+];
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +39,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "ONONC — Original animated component library",
   description:
     "An original, motion-first React component library for Next.js: animated backgrounds, text effects, interactive components, and section blocks.",
@@ -48,7 +70,7 @@ export default function RootLayout({
         <SiteHeader />
         {children}
         <div className="site-shell mt-auto pb-20 pt-24">
-          <FooterBlock brand="ONONC" />
+          <FooterBlock brand="ONONC" columns={footerColumns} />
         </div>
         <Toaster />
       </body>

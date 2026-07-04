@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { ComponentPlayground } from "@/components/showcase/component-playground";
+import { CopyForAi } from "@/components/showcase/copy-for-ai";
 import { readSource } from "@/lib/source";
+import { absoluteUrl } from "@/lib/site";
 import { detailPageParams, findComponent } from "@/registry";
 
 export const dynamicParams = false;
@@ -38,6 +40,21 @@ export default async function ComponentDetailPage({
   const { category: cat, item } = found;
   const code = await readSource(item.sourcePath);
 
+  const aiPrompt = [
+    `Add the ONONC "${item.name}" component to my project.`,
+    "",
+    "Install with the shadcn CLI:",
+    `npx shadcn@latest add ${absoluteUrl(`/r/${item.id}.json`)}`,
+    "",
+    `Docs: ${absoluteUrl(`/${cat.id}/${item.id}`)}`,
+    `All components: ${absoluteUrl("/llms.txt")}`,
+    "",
+    `Source — src/${item.sourcePath}:`,
+    "```tsx",
+    code.trimEnd(),
+    "```",
+  ].join("\n");
+
   return (
     <section className="py-10">
       <nav
@@ -71,6 +88,9 @@ export default async function ComponentDetailPage({
             ))}
           </div>
         ) : null}
+        <div className="pt-2">
+          <CopyForAi prompt={aiPrompt} />
+        </div>
       </div>
 
       <div className="mt-8">

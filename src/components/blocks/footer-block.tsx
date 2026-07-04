@@ -1,32 +1,106 @@
-import { AtSign, Globe, Rss } from "lucide-react";
+import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+export interface FooterLink {
+  label: string;
+  /** Internal route ("/…", "#…") renders a next/link; anything else opens in a new tab. */
+  href: string;
+}
 
 export interface FooterColumn {
   heading: string;
-  links: string[];
+  links: FooterLink[];
+}
+
+export interface FooterSocial {
+  label: string;
+  href: string;
+  icon: LucideIcon;
 }
 
 export interface FooterBlockProps {
   brand?: string;
   tagline?: string;
   columns?: FooterColumn[];
+  /** Optional social icons. None are shown unless real links are supplied. */
+  socials?: FooterSocial[];
+  /** Small note shown opposite the copyright line. */
+  note?: string;
   className?: string;
 }
 
+/**
+ * Sensible defaults that point at real routes only — never dead "#" links.
+ * Consumers should pass their own `columns` for their own site map.
+ */
 const DEFAULT_COLUMNS: FooterColumn[] = [
-  { heading: "Product", links: ["Components", "Blocks", "Templates", "Changelog"] },
-  { heading: "Resources", links: ["Docs", "Guides", "Showcase", "Figma"] },
-  { heading: "Company", links: ["About", "Blog", "Careers", "Contact"] },
+  {
+    heading: "Library",
+    links: [
+      { label: "Backgrounds", href: "/backgrounds" },
+      { label: "Text Animations", href: "/text" },
+      { label: "Components", href: "/ui" },
+      { label: "Section Blocks", href: "/blocks" },
+    ],
+  },
+  {
+    heading: "Get started",
+    links: [
+      { label: "Introduction", href: "/introduction" },
+      { label: "Overview", href: "/" },
+    ],
+  },
 ];
 
+/** True for same-site targets that should use client-side navigation. */
+function isInternal(href: string): boolean {
+  return href.startsWith("/") || href.startsWith("#");
+}
+
+/** Renders an internal next/link or an external anchor, based on the href. */
+function FooterAnchor({
+  href,
+  className,
+  ariaLabel,
+  children,
+}: {
+  href: string;
+  className?: string;
+  ariaLabel?: string;
+  children: React.ReactNode;
+}) {
+  if (isInternal(href)) {
+    return (
+      <Link href={href} className={className} aria-label={ariaLabel}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={className}
+      aria-label={ariaLabel}
+    >
+      {children}
+    </a>
+  );
+}
+
 /**
- * FooterBlock — a four-region footer: brand + tagline + socials alongside
- * columns of navigation links, with a legal strip beneath.
+ * FooterBlock — brand + tagline (with optional socials) beside columns of
+ * real navigation links, over a legal strip. Every link resolves to an actual
+ * destination; there are no placeholder buttons.
  */
 export function FooterBlock({
   brand = "ONONC",
   tagline = "Original, motion-first components for the modern web.",
   columns = DEFAULT_COLUMNS,
+  socials,
+  note = "Built with Next.js & Tailwind.",
   className,
 }: FooterBlockProps) {
   return (
@@ -36,57 +110,57 @@ export function FooterBlock({
         className,
       )}
     >
-      <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-5">
-        <div className="col-span-2">
-          <div className="flex items-center">
-            <span className="text-lg font-bold tracking-tight">{brand}</span>
-          </div>
-          <p className="mt-3 max-w-xs text-sm text-muted">{tagline}</p>
-          <div className="mt-4 flex gap-2">
-            <a
-              href="#"
-              aria-label="Website"
-              className="grid size-9 place-items-center rounded-lg border border-border text-muted transition-colors hover:text-foreground"
-            >
-              <Globe className="size-4" />
-            </a>
-            <a
-              href="#"
-              aria-label="Social"
-              className="grid size-9 place-items-center rounded-lg border border-border text-muted transition-colors hover:text-foreground"
-            >
-              <AtSign className="size-4" />
-            </a>
-            <a
-              href="#"
-              aria-label="Blog feed"
-              className="grid size-9 place-items-center rounded-lg border border-border text-muted transition-colors hover:text-foreground"
-            >
-              <Rss className="size-4" />
-            </a>
-          </div>
-        </div>
-        {columns.map((col, i) => (
-          <div key={i}>
-            <h3 className="text-sm font-semibold">{col.heading}</h3>
-            <ul className="mt-3 space-y-2">
-              {col.links.map((link, j) => (
-                <li key={j}>
-                  <a
-                    href="#"
-                    className="text-sm text-muted transition-colors hover:text-foreground"
-                  >
-                    {link}
-                  </a>
-                </li>
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
+        <div className="max-w-xs">
+          <span className="text-lg font-bold tracking-tight">{brand}</span>
+          <p className="mt-3 text-sm leading-relaxed text-muted">{tagline}</p>
+          {socials && socials.length > 0 ? (
+            <div className="mt-5 flex gap-2">
+              {socials.map((social) => (
+                <FooterAnchor
+                  key={social.label}
+                  href={social.href}
+                  ariaLabel={social.label}
+                  className="grid size-9 place-items-center rounded-lg border border-border text-muted outline-none transition-colors hover:bg-background hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand/60"
+                >
+                  <social.icon className="size-4" aria-hidden />
+                </FooterAnchor>
               ))}
-            </ul>
-          </div>
-        ))}
+            </div>
+          ) : null}
+        </div>
+
+        <nav
+          aria-label="Footer"
+          className="flex flex-wrap gap-x-12 gap-y-8 sm:gap-x-16"
+        >
+          {columns.map((col) => (
+            <div key={col.heading} className="min-w-28">
+              <h3 className="text-sm font-semibold text-foreground">
+                {col.heading}
+              </h3>
+              <ul className="mt-3 space-y-2.5">
+                {col.links.map((link) => (
+                  <li key={link.label}>
+                    <FooterAnchor
+                      href={link.href}
+                      className="rounded-sm text-sm text-muted outline-none transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand/60"
+                    >
+                      {link.label}
+                    </FooterAnchor>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
       </div>
+
       <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 text-sm text-muted sm:flex-row">
-        <span>© {new Date().getFullYear()} {brand}. All rights reserved.</span>
-        <span>Built with Next.js & Tailwind.</span>
+        <span>
+          © {new Date().getFullYear()} {brand}. All rights reserved.
+        </span>
+        {note ? <span>{note}</span> : null}
       </div>
     </footer>
   );

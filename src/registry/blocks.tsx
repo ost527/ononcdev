@@ -1181,7 +1181,8 @@ export const blocks: Category = {
     {
       id: "footer-block",
       name: "Footer",
-      description: "Four-region footer with brand, links, and socials.",
+      description:
+        "Footer with brand, real navigation links, and an optional socials row.",
       sourcePath: "components/blocks/footer-block.tsx",
       tags: ["layout"],
       preview: <FooterBlock />,
