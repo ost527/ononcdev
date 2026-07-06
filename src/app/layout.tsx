@@ -24,6 +24,7 @@ const footerColumns: FooterColumn[] = [
       { label: "Introduction", href: "/introduction" },
       { label: "For AI agents", href: "/ai-agents" },
       { label: "Resources", href: "/resources" },
+      { label: "Changelog", href: "/changelog" },
       { label: "Overview", href: "/" },
     ],
   },

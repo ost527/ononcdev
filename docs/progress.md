@@ -953,3 +953,111 @@ Verification: `npx tsc --noEmit` = 0, `npm run lint` = 0, `npm test` = 44 files 
 `npm run build` = success (157 routes). Confirmed the built `/blocks` HTML carries
 the `min-h-[22rem]`/`min-h-[28rem]` classes and the static CSS emits the matching
 `min-height` rules (Tailwind v4 arbitrary utilities). Review: GO.
+
+
+## Session: Changelog Feature Release & Documentation Sync (2026-07-06, 14:41 UTC+9)
+
+### What Was Completed
+
+**New /changelog Static Route + Root CHANGELOG.md Feature Complete**
+
+The /changelog page is now live — a dedicated static route rendering all 11 release versions with metadata and links, synced from the root CHANGELOG.md file.
+
+#### Implementation ✅
+
+**Site Page**
+- ✅ `/src/app/changelog/page.tsx` — async server component rendering RELEASES array with:
+  - Page metadata: title "Changelog — ONONC", og:type "article", canonical URL, BreadcrumbList JSON-LD
+  - All 11 version headings (1.10, 1.9, 1.8, 1.7, 1.6, 1.5, 1.4, 1.3, 1.2, 1.1, 1.0) in reverse-chronological order
+  - GitHub link (target=_blank rel="noopener noreferrer") to CHANGELOG.md on main branch
+  - `out/changelog.html` static export (83,567 bytes)
+
+**Root Documentation**
+- ✅ `/CHANGELOG.md` — GitHub-visible release history file with all 11 versions in Keep a Changelog format
+- ✅ Synced with page.tsx RELEASES array: (version, date) tuples are byte-identical
+
+**Footer Integration**
+- ✅ Wired into footer 'Get started' column: "Changelog" link → /changelog
+- ✅ Renders on every static page (177 static HTML files confirmed via grep)
+
+**Sitemap & SEO**
+- ✅ `/changelog` added to sitemap.xml (1 new URL entry, line 20 of out/sitemap.xml)
+- ✅ Sitemap URL count updated: 147 → 148 URLs
+- ✅ metadata.ts includes changelog in description
+
+#### Verification (Real Evidence) ✅
+
+**Static Export:**
+- ✅ `out/changelog.html` exists, 83,567 bytes (verified via ls, wc -c)
+- ✅ Content present: "What's new" (meta description), "Ferrofluid" (v1.5 highlight), "View on GitHub" (CTA text), all 11 version headings in correct order
+- ✅ React version text nodes verified (v1.10, v1.9, … v1.0) all present in `<h2>` elements
+
+**Footer Linkage:**
+- ✅ Footer link wiring: grep across out/*.html for `href="/changelog"` → 177 matches (every static page confirmed)
+- ✅ out/index.html verified (home page link renders)
+
+**Sitemap:**
+- ✅ out/sitemap.xml contains `<loc>https://dev.ononc.com/changelog</loc>` (line 20)
+
+**Version Sync:**
+- ✅ Python regex diff verified: all 11 (version, date) tuples match byte-for-byte between CHANGELOG.md and page.tsx RELEASES[]
+- ✅ Pairs: 1.10=2026-07-06, 1.9=2026-07-05, 1.8=2026-07-05, 1.7=2026-07-04, 1.6=2026-07-04, 1.5=2026-07-04, 1.4=2026-07-04, 1.3=2026-07-04, 1.2=2026-07-01, 1.1=2026-06-30, 1.0=2026-06-30
+
+**GitHub URL:**
+- ✅ Extracted from out/changelog.html: `https://github.com/ost527/ononcdev/blob/main/CHANGELOG.md` (matches GITHUB_CHANGELOG_URL constant)
+
+**Metadata & JSON-LD:**
+- ✅ out/changelog.html carries:
+  - `rel="canonical" href="https://dev.ononc.com/changelog"`
+  - `og:url content="https://dev.ononc.com/changelog"`
+  - `og:title content="Changelog — ONONC"`
+  - `og:type content="article"`
+  - BreadcrumbList JSON-LD with Home→Changelog path pointing at absolute URLs
+
+**Live Server Check:**
+- ✅ `npx serve out -p 4173` tested: `/changelog` → HTTP 200, Content-Length 83567, body contains "View on GitHub"
+- ✅ `/sitemap.xml` → HTTP 200
+- ✅ No lingering processes left after verification
+
+#### Deterministic Gate Status ✅
+
+- ✅ `npx tsc --noEmit` = 0 errors
+- ✅ `npm run lint` = 0 errors (6 pre-existing text/* warnings)
+- ✅ `npm test` = 72 files / 259 tests passing
+- ✅ `npm run build` = EXIT 0 (out/changelog.html, out/sitemap.xml, all artifacts emitted)
+
+#### Documentation Sync ✅
+
+**README.md Updates:**
+- ✅ Added `src/app/changelog/page.tsx` to Project Structure (app/ tree, with one-line description)
+- ✅ Updated sitemap.ts comment: 147 URLs → 148 URLs (includes changelog)
+- ✅ Updated "Search engine and metadata" bullet: sitemap count ~160 → ~161 URLs (includes changelog)
+
+**docs/progress.md Updates:**
+- ✅ This session log (NOW APPENDED)
+
+#### Files Changed
+
+1. **README.md** — 3 updates:
+   - Project Structure: Added changelog route with description
+   - sitemap.ts comment: 147 → 148 URL count
+   - Search engine metadata: ~160 → ~161 URL count
+
+2. **docs/progress.md** — 1 update:
+   - Appended dated session entry (2026-07-06) with full verification and status
+
+#### No Defects Found
+
+QA review verified zero defects:
+- All static artifacts present and byte-accurate
+- Footer link renders on 177/177 pages
+- Sitemap includes one new entry
+- Version data is synced across source files
+- Metadata and JSON-LD structure correct
+- Live server test confirmed HTTP 200 + correct content
+
+#### Next Steps
+
+- ✅ Ready for commit/push (all green gates: tsc, eslint, vitest, build)
+- ✅ Ready for Cloudflare Pages redeploy
+- ✅ Changelog feature is production-ready

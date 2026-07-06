@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/introduction",
     "/ai-agents",
     "/resources",
+    "/changelog",
     "/llms.txt",
     ...categories.map((category) => `/${category.id}`),
     ...detailPageParams().map((p) => `/${p.category}/${p.id}`),

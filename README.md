@@ -32,6 +32,8 @@ src/
 │   │   └── page.tsx             # "For AI agents" docs page explaining why ONONC suits coding agents; links to llms.txt endpoints
 │   ├── resources/
 │   │   └── page.tsx             # "Recommended resources" board: curated external design systems & component libraries (10 sites with descriptions, tags, outbound links)
+│   ├── changelog/
+│   │   └── page.tsx             # Changelog page listing all releases with version history and feature highlights (GitHub-visible CHANGELOG.md synced)
 │   ├── llms.txt/
 │   │   └── route.ts             # Static route handler serving machine-readable index of all components
 │   ├── llms-full.txt/
@@ -39,7 +41,7 @@ src/
 │   ├── r/
 │   │   └── [name]/route.ts      # shadcn-compatible static registry: /r/<id>.json with bundled sources + dependencies
 │   ├── robots.ts                # robots.txt route handler (allow all, Host, Sitemap)
-│   ├── sitemap.ts               # sitemap.xml route handler (147 URLs: home, intro, ai-agents, llms.txt, categories, detail pages)
+│   ├── sitemap.ts               # sitemap.xml route handler (148 URLs: home, changelog, ai-agents, intro, llms.txt, categories, detail pages)
 │   └── [category]/
 │       ├── layout.tsx           # Sidebar + content split for all category routes
 │       ├── page.tsx             # Per-category view: renders ONLY that category's components
@@ -283,7 +285,7 @@ A machine-readable index and dedicated docs page enable LLM coding agents to dis
 - **/ai-agents** — Standalone docs page (`src/app/ai-agents/page.tsx`) explaining why ONONC suits LLM coding agents: real copy-paste source, plain React + Tailwind, predictable structure, machine-readable llms.txt, one-command shadcn install, no additional dependencies, and full reduced-motion/a11y support. Includes JSON-LD breadcrumb and links to all endpoints. Linked from the footer "Get started" section
 - **Copy for AI button** — `src/components/showcase/copy-for-ai.tsx` on each component detail page; copies a ready prompt including the install command, docs URL, and component source for immediate agent use
 - **Site configuration** — `src/lib/site.ts` defines `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, defaults to `https://dev.ononc.com`) and `absoluteUrl()` helper used for component links in llms.txt and registry URLs, and for `metadataBase` in `src/app/layout.tsx`. Production domain is `dev.ononc.com`. URLs are 404-safe: component links point to `/[category]/[id]` detail page only when generated (backgrounds/text/ui); blocks and non-customizable components link to their category page instead
-- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (~160 URLs: home, ai-agents intro, llms.txt, all 4 categories, and all detail pages for backgrounds/text/ui components)
+- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (~161 URLs: home, changelog, ai-agents intro, llms.txt, all 4 categories, and all detail pages for backgrounds/text/ui components)
 - **Static export output** — Emitted to `out/llms.txt`, `out/llms-full.txt`, `out/ai-agents.html`, `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (336 files) by `next build` (with `output: "export"`)
 - **Tests** — Validated by `src/lib/llms.test.ts` (llms.txt/llms-full.txt generation) and `src/lib/registry-json.test.ts` (all 336 items, dependency validation against package.json, transitive import bundling)
 
