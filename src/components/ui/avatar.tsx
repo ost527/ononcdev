@@ -48,7 +48,7 @@ export function Avatar({ name, src, size = "md", status, className }: AvatarProp
   return (
     <span
       className={cn(
-        "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface-2 font-medium text-foreground ring-1 ring-border",
+        "relative inline-flex shrink-0 items-center justify-center rounded-full bg-surface-2 font-medium text-foreground ring-1 ring-border",
         SIZES[size],
         className,
       )}
@@ -59,7 +59,7 @@ export function Avatar({ name, src, size = "md", status, className }: AvatarProp
           src={src}
           alt={name}
           onError={() => setErrored(true)}
-          className="size-full object-cover"
+          className="size-full rounded-full object-cover"
         />
       ) : (
         <>

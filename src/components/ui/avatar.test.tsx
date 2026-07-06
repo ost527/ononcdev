@@ -14,4 +14,11 @@ describe("Avatar", () => {
     const img = screen.getByRole("img", { name: "Iris Cho" });
     expect(img.tagName).toBe("IMG");
   });
+
+  it("renders a labelled status dot as a sibling (not inside the clipped circle)", () => {
+    render(<Avatar name="Mara Vance" status="online" />);
+    const dot = screen.getByRole("img", { name: "Status: online" });
+    // The dot must not sit inside an overflow-hidden ancestor, or it gets clipped.
+    expect(dot.parentElement?.className).not.toContain("overflow-hidden");
+  });
 });
