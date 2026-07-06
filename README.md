@@ -41,7 +41,7 @@ src/
 │   ├── r/
 │   │   └── [name]/route.ts      # shadcn-compatible static registry: /r/<id>.json with bundled sources + dependencies
 │   ├── robots.ts                # robots.txt route handler (allow all, Host, Sitemap)
-│   ├── sitemap.ts               # sitemap.xml route handler (148 URLs: home, changelog, ai-agents, intro, llms.txt, categories, detail pages)
+│   ├── sitemap.ts               # sitemap.xml route handler (227 URLs: home, changelog, ai-agents, resources, llms.txt, all categories, all non-block detail pages)
 │   └── [category]/
 │       ├── layout.tsx           # Sidebar + content split for all category routes
 │       ├── page.tsx             # Per-category view: renders ONLY that category's components
@@ -87,7 +87,7 @@ src/
 - **Per-category routes** (/backgrounds, /text, /ui, /blocks) — Sidebar + grid of component cards
   - **UI/Text/Backgrounds (cards):** Linked title + summary direct to detail pages
   - **Blocks (full-width list):** Plain title + summary (no link), inline Preview/Code tabs with ViewportToggle for responsive preview
-- **Component detail routes** (/[category]/[id]) — Static-generated for backgrounds/text/ui components only; blocks have no detail pages. Each detail page is a playground with Preview/Code tabs, viewport presets (Desktop/Tablet/Mobile), responsive resize handle, optional live Customize panel, and Props table
+- **Component detail routes** (/[category]/[id]) — Static-generated for all non-block components (217 total: backgrounds, text, ui); blocks have no detail pages (/blocks/<id> returns 404). Each detail page is a playground with Preview/Code tabs, viewport presets (Desktop/Tablet/Mobile), responsive resize handle, optional live Customize panel, and Props table
 - **Navigation** — Left Sidebar (desktop) + MobileNav pills (mobile); fed as plain {id,label,count}[] props from registry to keep preview tree server-side
 - **Copy-Paste Integration** — Component sources embedded at build time; Code tab includes copy-to-clipboard
 
@@ -95,7 +95,7 @@ src/
 
 ## Components
 
-The registry defines 336 components across four categories (computed by `src/registry/index.ts`). Detail/playground pages are statically generated only for the customizable components — blocks and non-customizable components have no detail page. The component count is derived at build time from the registry and embedded in the landing page.
+The registry defines 336 components across four categories (computed by `src/registry/index.ts`). Detail/playground pages are statically generated for all non-block components (backgrounds 72 + text 58 + ui 87 = 217 total). Blocks have no per-component detail page; they are listed inline on the /blocks category page. The component count is derived at build time from the registry and embedded in the landing page.
 
 ### Backgrounds (72)
 Ambient, GPU-friendly canvases that pause when off-screen or motion is reduced.
@@ -284,15 +284,15 @@ A machine-readable index and dedicated docs page enable LLM coding agents to dis
   > **Note:** Components installed standalone via `npx shadcn@latest add .../r/<id>.json` assume the consumer has ONONC's `globals.css` design tokens present in their project. Additionally, a few components rely on globals.css `@keyframes` — **star-border** requires `star-movement-top` and `star-movement-bottom`, and **flowing-menu** reuses `marquee` — which are NOT bundled in the registry JSON. Without these keyframes, the animation will be static (no error, no animation). This is by-design: ONONC components are meant to be modified and integrated into design systems, not used as isolated package-locked third-party UI. For full fidelity, copy the component source and tokens directly from the detail pages.
 - **/ai-agents** — Standalone docs page (`src/app/ai-agents/page.tsx`) explaining why ONONC suits LLM coding agents: real copy-paste source, plain React + Tailwind, predictable structure, machine-readable llms.txt, one-command shadcn install, no additional dependencies, and full reduced-motion/a11y support. Includes JSON-LD breadcrumb and links to all endpoints. Linked from the footer "Get started" section
 - **Copy for AI button** — `src/components/showcase/copy-for-ai.tsx` on each component detail page; copies a ready prompt including the install command, docs URL, and component source for immediate agent use
-- **Site configuration** — `src/lib/site.ts` defines `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, defaults to `https://dev.ononc.com`) and `absoluteUrl()` helper used for component links in llms.txt and registry URLs, and for `metadataBase` in `src/app/layout.tsx`. Production domain is `dev.ononc.com`. URLs are 404-safe: component links point to `/[category]/[id]` detail page only when generated (backgrounds/text/ui); blocks and non-customizable components link to their category page instead
-- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (~161 URLs: home, changelog, ai-agents intro, llms.txt, all 4 categories, and all detail pages for backgrounds/text/ui components)
+- **Site configuration** — `src/lib/site.ts` defines `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, defaults to `https://dev.ononc.com`) and `absoluteUrl()` helper used for component links in llms.txt and registry URLs, and for `metadataBase` in `src/app/layout.tsx`. Production domain is `dev.ononc.com`. URLs are 404-safe: component links point to `/[category]/[id]` detail page for all non-block components; only blocks link to their category page instead
+- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (227 URLs: home, changelog, ai-agents, resources, llms.txt, all 4 categories, and all 217 non-block detail pages)
 - **Static export output** — Emitted to `out/llms.txt`, `out/llms-full.txt`, `out/ai-agents.html`, `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (336 files) by `next build` (with `output: "export"`)
 - **Tests** — Validated by `src/lib/llms.test.ts` (llms.txt/llms-full.txt generation) and `src/lib/registry-json.test.ts` (all 336 items, dependency validation against package.json, transitive import bundling)
 
 ### Component Detail Playground
 Each component has a dedicated detail page (/[category]/[id]) with an interactive playground — explore variants, customize props live, and preview changes in real-time.
 
-- **Static Generation** — Backgrounds/text/ui components (all non-block components) pre-rendered at build time via `generateStaticParams()` (157 total static routes: home + _not-found + 4 category pages + all backgrounds/text/ui detail pages); `dynamicParams=false` prevents stale 404s. Blocks have no detail pages; /blocks/<id> returns 404
+- **Static Generation** — All non-block components pre-rendered at build time via `generateStaticParams()` (217 detail pages: backgrounds 72 + text 58 + ui 87); `dynamicParams=false` prevents stale 404s. Blocks have no detail pages; /blocks/<id> returns 404
 - **Playground Interface** — Per-component page (`src/components/showcase/component-playground.tsx`) with:
   - **Preview / Code tabs** — Switch between live component and syntax-highlighted source (roving-tabindex, WAI-ARIA Tabs pattern)
   - **Viewport presets** — Desktop (full width), Tablet (768px), Mobile (390px); buttons toggle viewport context
@@ -407,10 +407,10 @@ Reusable React hook for canvas-based components:
 ## Verification Status
 
 ✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
-✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + all backgrounds/text/ui detail pages + /_not-found; ~481 total routes)  
+✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + 217 non-block detail pages + /_not-found; exits 0)  
 ✅ **Lint** — `npm run lint` = 0 errors (eslint flat config; 6 pre-existing warnings in src/components/text/*)  
-✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, /ai-agents, and component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 336 components; 404 for unknown categories; no hydration errors; all components present; category scoping confirmed  
-✅ **Tests** — `npm test` = 59 files, 202 tests passed (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated; component-playground interface tested)
+✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, /ai-agents, and all 217 component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 336 components; 404 for /blocks/<id>; no hydration errors; all components present; category scoping confirmed  
+✅ **Tests** — `npm test` = 72 files, 259 tests passing (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated with updated detail-page rules; component-playground interface tested)
 
 ---
 

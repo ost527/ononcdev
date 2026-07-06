@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ComponentShowcase } from "@/components/showcase/component-showcase";
 import { readSources } from "@/lib/source";
 import { categories, componentHasDetailPage } from "@/registry";
+import { isCustomizable } from "@/registry/customizable";
 import { groupItems } from "@/registry/subcategories";
 
 export const dynamicParams = false;
@@ -71,6 +72,9 @@ export default async function CategoryPage({
               }
             >
               {group.items.map((item) => {
+                // A detail page exists for every non-block component (so its
+                // code is always viewable); the "Customizable" badge is shown
+                // only when the component actually has live Customize controls.
                 const detail = componentHasDetailPage(found.id, item.id);
                 return (
                   <ComponentShowcase
@@ -83,7 +87,7 @@ export default async function CategoryPage({
                     layout={isBlocks ? "block" : "card"}
                     frameClassName={item.frameClassName}
                     bleed={item.bleed}
-                    customizable={detail}
+                    customizable={isCustomizable(item.id)}
                     previewClassName={item.previewClassName}
                     previewPadding={item.previewPadding}
                     previewBorder={item.previewBorder}

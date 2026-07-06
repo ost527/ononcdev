@@ -24,9 +24,10 @@ Notes for coding agents:
 - All motion degrades under prefers-reduced-motion; canvas backgrounds pause when off-screen and when the tab is hidden.`;
 
 /**
- * URL for a component: its detail page when one is actually generated, else the
- * category page. Blocks and non-customizable components have no detail page, so
- * linking to `/{category}/{id}` for them would 404 — this guards against that.
+ * URL for a component: its detail page when one is generated, else the category
+ * page. Only blocks lack a detail page — they are composed sections shown
+ * inline on `/blocks` — so linking to `/blocks/{id}` would 404; this guards
+ * against that while every other component links straight to its detail page.
  */
 function itemUrl(category: Category, item: RegistryItem): string {
   return componentHasDetailPage(category.id, item.id)

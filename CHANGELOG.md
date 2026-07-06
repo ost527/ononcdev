@@ -5,6 +5,20 @@ All notable changes to **ONONC** are documented here. The format is based on
 date-stamped development batches. A rendered version lives at
 [dev.ononc.com/changelog](https://dev.ononc.com/changelog).
 
+## [1.11] — 2026-07-06 — All non-block components now have detail pages
+
+### Changed
+- Every non-block component (backgrounds 72 + text 58 + ui 87 = 217) now gets its own `/[category]/[id]` detail page, making its full source always viewable on the Code tab.
+- The **Customizable badge** is now decoupled from detail-page links: it still marks only components with live Customize controls (isCustomizable), while detail-page links exist for all non-blocks.
+- Updated `src/registry/index.ts` `componentHasDetailPage()` to drop the isCustomizable gate; updated `src/app/(docs)/[category]/page.tsx` to drive the badge from isCustomizable separately; updated `src/registry/playground.test.ts` detail-scope tests to reflect the new rule.
+- Blocks still have no per-block detail page (`/blocks/<id>` still returns 404); only blocks fall back to their category page.
+- Sitemap now emits 227 URLs (217 non-block detail pages + /blocks category + 9 other routes).
+
+### Verified
+- tsc --noEmit 0 errors; eslint 0 errors (6 pre-existing text/* warnings); vitest 72 files / 259 tests pass; next build exit 0.
+- The `/[category]/[id]` route now emits 217 detail pages; `out/blocks` has 0 detail HTML; `out/sitemap.xml` has 227 `<loc>` entries.
+- llms.txt now emits per-component detail URLs for non-block components and the /blocks category URL for blocks.
+
 ## [1.10] — 2026-07-06 — 8 premium interactive components (React Bits Pro–inspired)
 
 ### Added

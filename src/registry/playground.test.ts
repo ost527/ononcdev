@@ -8,7 +8,7 @@ import {
   findComponent,
   hasDetailPage,
 } from "./index";
-import { customizableIds, isCustomizable } from "./customizable";
+import { customizableIds } from "./customizable";
 import { playgrounds } from "./playground";
 import type { PlaygroundValues } from "./types";
 
@@ -43,46 +43,45 @@ describe("detail page scope", () => {
     expect(hasDetailPage("backgrounds")).toBe(true);
   });
 
-  it("detailPageParams omits blocks and includes only customizable components", () => {
+  it("detailPageParams omits blocks and includes every non-block component", () => {
     const detail = detailPageParams();
     expect(detail.some((p) => p.category === "blocks")).toBe(false);
     expect(detail.length).toBeGreaterThan(0);
+    // Blocks exist, so the detail set is a strict subset of all components.
     expect(detail.length).toBeLessThan(allComponentParams().length);
     for (const p of detail) {
       expect(findComponent(p.category, p.id), `${p.category}/${p.id}`).not.toBeNull();
-      expect(isCustomizable(p.id), `${p.category}/${p.id} customizable`).toBe(true);
+      expect(
+        hasDetailPage(p.category),
+        `${p.category}/${p.id} in a detail-page category`,
+      ).toBe(true);
     }
   });
 
-  it("detail pages exactly match customizable components in detail-page categories", () => {
+  it("detail pages cover every component in a detail-page category", () => {
     const expected = categories
       .filter((c) => hasDetailPage(c.id))
-      .flatMap((c) => c.items.filter((i) => isCustomizable(i.id)));
+      .flatMap((c) => c.items);
     expect(detailPageParams().length).toBe(expected.length);
   });
 
-  it("componentHasDetailPage requires a detail-page category AND customize controls", () => {
-    // A customizable component in a detail-page category keeps its page.
-    const withPage = categories
-      .filter((c) => hasDetailPage(c.id))
-      .flatMap((c) => c.items.map((i) => ({ cat: c.id, id: i.id })))
-      .find((x) => isCustomizable(x.id));
-    if (withPage) {
-      expect(componentHasDetailPage(withPage.cat, withPage.id)).toBe(true);
-    }
-
-    // A non-customizable component loses its page even in a detail-page category.
-    const withoutPage = categories
-      .filter((c) => hasDetailPage(c.id))
-      .flatMap((c) => c.items.map((i) => ({ cat: c.id, id: i.id })))
-      .find((x) => !isCustomizable(x.id));
-    if (withoutPage) {
-      expect(componentHasDetailPage(withoutPage.cat, withoutPage.id)).toBe(false);
+  it("componentHasDetailPage covers any component in a detail-page category, never blocks", () => {
+    // Every real component in a detail-page category has a page — whether or
+    // not it exposes live Customize controls — so its source is always viewable.
+    for (const c of categories.filter((c) => hasDetailPage(c.id))) {
+      for (const item of c.items) {
+        expect(componentHasDetailPage(c.id, item.id), `${c.id}/${item.id}`).toBe(
+          true,
+        );
+      }
     }
 
     // Blocks never get a detail page.
     const block = categories.find((c) => c.id === "blocks")!.items[0];
     expect(componentHasDetailPage("blocks", block.id)).toBe(false);
+
+    // An unknown id has no page even in a detail-page category.
+    expect(componentHasDetailPage("ui", "does-not-exist")).toBe(false);
   });
 });
 
