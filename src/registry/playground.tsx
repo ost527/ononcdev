@@ -4,7 +4,15 @@ import { Alert, type AlertVariant } from "@/components/ui/alert";
 import { Avatar, type AvatarStatus } from "@/components/ui/avatar";
 import { Badge, type BadgeTone, type BadgeVariant } from "@/components/ui/badge";
 import { BounceCards } from "@/components/ui/bounce-cards";
+import { CardStack } from "@/components/ui/card-stack";
 import { CardSwap } from "@/components/ui/card-swap";
+import { ElasticSlider } from "@/components/ui/elastic-slider";
+import { FlowingMenu } from "@/components/ui/flowing-menu";
+import { GlareHover } from "@/components/ui/glare-hover";
+import { Magnet } from "@/components/ui/magnet";
+import { ProfileCard } from "@/components/ui/profile-card";
+import { ScrollStack } from "@/components/ui/scroll-stack";
+import { StarBorder } from "@/components/ui/star-border";
 import { ChromaCard } from "@/components/ui/chroma-card";
 import { ChromaGrid } from "@/components/ui/chroma-grid";
 import { CircularGallery } from "@/components/ui/circular-gallery";
@@ -3646,6 +3654,340 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { name: "pauseOnHover", type: "boolean", default: "true", description: "Pause the rotation while the pointer is over the stack." },
       { name: "radius", type: "number", default: "20", description: "Card corner radius in pixels." },
       { name: "label", type: "string", default: '"Auto-rotating card stack"', description: "Accessible name for the stack." },
+    ],
+  },
+
+  "profile-card": {
+    controls: [
+      { type: "text", key: "name", label: "Name", group: "Content", default: "Ava Bennett" },
+      { type: "text", key: "title", label: "Title", group: "Content", default: "Product Designer" },
+      { type: "text", key: "handle", label: "Handle", group: "Content", default: "avabennett" },
+      { type: "text", key: "status", label: "Status", group: "Content", default: "Online" },
+      { type: "boolean", key: "showContact", label: "Contact button", group: "Content", default: true },
+      { type: "text", key: "contactLabel", label: "Contact label", group: "Content", default: "Message" },
+      { type: "number", key: "tilt", label: "Tilt", group: "Tilt & sheen", min: 0, max: 25, step: 1, unit: "°", default: 12 },
+      { type: "number", key: "sheen", label: "Sheen", group: "Tilt & sheen", min: 0, max: 1, step: 0.05, default: 0.6, hint: "Holographic overlay intensity." },
+      { type: "boolean", key: "glare", label: "Moving glare", group: "Tilt & sheen", default: true },
+      { type: "boolean", key: "behindGlow", label: "Behind glow", group: "Tilt & sheen", default: true },
+      { type: "color", key: "color", label: "Accent", group: "Colors", default: "#8b5cf6" },
+      { type: "color", key: "color2", label: "Accent 2", group: "Colors", default: "#22d3ee" },
+      { type: "number", key: "radius", label: "Corner radius", group: "Style", min: 0, max: 40, step: 2, unit: "px", default: 22 },
+    ],
+    render: (v) => (
+      <div className="w-full">
+        <ProfileCard
+          name={s(v, "name")}
+          title={s(v, "title")}
+          handle={s(v, "handle")}
+          status={s(v, "status")}
+          showContact={bool(v, "showContact")}
+          contactLabel={s(v, "contactLabel")}
+          tilt={n(v, "tilt")}
+          sheen={n(v, "sheen")}
+          glare={bool(v, "glare")}
+          behindGlow={bool(v, "behindGlow")}
+          color={s(v, "color")}
+          color2={s(v, "color2")}
+          radius={n(v, "radius")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "name", type: "string", default: '"Ava Bennett"', description: "Full name; also used to derive the avatar initials." },
+      { name: "title", type: "string", default: '"Product Designer"', description: "Role or subtitle beneath the name." },
+      { name: "handle", type: "string", default: '"avabennett"', description: "Social handle, rendered as @handle." },
+      { name: "status", type: "string", default: '"Online"', description: "Availability label shown beside the status dot." },
+      { name: "avatarUrl", type: "string", description: "Avatar image URL; falls back to initials when omitted or on error." },
+      { name: "tilt", type: "number", default: "12", description: "Maximum pointer tilt in degrees; 0 disables the tilt." },
+      { name: "sheen", type: "number", default: "0.6", description: "Holographic sheen overlay intensity (0–1)." },
+      { name: "glare", type: "boolean", default: "true", description: "Render a moving specular highlight that tracks the pointer." },
+      { name: "behindGlow", type: "boolean", default: "true", description: "Render a soft blurred colored glow behind the card." },
+      { name: "color", type: "string", default: '"#8b5cf6"', description: "Primary accent color (hex)." },
+      { name: "color2", type: "string", default: '"#22d3ee"', description: "Secondary accent color (hex)." },
+      { name: "radius", type: "number", default: "22", description: "Corner radius in pixels." },
+      { name: "showContact", type: "boolean", default: "true", description: "Render the contact button." },
+      { name: "contactLabel", type: "string", default: '"Message"', description: "Text label for the contact button." },
+      { name: "onContact", type: "() => void", description: "Called when the contact button is activated." },
+    ],
+  },
+
+  "scroll-stack": {
+    controls: [
+      { type: "number", key: "height", label: "Viewport height", group: "Layout", min: 300, max: 600, step: 20, unit: "px", default: 420 },
+      { type: "number", key: "itemHeight", label: "Card height", group: "Layout", min: 160, max: 360, step: 10, unit: "px", default: 260 },
+      { type: "number", key: "topOffset", label: "Top offset", group: "Layout", min: 0, max: 80, step: 4, unit: "px", default: 32 },
+      { type: "number", key: "stagger", label: "Peek stagger", group: "Layout", min: 0, max: 40, step: 2, unit: "px", default: 14 },
+      { type: "number", key: "gap", label: "Scroll gap", group: "Layout", min: 0, max: 80, step: 4, unit: "px", default: 28 },
+      { type: "number", key: "scaleStep", label: "Scale step", group: "Motion", min: 0, max: 0.2, step: 0.01, default: 0.05, hint: "How much a covered card shrinks." },
+      { type: "number", key: "rotate", label: "Settle rotation", group: "Motion", min: -8, max: 8, step: 1, unit: "°", default: 0 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Style", min: 0, max: 32, step: 2, unit: "px", default: 20 },
+    ],
+    usage: { extra: 'className="mx-auto max-w-md"' },
+    render: (v) => (
+      <div className="w-full">
+        <ScrollStack
+          className="mx-auto max-w-md"
+          height={n(v, "height")}
+          itemHeight={n(v, "itemHeight")}
+          topOffset={n(v, "topOffset")}
+          stagger={n(v, "stagger")}
+          gap={n(v, "gap")}
+          scaleStep={n(v, "scaleStep")}
+          rotate={n(v, "rotate")}
+          radius={n(v, "radius")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "items", type: "ScrollStackItem[]", default: "gradient set", description: "Cards to stack ({ title, subtitle?, background? })." },
+      { name: "itemHeight", type: "number", default: "260", description: "Card height in pixels." },
+      { name: "topOffset", type: "number", default: "32", description: "Sticky top offset for the first card, in pixels." },
+      { name: "stagger", type: "number", default: "14", description: "Extra sticky-top added per card so stacked cards peek, in pixels." },
+      { name: "scaleStep", type: "number", default: "0.05", description: "Scale reduction applied to a card as the next scrolls over it." },
+      { name: "gap", type: "number", default: "28", description: "Vertical gap between cards while scrolling, in pixels." },
+      { name: "rotate", type: "number", default: "0", description: "Degrees of rotation applied to a settling card (0 disables)." },
+      { name: "radius", type: "number", default: "20", description: "Card corner radius in pixels." },
+      { name: "height", type: "number", default: "420", description: "Height of the internal scroll viewport, in pixels." },
+      { name: "label", type: "string", default: '"Scroll stack"', description: "Accessible name for the stack region." },
+    ],
+  },
+
+  "card-stack": {
+    controls: [
+      { type: "number", key: "cardWidth", label: "Card width", group: "Cards", min: 220, max: 360, step: 10, unit: "px", default: 300 },
+      { type: "number", key: "cardHeight", label: "Card height", group: "Cards", min: 140, max: 280, step: 10, unit: "px", default: 200 },
+      { type: "number", key: "offset", label: "Stack offset", group: "Cards", min: 2, max: 24, step: 1, unit: "px", default: 10 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Cards", min: 0, max: 28, step: 2, unit: "px", default: 18 },
+      { type: "number", key: "sensitivity", label: "Throw distance", group: "Interaction", min: 60, max: 260, step: 10, unit: "px", default: 160, hint: "Drag past this to send the top card back." },
+      { type: "boolean", key: "randomRotate", label: "Random rotation", group: "Interaction", default: true },
+      { type: "boolean", key: "sendToBackOnClick", label: "Click to cycle", group: "Interaction", default: false },
+    ],
+    render: (v) => (
+      <CardStack
+        cardWidth={n(v, "cardWidth")}
+        cardHeight={n(v, "cardHeight")}
+        offset={n(v, "offset")}
+        radius={n(v, "radius")}
+        sensitivity={n(v, "sensitivity")}
+        randomRotate={bool(v, "randomRotate")}
+        sendToBackOnClick={bool(v, "sendToBackOnClick")}
+      />
+    ),
+    props: [
+      { name: "items", type: "CardStackItem[]", default: "gradient set", description: "Cards in the stack, front to back ({ title, subtitle?, background? })." },
+      { name: "cardWidth", type: "number", default: "300", description: "Card width in pixels." },
+      { name: "cardHeight", type: "number", default: "200", description: "Card height in pixels." },
+      { name: "sensitivity", type: "number", default: "160", description: "Drag distance (px) past which the top card is sent to the back." },
+      { name: "offset", type: "number", default: "10", description: "Positional offset per card deeper in the stack, in pixels." },
+      { name: "randomRotate", type: "boolean", default: "true", description: "Apply a small, deterministic per-card rotation." },
+      { name: "sendToBackOnClick", type: "boolean", default: "false", description: "Clicking the top card also sends it to the back." },
+      { name: "radius", type: "number", default: "18", description: "Card corner radius in pixels." },
+      { name: "label", type: "string", default: '"Card stack"', description: "Accessible name for the stack." },
+    ],
+  },
+
+  magnet: {
+    controls: [
+      { type: "number", key: "padding", label: "Activation radius", group: "Magnet", min: 0, max: 300, step: 10, unit: "px", default: 120 },
+      { type: "number", key: "strength", label: "Strength", group: "Magnet", min: 0, max: 1, step: 0.05, default: 0.4, hint: "Fraction of the pointer offset followed." },
+      { type: "number", key: "maxTranslate", label: "Max travel", group: "Magnet", min: 0, max: 120, step: 5, unit: "px", default: 40 },
+      { type: "boolean", key: "disabled", label: "Disabled", group: "Magnet", default: false },
+      { type: "number", key: "springStiffness", label: "Stiffness", group: "Spring", min: 50, max: 500, step: 10, default: 200 },
+      { type: "number", key: "springDamping", label: "Damping", group: "Spring", min: 5, max: 40, step: 1, default: 18 },
+    ],
+    usage: {
+      element: (v) =>
+        `<Magnet padding={${n(v, "padding")}} strength={${n(v, "strength")}} maxTranslate={${n(v, "maxTranslate")}} disabled={${bool(v, "disabled")}}>
+  <button type="button">Magnet me</button>
+</Magnet>`,
+    },
+    render: (v) => (
+      <Magnet
+        padding={n(v, "padding")}
+        strength={n(v, "strength")}
+        maxTranslate={n(v, "maxTranslate")}
+        disabled={bool(v, "disabled")}
+        springStiffness={n(v, "springStiffness")}
+        springDamping={n(v, "springDamping")}
+      >
+        <button
+          type="button"
+          className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/30"
+        >
+          Magnet me
+        </button>
+      </Magnet>
+    ),
+    props: [
+      { name: "children", type: "ReactNode", description: "Content the magnet effect wraps; keeps its own semantics.", required: true },
+      { name: "padding", type: "number", default: "120", description: "Activation radius (px) around the element's bounds." },
+      { name: "strength", type: "number", default: "0.4", description: "Fraction (0–1) of the pointer offset the element follows." },
+      { name: "maxTranslate", type: "number", default: "40", description: "Maximum translation in either axis, in pixels." },
+      { name: "springStiffness", type: "number", default: "200", description: "Spring stiffness driving the follow motion." },
+      { name: "springDamping", type: "number", default: "18", description: "Spring damping driving the follow motion." },
+      { name: "disabled", type: "boolean", default: "false", description: "Disable the magnet effect entirely." },
+      { name: "className", type: "string", description: "Class name for the outer, non-moving wrapper." },
+      { name: "innerClassName", type: "string", description: "Class name for the inner, moving element." },
+    ],
+  },
+
+  "flowing-menu": {
+    controls: [
+      { type: "number", key: "rowHeight", label: "Row height", group: "Layout", min: 48, max: 120, step: 4, unit: "px", default: 72 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Layout", min: 0, max: 32, step: 2, unit: "px", default: 0 },
+      { type: "number", key: "speed", label: "Marquee speed", group: "Motion", min: 4, max: 30, step: 1, unit: "s", default: 12 },
+      { type: "number", key: "repeat", label: "Label repeats", group: "Motion", min: 2, max: 16, step: 1, default: 8 },
+      { type: "color", key: "accent", label: "Band color", group: "Colors", default: "#8b5cf6" },
+      { type: "color", key: "accentText", label: "Band text", group: "Colors", default: "#0b0d18" },
+    ],
+    usage: { extra: 'className="mx-auto max-w-md"' },
+    render: (v) => (
+      <div className="w-full">
+        <FlowingMenu
+          className="mx-auto max-w-md"
+          rowHeight={n(v, "rowHeight")}
+          radius={n(v, "radius")}
+          speed={n(v, "speed")}
+          repeat={n(v, "repeat")}
+          accent={s(v, "accent")}
+          accentText={s(v, "accentText")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "items", type: "FlowingMenuItem[]", default: "4 links", description: "Rows to render ({ label, href? }); omit href to render a button." },
+      { name: "rowHeight", type: "number", default: "72", description: "Height of each row in pixels." },
+      { name: "speed", type: "number", default: "12", description: "Seconds for one full marquee loop." },
+      { name: "accent", type: "string", default: '"#8b5cf6"', description: "Hover band background (hex)." },
+      { name: "accentText", type: "string", default: '"#0b0d18"', description: "Text color on the hover band (hex)." },
+      { name: "repeat", type: "number", default: "8", description: "Times the label repeats within one marquee track." },
+      { name: "radius", type: "number", default: "0", description: "Corner radius of the outer container, in pixels." },
+      { name: "label", type: "string", default: '"Flowing menu"', description: "Accessible name for the nav element." },
+    ],
+  },
+
+  "elastic-slider": {
+    controls: [
+      { type: "number", key: "defaultValue", label: "Value", group: "Range", min: 0, max: 100, step: 1, default: 50 },
+      { type: "number", key: "min", label: "Min", group: "Range", min: 0, max: 40, step: 5, default: 0 },
+      { type: "number", key: "max", label: "Max", group: "Range", min: 60, max: 200, step: 10, default: 100 },
+      { type: "number", key: "step", label: "Step", group: "Range", min: 1, max: 25, step: 1, default: 1 },
+      { type: "number", key: "markers", label: "Tick marks", group: "Style", min: 0, max: 11, step: 1, default: 0 },
+      { type: "boolean", key: "showIcons", label: "Show icons", group: "Style", default: true },
+      { type: "color", key: "accent", label: "Fill color", group: "Style", default: "#8b5cf6" },
+      { type: "number", key: "overflow", label: "Elastic overflow", group: "Motion", min: 0, max: 150, step: 10, unit: "px", default: 60 },
+      { type: "number", key: "stiffness", label: "Stiffness", group: "Motion", min: 100, max: 600, step: 20, default: 300 },
+      { type: "number", key: "damping", label: "Damping", group: "Motion", min: 10, max: 60, step: 2, default: 30 },
+    ],
+    usage: { extra: 'className="mx-auto"' },
+    render: (v) => (
+      <div className="flex w-full justify-center">
+        <ElasticSlider
+          defaultValue={n(v, "defaultValue")}
+          min={n(v, "min")}
+          max={n(v, "max")}
+          step={n(v, "step")}
+          markers={n(v, "markers")}
+          showIcons={bool(v, "showIcons")}
+          accent={s(v, "accent")}
+          overflow={n(v, "overflow")}
+          stiffness={n(v, "stiffness")}
+          damping={n(v, "damping")}
+        />
+      </div>
+    ),
+    props: [
+      { name: "defaultValue", type: "number", default: "50", description: "Initial value (uncontrolled)." },
+      { name: "min", type: "number", default: "0", description: "Minimum value." },
+      { name: "max", type: "number", default: "100", description: "Maximum value." },
+      { name: "step", type: "number", default: "1", description: "Increment per key press / drag snap." },
+      { name: "markers", type: "number", default: "0", description: "Number of evenly spaced tick marks; 0 renders none." },
+      { name: "showIcons", type: "boolean", default: "true", description: "Flank the track with min/max volume icons." },
+      { name: "accent", type: "string", default: '"#8b5cf6"', description: "Fill color (hex)." },
+      { name: "overflow", type: "number", default: "60", description: "Max pixels the track elastically stretches past an end." },
+      { name: "stiffness", type: "number", default: "300", description: "Spring stiffness for the elastic stretch." },
+      { name: "damping", type: "number", default: "30", description: "Spring damping for the elastic stretch." },
+      { name: "onValueChange", type: "(value: number) => void", description: "Called with the new value whenever it changes." },
+      { name: "label", type: "string", default: '"Elastic slider"', description: "Accessible name for the slider." },
+    ],
+  },
+
+  "star-border": {
+    controls: [
+      { type: "color", key: "color", label: "Glow color", group: "Style", default: "#8b5cf6" },
+      { type: "number", key: "speed", label: "Speed", group: "Motion", min: 1, max: 20, step: 1, unit: "s", default: 6 },
+      { type: "number", key: "thickness", label: "Border thickness", group: "Style", min: 1, max: 6, step: 1, unit: "px", default: 2 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Style", min: 0, max: 32, step: 2, unit: "px", default: 16 },
+      { type: "number", key: "glow", label: "Outer glow", group: "Style", min: 0, max: 40, step: 2, unit: "px", default: 14 },
+    ],
+    usage: {
+      element: (v) =>
+        `<StarBorder color="${s(v, "color")}" speed={${n(v, "speed")}} thickness={${n(v, "thickness")}} radius={${n(v, "radius")}} glow={${n(v, "glow")}}>
+  Star Border
+</StarBorder>`,
+    },
+    render: (v) => (
+      <StarBorder
+        color={s(v, "color")}
+        speed={n(v, "speed")}
+        thickness={n(v, "thickness")}
+        radius={n(v, "radius")}
+        glow={n(v, "glow")}
+      >
+        <span className="text-sm font-semibold">Star Border</span>
+      </StarBorder>
+    ),
+    props: [
+      { name: "children", type: "ReactNode", description: "Content wrapped by the animated border.", required: true },
+      { name: "color", type: "string", default: '"#8b5cf6"', description: "Glow color (hex)." },
+      { name: "speed", type: "number", default: "6", description: "Seconds per travel loop." },
+      { name: "thickness", type: "number", default: "2", description: "Border thickness in pixels." },
+      { name: "radius", type: "number", default: "16", description: "Corner radius in pixels." },
+      { name: "glow", type: "number", default: "14", description: "Soft outer glow radius in pixels (0 disables)." },
+      { name: "className", type: "string", description: "Class applied to the inner content element." },
+    ],
+  },
+
+  "glare-hover": {
+    controls: [
+      { type: "color", key: "glareColor", label: "Glare color", group: "Glare", default: "#ffffff" },
+      { type: "number", key: "glareOpacity", label: "Glare opacity", group: "Glare", min: 0, max: 1, step: 0.05, default: 0.35 },
+      { type: "number", key: "angle", label: "Angle", group: "Glare", min: 0, max: 180, step: 5, unit: "°", default: 45 },
+      { type: "number", key: "size", label: "Band width", group: "Glare", min: 100, max: 400, step: 10, unit: "%", default: 220 },
+      { type: "number", key: "duration", label: "Sweep duration", group: "Motion", min: 0.2, max: 2, step: 0.1, unit: "s", default: 0.8 },
+      { type: "number", key: "radius", label: "Corner radius", group: "Style", min: 0, max: 32, step: 2, unit: "px", default: 16 },
+    ],
+    usage: {
+      element: (v) =>
+        `<GlareHover glareColor="${s(v, "glareColor")}" glareOpacity={${n(v, "glareOpacity")}} angle={${n(v, "angle")}} duration={${n(v, "duration")}} className="h-48 w-72 border border-border bg-surface">
+  <div className="flex h-full items-center justify-center">Glare Hover</div>
+</GlareHover>`,
+    },
+    render: (v) => (
+      <GlareHover
+        glareColor={s(v, "glareColor")}
+        glareOpacity={n(v, "glareOpacity")}
+        angle={n(v, "angle")}
+        size={n(v, "size")}
+        duration={n(v, "duration")}
+        radius={n(v, "radius")}
+        className="h-48 w-72 border border-border bg-surface"
+      >
+        <div className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center">
+          <p className="text-lg font-semibold">Glare Hover</p>
+          <p className="text-sm text-muted">Hover to sweep</p>
+        </div>
+      </GlareHover>
+    ),
+    props: [
+      { name: "children", type: "ReactNode", description: "Content beneath the glare layer.", required: true },
+      { name: "glareColor", type: "string", default: '"#ffffff"', description: "Glare color (hex)." },
+      { name: "glareOpacity", type: "number", default: "0.35", description: "Peak opacity of the glare (0–1)." },
+      { name: "angle", type: "number", default: "45", description: "Glare band angle in degrees." },
+      { name: "size", type: "number", default: "220", description: "Glare band width as a percentage of the element." },
+      { name: "duration", type: "number", default: "0.8", description: "Sweep duration in seconds." },
+      { name: "radius", type: "number", default: "16", description: "Corner radius in pixels." },
+      { name: "className", type: "string", description: "Class applied to the outer wrapper." },
     ],
   },
 

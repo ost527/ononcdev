@@ -153,12 +153,16 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
       label: "Buttons & actions",
       slugs: [
         "magnetic-button", "shimmer-button", "ripple-button", "toggle-group",
+        "magnet", "star-border",
       ],
     },
     {
       id: "cards",
       label: "Cards & surfaces",
-      slugs: ["card", "tilt-card", "spotlight-card", "hover-card", "stat-card"],
+      slugs: [
+        "card", "tilt-card", "spotlight-card", "hover-card", "stat-card",
+        "profile-card", "glare-hover",
+      ],
     },
     {
       id: "interactive",
@@ -168,6 +172,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
         "preloader", "globe", "swipe-cards", "circular-gallery",
         "rolling-gallery", "card-swap", "chroma-grid", "pixel-card",
         "masonry", "bounce-cards", "glass-icons", "magic-bento",
+        "scroll-stack", "card-stack", "flowing-menu",
       ],
     },
     {
@@ -177,7 +182,7 @@ const DEFS: Record<CategoryId, readonly SubGroupDef[]> = {
         "switch", "checkbox", "radio-group", "select", "multi-select",
         "combobox", "slider", "otp-input", "number-input", "textarea",
         "tag-input", "file-dropzone", "rating", "color-picker", "date-picker",
-        "time-picker", "calendar",
+        "time-picker", "calendar", "elastic-slider",
       ],
     },
     {

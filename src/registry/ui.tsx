@@ -72,7 +72,15 @@ import { Toolbar } from "@/components/ui/toolbar";
 import { TreeView } from "@/components/ui/tree-view";
 import { Avatar } from "@/components/ui/avatar";
 import { BounceCards } from "@/components/ui/bounce-cards";
+import { CardStack } from "@/components/ui/card-stack";
 import { CardSwap } from "@/components/ui/card-swap";
+import { ElasticSlider } from "@/components/ui/elastic-slider";
+import { FlowingMenu } from "@/components/ui/flowing-menu";
+import { GlareHover } from "@/components/ui/glare-hover";
+import { Magnet } from "@/components/ui/magnet";
+import { ProfileCard } from "@/components/ui/profile-card";
+import { ScrollStack } from "@/components/ui/scroll-stack";
+import { StarBorder } from "@/components/ui/star-border";
 import { ChromaCard } from "@/components/ui/chroma-card";
 import { ChromaGrid } from "@/components/ui/chroma-grid";
 import { CircularGallery } from "@/components/ui/circular-gallery";
@@ -1332,6 +1340,106 @@ export const ui: Category = {
       tags: ["pointer", "hover", "layout"],
       frameClassName: "w-full p-6",
       preview: <MagicBento className="mx-auto max-w-2xl" />,
+    },
+    {
+      id: "profile-card",
+      name: "Profile Card",
+      description:
+        "A profile card that tilts toward the pointer with a holographic sheen, glare, and glow.",
+      sourcePath: "components/ui/profile-card.tsx",
+      tags: ["pointer", "3D", "hover"],
+      frameClassName: "min-h-[24rem] w-full items-center justify-center p-6",
+      preview: <ProfileCard />,
+    },
+    {
+      id: "scroll-stack",
+      name: "Scroll Stack",
+      description:
+        "Cards that pin and scale into a stack as you scroll an internal viewport.",
+      sourcePath: "components/ui/scroll-stack.tsx",
+      tags: ["scroll", "motion", "layout"],
+      frameClassName: "w-full items-center justify-center p-6",
+      preview: <ScrollStack className="mx-auto max-w-md" />,
+    },
+    {
+      id: "card-stack",
+      name: "Card Stack",
+      description:
+        "A draggable deck — throw or click the top card to send it to the back.",
+      sourcePath: "components/ui/card-stack.tsx",
+      tags: ["motion", "drag", "a11y"],
+      frameClassName: "min-h-[18rem] w-full items-center justify-center p-6",
+      preview: <CardStack />,
+    },
+    {
+      id: "magnet",
+      name: "Magnet",
+      description:
+        "Wraps any element so it springs toward the pointer within an activation radius.",
+      sourcePath: "components/ui/magnet.tsx",
+      tags: ["pointer", "motion", "spring"],
+      frameClassName: "min-h-[14rem] w-full items-center justify-center p-6",
+      preview: (
+        <Magnet>
+          <button
+            type="button"
+            className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/30"
+          >
+            Magnet me
+          </button>
+        </Magnet>
+      ),
+    },
+    {
+      id: "flowing-menu",
+      name: "Flowing Menu",
+      description:
+        "Menu rows where a colored marquee band flows across on hover or focus.",
+      sourcePath: "components/ui/flowing-menu.tsx",
+      tags: ["hover", "loop", "a11y"],
+      frameClassName: "w-full items-center justify-center p-6",
+      preview: <FlowingMenu className="mx-auto max-w-md" />,
+    },
+    {
+      id: "elastic-slider",
+      name: "Elastic Slider",
+      description:
+        "An accessible slider that stretches elastically when dragged past its ends.",
+      sourcePath: "components/ui/elastic-slider.tsx",
+      tags: ["pointer", "a11y", "spring"],
+      frameClassName: "min-h-[10rem] w-full items-center justify-center p-6",
+      preview: <ElasticSlider className="mx-auto" />,
+    },
+    {
+      id: "star-border",
+      name: "Star Border",
+      description:
+        "A wrapper with an animated glowing gradient border that travels around the edge.",
+      sourcePath: "components/ui/star-border.tsx",
+      tags: ["hover", "loop", "css"],
+      frameClassName: "min-h-[10rem] w-full items-center justify-center p-6",
+      preview: (
+        <StarBorder>
+          <span className="text-sm font-semibold">Star Border</span>
+        </StarBorder>
+      ),
+    },
+    {
+      id: "glare-hover",
+      name: "Glare Hover",
+      description:
+        "A surface that sweeps a diagonal glare highlight across its face on hover.",
+      sourcePath: "components/ui/glare-hover.tsx",
+      tags: ["hover", "css", "reveal"],
+      frameClassName: "min-h-[16rem] w-full items-center justify-center p-6",
+      preview: (
+        <GlareHover className="h-48 w-72 border border-border bg-surface">
+          <div className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center">
+            <p className="text-lg font-semibold">Glare Hover</p>
+            <p className="text-sm text-muted">Hover to sweep</p>
+          </div>
+        </GlareHover>
+      ),
     },
   ],
 };

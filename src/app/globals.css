@@ -136,6 +136,12 @@
   }
 }
 
+@keyframes star-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes aurora {
   0% {
     transform: translate3d(-8%, -4%, 0) rotate(-6deg) scale(1.1);
