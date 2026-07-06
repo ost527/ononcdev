@@ -540,3 +540,12 @@ None currently open. Recently resolved:
 - Cross-browser testing (Safari backdrop-filter, canvas DPR)
 - CI/CD integration (automated type check, build, lint on PR)
 - Optional: Figma design tokens sync, npm package export, Playwright E2E tests
+
+
+---
+
+## License & Attribution
+
+ONONC is released under the [MIT License](LICENSE) — free to use, copy, modify, and redistribute, including commercially, with no restrictions beyond preserving the copyright notice.
+
+See [NOTICE.md](NOTICE.md) for prior-art attribution (shadcn's registry protocol; React Bits / Aceternity / Magic UI concepts) and an explicit statement that ONONC's components are independent reimplementations that copy or vendor no third-party source. [docs/originality-audit.md](docs/originality-audit.md) has the full, honest component-level breakdown — including that React Bits is MIT + Commons Clause and how ONONC's same-named components differ in implementation.
