@@ -19,7 +19,7 @@ date-stamped development batches. A rendered version lives at
 - The `/[category]/[id]` route now emits 217 detail pages; `out/blocks` has 0 detail HTML; `out/sitemap.xml` has 227 `<loc>` entries.
 - llms.txt now emits per-component detail URLs for non-block components and the /blocks category URL for blocks.
 
-## [1.10] — 2026-07-06 — 8 premium interactive components (React Bits Pro–inspired)
+## [1.10] — 2026-07-06 — 8 premium interactive components (React Bits–inspired, independent implementations)
 
 ### Added
 - **Profile Card, Scroll Stack, Card Stack, Magnet, Flowing Menu, Elastic Slider, Star Border, Glare Hover** — eight premium interactive components.

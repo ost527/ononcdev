@@ -3760,7 +3760,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { type: "number", key: "radius", label: "Corner radius", group: "Cards", min: 0, max: 28, step: 2, unit: "px", default: 18 },
       { type: "number", key: "sensitivity", label: "Throw distance", group: "Interaction", min: 60, max: 260, step: 10, unit: "px", default: 160, hint: "Drag past this to send the top card back." },
       { type: "boolean", key: "randomRotate", label: "Random rotation", group: "Interaction", default: true },
-      { type: "boolean", key: "sendToBackOnClick", label: "Click to cycle", group: "Interaction", default: false },
+      { type: "boolean", key: "cycleOnClick", label: "Click to cycle", group: "Interaction", default: false },
     ],
     render: (v) => (
       <CardStack
@@ -3770,7 +3770,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
         radius={n(v, "radius")}
         sensitivity={n(v, "sensitivity")}
         randomRotate={bool(v, "randomRotate")}
-        sendToBackOnClick={bool(v, "sendToBackOnClick")}
+        cycleOnClick={bool(v, "cycleOnClick")}
       />
     ),
     props: [
@@ -3780,7 +3780,7 @@ export const playgrounds: Record<string, PlaygroundSpec> = {
       { name: "sensitivity", type: "number", default: "160", description: "Drag distance (px) past which the top card is sent to the back." },
       { name: "offset", type: "number", default: "10", description: "Positional offset per card deeper in the stack, in pixels." },
       { name: "randomRotate", type: "boolean", default: "true", description: "Apply a small, deterministic per-card rotation." },
-      { name: "sendToBackOnClick", type: "boolean", default: "false", description: "Clicking the top card also sends it to the back." },
+      { name: "cycleOnClick", type: "boolean", default: "false", description: "Clicking the top card also sends it to the back." },
       { name: "radius", type: "number", default: "18", description: "Card corner radius in pixels." },
       { name: "label", type: "string", default: '"Card stack"', description: "Accessible name for the stack." },
     ],

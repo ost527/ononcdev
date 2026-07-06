@@ -49,6 +49,27 @@ const WHY: { title: string; body: string }[] = [
   },
 ];
 
+const PRIOR_ART: { name: string; borrowed: string }[] = [
+  {
+    name: "shadcn/ui",
+    borrowed:
+      "the copy-paste registry protocol our /r/<id>.json install targets — an open standard any project can implement, not a dependency we pull in.",
+  },
+  {
+    name: "React Bits · Aceternity · Magic UI",
+    borrowed:
+      "the motion-component lineage that inspired many background, text, and interactive concepts and names.",
+  },
+];
+
+const DIFFERENT: string[] = [
+  "No Radix, no UI dependencies — every interactive primitive (accordion, tabs, switch, modal, …) is implemented from scratch with its own ARIA, keyboard, and focus handling.",
+  "Motion-first: a shared canvas lifecycle (off-screen pause, DPR cap) and Framer Motion polish across the whole library.",
+  "Accessible and reduced-motion aware by default — including the eye-candy components.",
+  "One dark-first design-token system spanning backgrounds, text, components, and blocks.",
+  "Independently implemented — no source is vendored or copied from the projects above.",
+];
+
 const STEPS: string[] = [
   `Point the agent at the docs — e.g. "Read ${absoluteUrl("/llms.txt")}".`,
   "It picks the right component by name and description from the index.",
@@ -157,6 +178,64 @@ export default function AiAgentsPage() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
+              Original work, honest about its lineage
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              ONONC is not a reskin. It shares no code with — and takes no
+              dependency on — the projects that inspired it, which is also why
+              an agent can read and own it so easily. What it gratefully
+              borrows:
+            </p>
+            <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+              {PRIOR_ART.map((item) => (
+                <li
+                  key={item.name}
+                  className="rounded-xl border border-border bg-surface p-5"
+                >
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {item.name}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
+                    {item.borrowed}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 text-sm font-medium text-foreground">
+              How ONONC differs
+            </p>
+            <ul className="mt-3 space-y-2.5">
+              {DIFFERENT.map((item) => (
+                <li
+                  key={item}
+                  className="flex gap-2.5 text-sm leading-relaxed text-muted"
+                >
+                  <Check
+                    className="mt-0.5 size-4 shrink-0 text-brand-ink"
+                    aria-hidden
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 text-sm leading-relaxed text-muted">
+              A full component-level breakdown lives in{" "}
+              <span className="font-mono text-foreground">
+                docs/originality-audit.md
+              </span>
+              , and the libraries we recommend are on{" "}
+              <Link
+                href="/resources"
+                className="font-medium text-foreground underline-offset-4 hover:underline"
+              >
+                Resources
+              </Link>
+              .
+            </p>
           </section>
 
           <section>

@@ -28,7 +28,7 @@ export interface CardStackProps {
   /** Apply a small, deterministic per-card rotation (seeded by index). */
   randomRotate?: boolean;
   /** Clicking the top card also sends it to the back. */
-  sendToBackOnClick?: boolean;
+  cycleOnClick?: boolean;
   /** Card corner radius in pixels. */
   radius?: number;
   /** Accessible name for the stack. */
@@ -62,7 +62,7 @@ export function CardStack({
   sensitivity = 160,
   offset = 10,
   randomRotate = true,
-  sendToBackOnClick = false,
+  cycleOnClick = false,
   radius = 18,
   label = "Card stack",
   className,
@@ -127,12 +127,12 @@ export function CardStack({
                   key={itemIndex}
                   role="article"
                   aria-hidden={!isTop}
-                  onClick={isTop && sendToBackOnClick ? sendToBack : undefined}
+                  onClick={isTop && cycleOnClick ? sendToBack : undefined}
                   className={cn(
                     "absolute inset-0 flex flex-col overflow-hidden border border-border bg-surface shadow-xl outline-none",
                     isTop ? "touch-none" : "pointer-events-none",
-                    isTop && sendToBackOnClick && "cursor-pointer",
-                    isTop && !sendToBackOnClick && "cursor-grab active:cursor-grabbing",
+                    isTop && cycleOnClick && "cursor-pointer",
+                    isTop && !cycleOnClick && "cursor-grab active:cursor-grabbing",
                   )}
                   style={{ borderRadius: radius, zIndex: n - depth }}
                   initial={false}
@@ -148,7 +148,7 @@ export function CardStack({
                       : { type: "spring", stiffness: 260, damping: 26 }
                   }
                   drag={isTop}
-                  dragElastic={0.6}
+                  dragElastic={0.4}
                   dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
                   whileDrag={{ scale: reduce ? scale : scale * 1.03 }}
                   onDragEnd={isTop ? handleDragEnd : undefined}

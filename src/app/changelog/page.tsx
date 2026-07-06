@@ -42,7 +42,7 @@ const RELEASES: Release[] = [
     date: "2026-07-06",
     tag: "Components",
     tone: "neutral",
-    title: "8 premium interactive components (React Bits Pro–inspired)",
+    title: "8 premium interactive components (React Bits–inspired)",
     highlights: [
       "Added Profile Card, Scroll Stack, Card Stack, Magnet, Flowing Menu, Elastic Slider, Star Border, and Glare Hover.",
       "Each ships 4–6 grouped Customize controls, a Props table, a detail page, and a shadcn registry entry at /r/<id>.json.",
