@@ -25,7 +25,7 @@ const WHY: { title: string; body: string }[] = [
   },
   {
     title: "One-command install",
-    body: "npx shadcn@latest add https://dev.ononc.com/r/<id>.json drops the component and every internal file it imports (helpers, sibling components) into your project via the shadcn registry protocol.",
+    body: "npx shadcn@latest add https://dev.ononc.com/r/<id>.json drops the component, every internal file it imports (helpers, sibling components), and ONONC's design tokens into your project via the shadcn registry protocol — so it renders correctly with no extra setup.",
   },
   {
     title: "Plain React + Tailwind + Framer Motion",
@@ -74,7 +74,7 @@ const STEPS: string[] = [
   `Point the agent at the docs — e.g. "Read ${absoluteUrl("/llms.txt")}".`,
   "It picks the right component by name and description from the index.",
   `It installs with one command — npx shadcn@latest add ${absoluteUrl("/r/<id>.json")} — or copies the source straight from the component's page.`,
-  "The install bundles the component plus every internal file it imports (helpers, sibling components) at your project's aliases, so there are no missing imports.",
+  "The install bundles the component, every internal file it imports (helpers, sibling components), and ONONC's design tokens + keyframes at your project's aliases and globals.css — so there are no missing imports and nothing renders unstyled.",
 ];
 
 const AGENTS: string[] = [
@@ -300,11 +300,16 @@ export default function AiAgentsPage() {
             </pre>
             <p className="mt-4 text-sm leading-relaxed text-muted">
               The install brings the component&apos;s{" "}
-              <span className="font-medium text-foreground">.tsx</span> source
-              (and the internal files it imports). Components use ONONC&apos;s
-              Tailwind v4 design tokens and keyframes from{" "}
-              <span className="font-mono text-foreground">globals.css</span>{" "}
-              (@theme) — copy those into your project for exact styling.
+              <span className="font-medium text-foreground">.tsx</span> source,
+              the internal files it imports, and ONONC&apos;s Tailwind v4 design
+              tokens + keyframes (written into your{" "}
+              <span className="font-mono text-foreground">globals.css</span>) —
+              so it renders correctly with no extra setup. To set up the tokens
+              on their own first, run{" "}
+              <span className="font-mono text-foreground">
+                npx shadcn@latest add {absoluteUrl("/r/ononc-theme.json")}
+              </span>
+              .
             </p>
           </section>
 

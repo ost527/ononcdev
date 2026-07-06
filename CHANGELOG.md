@@ -5,6 +5,20 @@ All notable changes to **ONONC** are documented here. The format is based on
 date-stamped development batches. A rendered version lives at
 [dev.ononc.com/changelog](https://dev.ononc.com/changelog).
 
+## [1.12] — 2026-07-06 — Registry ships design tokens (consumer styling fix)
+
+### Fixed
+- Components now render styled after `npx shadcn@latest add …/r/<id>.json` — previously ~231/336 components compiled but emitted zero CSS in consumer projects (tokens and keyframes were embedded only in ONONC's globals.css). Now every registry item carries ONONC's design tokens via shadcn `cssVars` (theme → @theme, light → :root, dark → .dark) and `css` (@keyframes nested in @layer base + @utility text-gradient/glass/site-shell), so `shadcn add` writes the tokens into the consumer's globals.css automatically. No manual token-copy step required.
+
+### Added
+- Standalone `/r/ononc-theme.json` (registry:theme item, 0 component files) installs ONLY the design tokens: `npx shadcn@latest add https://dev.ononc.com/r/ononc-theme.json` for projects that want to share tokens without adding a component.
+
+### Verified
+- tsc --noEmit 0 errors; eslint 0 errors (6 pre-existing text/* warnings); vitest 72 files / 261 tests pass (2 new tests in src/lib/registry-json.test.ts assert badge carries cssVars+css incl. @keyframes star-spin/spin + @utility text-gradient, and EVERY registry item has cssVars+css); next build exit 0.
+- Emitted artifacts: out/r now has 337 JSON files (336 component items + ononc-theme.json).
+- Real-system QA PASS: single `shadcn add badge.json` (also glitch-text, star-border) dropped component files AND injected tokens+keyframes into consumer globals.css (26→291 lines); standalone ononc-theme.json added tokens with 0 component files; consumer `next build` exited 0; compiled CSS contained REAL resolved rules (e.g. `.bg-surface{background-color:var(--surface)}`, `@keyframes star-spin`, `:root`/`.dark` token blocks) — direct proof the pre-fix "compiles but emits zero CSS" bug is fixed.
+- **Caveat:** The shipped theme includes generic token names (background, foreground, border, muted, ring); installing into a project that already defines them overrides those values — reconcile/scope in your design system as needed.
+
 ## [1.11] — 2026-07-06 — All non-block components now have detail pages
 
 ### Changed

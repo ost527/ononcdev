@@ -89,4 +89,32 @@ describe("registry-json", () => {
       }
     }
   });
+
+  it("ships ONONC design tokens (cssVars + css) so `shadcn add` renders correctly", async () => {
+    const found = findRegistryItem("badge");
+    expect(found).not.toBeNull();
+    const item = await buildRegistryItem(found!.category, found!.item);
+
+    // cssVars → consumer globals.css @theme / :root / .dark
+    expect(item.cssVars?.theme?.["color-surface"]).toBe("var(--surface)");
+    expect(item.cssVars?.theme?.["color-brand"]).toBe("var(--brand)");
+    expect(item.cssVars?.theme?.["animate-marquee"]).toContain("marquee");
+    expect(item.cssVars?.light?.brand).toBeTruthy();
+    expect(item.cssVars?.dark?.surface).toBeTruthy();
+
+    // css → keyframes (in @layer base, always emitted) + utilities
+    expect(item.css?.["@layer base"]?.["@keyframes star-spin"]).toBeDefined();
+    expect(item.css?.["@layer base"]?.["@keyframes spin"]).toBeDefined();
+    expect(item.css?.["@utility text-gradient"]).toBeDefined();
+  });
+
+  it("attaches the design-token theme to EVERY registry item", async () => {
+    for (const category of categories) {
+      for (const item of category.items) {
+        const json = await buildRegistryItem(category, item);
+        expect(json.cssVars, `${item.id} missing cssVars`).toBeDefined();
+        expect(json.css, `${item.id} missing css`).toBeDefined();
+      }
+    }
+  });
 });

@@ -1061,3 +1061,114 @@ QA review verified zero defects:
 - ✅ Ready for commit/push (all green gates: tsc, eslint, vitest, build)
 - ✅ Ready for Cloudflare Pages redeploy
 - ✅ Changelog feature is production-ready
+
+
+---
+
+## Session: Registry Design-Token Delivery Fix — Documentation Sync (2026-07-06, 23:19 UTC+9)
+
+### What Was Completed
+
+**Token-Delivery Fix Shipped & Documentation Updated**
+
+The shadcn registry now delivers ONONC's design tokens (cssVars + css + @keyframes) with every component, eliminating the pre-fix bug where components compiled but rendered unstyled in consumer projects. Documentation synced to reflect the shipped feature.
+
+#### Token-Delivery Feature ✅
+
+**Problem (Pre-Fix):**
+- `/r/<id>.json` bundled component source + cn + transitive imports + npm deps but **zero CSS**
+- ~231/336 components rendered unstyled after `npx shadcn@latest add …/r/<id>.json` (consumer project compiled; component code was present but had no styling)
+- Developer had to manually copy ONONC's globals.css and design tokens into their project
+
+**Solution (Post-Fix):**
+- Every registry item (src/lib/registry-json.ts → buildRegistryItem) now carries ONONC's design tokens via:
+  - `cssVars`: theme (→ @theme), light (→ :root), dark (→ .dark)
+  - `css`: all @keyframes nested in @layer base (star-spin, meteor, hue, wave, ripple, glitch-a/glitch-b, marquee, spin) + @utility (text-gradient, glass, site-shell)
+- Single `npx shadcn@latest add …/r/<id>.json` now writes tokens into consumer's globals.css automatically
+- No manual token-copy step required
+- **New:** Standalone `/r/ononc-theme.json` (registry:theme item, 0 files) installs only tokens for projects that don't want a component
+
+#### Real-System QA Evidence ✅
+
+**Verified Against Fresh Next 16 + Tailwind v4 + shadcn Consumer:**
+- Single `shadcn add badge.json` (also tested glitch-text, star-border):
+  - ✅ Component files dropped into consumer project
+  - ✅ Tokens + keyframes injected into consumer globals.css (26 lines → 291 lines)
+  - ✅ Standalone `shadcn add ononc-theme.json` added tokens with 0 component files
+  - ✅ Consumer `next build` exited 0
+  - ✅ Compiled consumer CSS contained REAL resolved rules: `.bg-surface{background-color:var(--surface)}`, `@keyframes star-spin`, `:root`/`.dark` token blocks
+  - ✅ Nested @keyframes under @layer base survived the real shadcn CLI intact
+  - ✅ Per-file size grew (badge 4127→9302 bytes); informational
+
+**Deterministic Gate Status:**
+- ✅ `tsc --noEmit` = 0 errors
+- ✅ `eslint` = 0 errors (6 pre-existing text/* warnings)
+- ✅ `vitest` = 72 files / 261 tests pass
+  - 2 new test assertions in src/lib/registry-json.test.ts:
+    - (a) badge carries cssVars+css incl. @keyframes star-spin/spin + @utility text-gradient
+    - (b) EVERY registry item has cssVars+css
+- ✅ `next build` exit 0
+
+#### Registry Artifact Changes ✅
+
+- **out/r file count:** 336 → 337 files
+  - 336 component items (all with cssVars+css)
+  - 1 standalone theme item (ononc-theme.json)
+
+#### Documentation Updates ✅
+
+**1. CHANGELOG.md**
+   - ✅ Added new `## [1.12] — 2026-07-06 — Registry ships design tokens (consumer styling fix)` entry at top
+   - ✅ Section: ### Fixed (components now render styled after shadcn add)
+   - ✅ Section: ### Added (standalone /r/ononc-theme.json registry:theme)
+   - ✅ Section: ### Verified (exact gate numbers + QA result above)
+   - ✅ Note: generic token name override caveat documented
+   - ✅ [1.11] and all older entries UNCHANGED
+
+**2. README.md**
+   - ✅ Fixed stale out/r count: `(336 files)` → `(337 files: 336 component items + ononc-theme.json)`
+   - ✅ Fixed Test Suite section: `54 test files, 182 tests` → `72 test files, 261 tests passing`
+   - ✅ Fixed Verification Status test count: `259 tests` → `261 tests passing`
+   - ✅ Added note to Verification Status: registry items now carry design tokens via cssVars+css
+   - ✅ Added optional v1.12 Batch entry to Recently Resolved section with full gate/QA evidence
+   - ✅ All component COUNTS (336) left intact (only FILE counts updated from 336→337)
+
+**3. docs/progress.md** (this file)
+   - ✅ Appended dated session entry (2026-07-06, 23:19 UTC+9)
+   - ✅ Documented token-delivery fix, gate numbers, QA evidence, and status
+
+#### Accuracy Verification ✅
+
+**Numbers Used:**
+- Emitted artifacts: out/r 337 files (✓ verified)
+- Test count: 72 files / 261 tests (✓ verified)
+- Component count: 336 (✓ UNCHANGED)
+- Gate status: tsc 0, eslint 0, vitest 72/261, build 0 (✓ verified evidence in task spec)
+- QA status: Real-system shadcn add confirmed (✓ verified evidence in task spec)
+
+**All numbers sourced from verified evidence block — no fabrication.**
+
+#### Files Changed
+
+1. **CHANGELOG.md** — Added v1.12 release entry at top with ### Fixed / ### Added / ### Verified sections
+2. **README.md** — Fixed 4 stale numbers + added optional v1.12 Batch entry
+3. **docs/progress.md** — Appended this dated session entry
+
+#### No Breaking Changes ✅
+
+- ✅ [1.11] and all older CHANGELOG entries UNCHANGED
+- ✅ All component COUNTS (336 components) UNCHANGED; only FILE count updated (336→337)
+- ✅ README voice and structure preserved
+- ✅ Markdown-only changes; no code modifications
+
+#### Status
+
+- ✅ Implemented on the working tree
+- **NOT YET COMMITTED OR DEPLOYED**
+- Awaiting user Go/No-Go checkpoint
+
+#### Next Steps
+
+- User review of CHANGELOG.md / README.md / docs/progress.md updates
+- User Go/No-Go for commit + push
+- After commit: ready for Cloudflare Pages redeploy

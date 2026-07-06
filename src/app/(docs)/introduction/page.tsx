@@ -126,6 +126,56 @@ export default function IntroductionPage() {
           </p>
         </section>
 
+        <section id="design-tokens" className="scroll-mt-24">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Design tokens
+          </h2>
+          <p className="mt-3">
+            ONONC components are styled with Tailwind v4 design tokens (colors
+            like <Code>surface</Code>, <Code>brand</Code>, <Code>muted</Code>),
+            custom animations, and keyframes that live in{" "}
+            <Code>src/app/globals.css</Code>. A component needs those tokens
+            present to render correctly.
+          </p>
+          <ul className="mt-4 list-disc space-y-2 pl-5 marker:text-muted-2">
+            <li>
+              <span className="font-medium text-foreground">
+                Installing with the CLI
+              </span>{" "}
+              brings them automatically —{" "}
+              <Code>{"npx shadcn@latest add https://dev.ononc.com/r/<id>.json"}</Code>{" "}
+              writes the tokens and keyframes into your <Code>globals.css</Code>{" "}
+              alongside the component.
+            </li>
+            <li>
+              <span className="font-medium text-foreground">
+                Want just the theme?
+              </span>{" "}
+              Run{" "}
+              <Code>
+                npx shadcn@latest add https://dev.ononc.com/r/ononc-theme.json
+              </Code>{" "}
+              to set up the tokens once, up front.
+            </li>
+            <li>
+              <span className="font-medium text-foreground">
+                Copying by hand?
+              </span>{" "}
+              Also copy the token layer (the <Code>@theme</Code>,{" "}
+              <Code>:root</Code>/<Code>.dark</Code> variables, keyframes, and
+              utilities) from <Code>src/app/globals.css</Code>, plus the{" "}
+              <Code>cn</Code> helper from <Code>src/lib/utils.ts</Code>.
+            </li>
+          </ul>
+          <p className="mt-4">
+            Heads-up: the tokens include generic names (<Code>background</Code>,{" "}
+            <Code>foreground</Code>, <Code>border</Code>, <Code>muted</Code>,{" "}
+            <Code>ring</Code>). Installing into a project that already defines
+            them (for example an existing shadcn theme) overrides those with
+            ONONC&apos;s values — reconcile or scope them as needed.
+          </p>
+        </section>
+
         <section id="built-with" className="scroll-mt-24">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">
             Built with

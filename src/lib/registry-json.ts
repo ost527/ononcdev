@@ -168,6 +168,19 @@ export interface RegistryFileJson {
   target: string;
 }
 
+/** shadcn cssVars: theme → @theme, light → :root, dark → .dark (keys have no leading `--`). */
+export interface RegistryCssVars {
+  theme?: Record<string, string>;
+  light?: Record<string, string>;
+  dark?: Record<string, string>;
+}
+
+/** shadcn css: raw at-rules/selectors as nested CSS-in-JSON (@keyframes, @utility, @layer, …). */
+export interface RegistryCssNode {
+  [key: string]: string | RegistryCssNode;
+}
+export type RegistryCss = Record<string, RegistryCssNode>;
+
 export interface RegistryItemJson {
   $schema: string;
   name: string;
@@ -177,10 +190,192 @@ export interface RegistryItemJson {
   author: string;
   categories: string[];
   dependencies?: string[];
+  cssVars?: RegistryCssVars;
+  css?: RegistryCss;
   files: RegistryFileJson[];
 }
 
 const AUTHOR = "ONONC <https://dev.ononc.com>";
+
+/**
+ * ONONC design tokens, shipped with EVERY registry item so a single
+ * `npx shadcn@latest add …/r/<id>.json` injects them into the consumer's
+ * globals.css (Tailwind v4). Mirrors src/app/globals.css: cssVars.theme →
+ * @theme, cssVars.light → :root, cssVars.dark → .dark, and css → raw
+ * @keyframes / @utility rules. Without these, ONONC's surface/brand/muted
+ * utility classes, custom animations, and keyframes emit no CSS in a consumer
+ * project (the components compile but render unstyled). Fonts and the
+ * class-based dark @custom-variant are intentionally omitted so the install
+ * never clobbers a consumer's typography or dark-mode strategy.
+ */
+const THEME_CSSVARS: RegistryCssVars = {
+  theme: {
+    "color-background": "var(--background)",
+    "color-surface": "var(--surface)",
+    "color-surface-2": "var(--surface-2)",
+    "color-foreground": "var(--foreground)",
+    "color-muted": "var(--muted)",
+    "color-muted-2": "var(--muted-2)",
+    "color-border": "var(--border)",
+    "color-border-strong": "var(--border-strong)",
+    "color-brand": "var(--brand)",
+    "color-brand-ink": "var(--brand-ink)",
+    "color-brand-2": "var(--brand-2)",
+    "color-brand-3": "var(--brand-3)",
+    "radius-4xl": "2rem",
+    "animate-marquee": "marquee var(--marquee-duration, 28s) linear infinite",
+    "animate-marquee-y":
+      "marquee-y var(--marquee-duration, 28s) linear infinite",
+    "animate-shimmer": "shimmer 2.4s linear infinite",
+    "animate-aurora": "aurora 16s ease-in-out infinite alternate",
+    "animate-grid-pan": "grid-pan 24s linear infinite",
+    "animate-float": "float 7s ease-in-out infinite",
+    "animate-gradient": "gradient-pan 8s ease infinite",
+    "animate-spin-slow": "spin 18s linear infinite",
+    "animate-pulse-ring": "pulse-ring 2.8s ease-out infinite",
+    "animate-blink": "blink 1.05s steps(1, end) infinite",
+  },
+  light: {
+    background: "#f6f7fb",
+    surface: "#ffffff",
+    "surface-2": "#eef0f7",
+    foreground: "#0c0e1a",
+    muted: "#545b70",
+    "muted-2": "#8a91a8",
+    border: "rgba(12, 14, 26, 0.1)",
+    "border-strong": "rgba(12, 14, 26, 0.16)",
+    brand: "#8b5cf6",
+    "brand-ink": "#6d28d9",
+    "brand-2": "#0891b2",
+    "brand-3": "#e11d62",
+    ring: "rgba(139, 92, 246, 0.55)",
+    "site-shell-width": "80rem",
+    "site-shell-gutter": "1.5rem",
+  },
+  dark: {
+    background: "#06070d",
+    surface: "#0b0d18",
+    "surface-2": "#11142370",
+    foreground: "#e9ebf5",
+    muted: "#8a91a8",
+    "muted-2": "#5b6178",
+    border: "rgba(255, 255, 255, 0.08)",
+    "border-strong": "rgba(255, 255, 255, 0.14)",
+    brand: "#8b5cf6",
+    "brand-ink": "#c4b5fd",
+    "brand-2": "#22d3ee",
+    "brand-3": "#fb7185",
+    ring: "rgba(139, 92, 246, 0.55)",
+  },
+};
+
+const THEME_CSS: RegistryCss = {
+  // Keyframes live in @layer base (always emitted) — NOT @theme, where Tailwind
+  // v4 tree-shakes any keyframe not referenced by a *used* animate-* utility.
+  // Several ONONC components animate via an inline `animation: <name>` string
+  // (star-spin, meteor, hue, wave, ripple, glitch-a/b) that Tailwind's class
+  // scanner cannot see, so their keyframes must be emitted unconditionally.
+  "@layer base": {
+    "@keyframes marquee": {
+    from: { transform: "translateX(0)" },
+    to: { transform: "translateX(-100%)" },
+  },
+  "@keyframes marquee-y": {
+    from: { transform: "translateY(0)" },
+    to: { transform: "translateY(-100%)" },
+  },
+  "@keyframes shimmer": {
+    from: { "background-position": "-200% 0" },
+    to: { "background-position": "200% 0" },
+  },
+  "@keyframes star-spin": { to: { transform: "rotate(360deg)" } },
+  // Tailwind only emits @keyframes spin when animate-spin is used; ship it so
+  // animate-spin-slow (and any raw `spin` reference) always animates.
+  "@keyframes spin": { to: { transform: "rotate(360deg)" } },
+  "@keyframes aurora": {
+    "0%": { transform: "translate3d(-8%, -4%, 0) rotate(-6deg) scale(1.1)" },
+    "50%": { transform: "translate3d(6%, 3%, 0) rotate(4deg) scale(1.25)" },
+    "100%": { transform: "translate3d(-4%, 6%, 0) rotate(8deg) scale(1.15)" },
+  },
+  "@keyframes grid-pan": {
+    from: { "background-position": "0 0" },
+    to: {
+      "background-position": "var(--grid-size, 44px) var(--grid-size, 44px)",
+    },
+  },
+  "@keyframes float": {
+    "0%, 100%": { transform: "translateY(0)" },
+    "50%": { transform: "translateY(-12px)" },
+  },
+  "@keyframes gradient-pan": {
+    "0%, 100%": { "background-position": "0% 50%" },
+    "50%": { "background-position": "100% 50%" },
+  },
+  "@keyframes pulse-ring": {
+    "0%": { transform: "scale(0.85)", opacity: "0.7" },
+    "100%": { transform: "scale(2.2)", opacity: "0" },
+  },
+  "@keyframes ring": {
+    from: { transform: "scale(0)", opacity: "0.5" },
+    to: { transform: "scale(1)", opacity: "0" },
+  },
+  "@keyframes blink": {
+    "0%, 50%": { opacity: "1" },
+    "50.01%, 100%": { opacity: "0" },
+  },
+  "@keyframes meteor": {
+    "0%": {
+      transform: "translate3d(0, 0, 0) rotate(var(--meteor-angle, 215deg))",
+      opacity: "0",
+    },
+    "8%": { opacity: "1" },
+    "100%": {
+      transform:
+        "translate3d(var(--meteor-x, -700px), var(--meteor-y, 700px), 0) rotate(var(--meteor-angle, 215deg))",
+      opacity: "0",
+    },
+  },
+  "@keyframes hue": { to: { filter: "hue-rotate(360deg)" } },
+  "@keyframes wave": {
+    "0%, 100%": { transform: "translateY(0)" },
+    "50%": { transform: "translateY(-0.34em)" },
+  },
+  "@keyframes ripple": { to: { transform: "scale(4)", opacity: "0" } },
+  "@keyframes glitch-a": {
+    "0%, 100%": { "clip-path": "inset(0 0 82% 0)", transform: "translate(0, 0)" },
+    "20%": { "clip-path": "inset(22% 0 48% 0)", transform: "translate(-2px, -1px)" },
+    "40%": { "clip-path": "inset(58% 0 18% 0)", transform: "translate(2px, 1px)" },
+    "60%": { "clip-path": "inset(40% 0 40% 0)", transform: "translate(-1px, 1px)" },
+    "80%": { "clip-path": "inset(8% 0 70% 0)", transform: "translate(1px, -1px)" },
+  },
+  "@keyframes glitch-b": {
+    "0%, 100%": { "clip-path": "inset(70% 0 8% 0)", transform: "translate(0, 0)" },
+    "25%": { "clip-path": "inset(30% 0 44% 0)", transform: "translate(2px, 1px)" },
+    "50%": { "clip-path": "inset(50% 0 28% 0)", transform: "translate(-2px, -1px)" },
+    "75%": { "clip-path": "inset(14% 0 58% 0)", transform: "translate(1px, 1px)" },
+  },
+  },
+  "@utility text-gradient": {
+    "background-image":
+      "linear-gradient(100deg, var(--brand-ink), var(--brand-2) 55%, var(--brand-3))",
+    "background-clip": "text",
+    "-webkit-background-clip": "text",
+    color: "transparent",
+  },
+  "@utility glass": {
+    background:
+      "linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02))",
+    "backdrop-filter": "blur(12px)",
+    "-webkit-backdrop-filter": "blur(12px)",
+    border: "1px solid var(--border)",
+  },
+  "@utility site-shell": {
+    "margin-inline": "auto",
+    width: "100%",
+    "max-width": "var(--site-shell-width)",
+    "padding-inline": "var(--site-shell-gutter)",
+  },
+};
 
 /** Build the shadcn registry-item JSON for a single component. */
 export async function buildRegistryItem(
@@ -205,7 +400,36 @@ export async function buildRegistryItem(
     files,
   };
   if (deps.size > 0) json.dependencies = [...deps].sort();
+  // Ship ONONC's design tokens with every item so `shadcn add` alone makes the
+  // component render correctly (no separate globals.css copy step required).
+  json.cssVars = THEME_CSSVARS;
+  json.css = THEME_CSS;
   return json;
+}
+
+/** Id of the standalone theme item served at /r/ononc-theme.json. */
+export const THEME_ITEM_ID = "ononc-theme";
+
+/**
+ * A standalone shadcn `registry:theme` item that installs ONLY ONONC's design
+ * tokens (no component files). `npx shadcn@latest add …/r/ononc-theme.json`
+ * sets up the whole token layer once; every component item also carries it, so
+ * this is a convenience for theming a project up front.
+ */
+export function buildThemeItem(): RegistryItemJson {
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: THEME_ITEM_ID,
+    type: "registry:theme",
+    title: "ONONC design tokens",
+    description:
+      "ONONC's Tailwind v4 design tokens, animations, and keyframes — install once so every ONONC component renders correctly.",
+    author: AUTHOR,
+    categories: ["theme"],
+    cssVars: THEME_CSSVARS,
+    css: THEME_CSS,
+    files: [],
+  };
 }
 
 /** `{ category, item }` for a registry id, or null. */

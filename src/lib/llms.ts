@@ -20,7 +20,7 @@ Notes for coding agents:
 - Or install any component with the shadcn CLI — \`npx shadcn@latest add ${absoluteUrl("/r/<id>.json")}\` — which bundles the component plus every internal file it imports (@/lib, sibling components) at your project's aliases. Each item is served at /r/<id>.json.
 - Stack: React 19 + Next.js 16, TypeScript, Tailwind CSS v4 (CSS-first @theme tokens in src/app/globals.css — there is no tailwind.config), Framer Motion for interactive motion, lucide-react for icons.
 - Shared helpers live in src/lib/utils.ts (cn, clamp, mapRange, seededRandom, prefersReducedMotion); canvas components use the lifecycle hook in src/lib/use-canvas.ts. The shadcn install bundles these automatically; when copying by hand, copy them too.
-- Styling: components use ONONC's Tailwind v4 design tokens and keyframes from src/app/globals.css (@theme — e.g. surface/brand/muted colors, aurora/shimmer/marquee animations). The registry brings the .tsx files only, so copy those tokens into your globals.css for exact styling.
+- Styling: components use ONONC's Tailwind v4 design tokens and keyframes (@theme — e.g. surface/brand/muted colors, aurora/shimmer/marquee/star-spin animations). The shadcn registry now ships these automatically: \`npx shadcn@latest add ${absoluteUrl("/r/<id>.json")}\` writes the tokens + keyframes into your globals.css alongside the component (or install them on their own with \`npx shadcn@latest add ${absoluteUrl("/r/ononc-theme.json")}\`). When copying source by hand, also copy the token layer from src/app/globals.css and the cn helper from src/lib/utils.ts.
 - All motion degrades under prefers-reduced-motion; canvas backgrounds pause when off-screen and when the tab is hidden.`;
 
 /**

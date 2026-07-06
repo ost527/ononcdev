@@ -562,7 +562,7 @@ export function ComponentPlayground({
                     </h3>
                     <p className="text-xs text-muted">
                       Reflects your Customize options — works once the component
-                      file below is in your project.
+                      and its design tokens are in your project.
                     </p>
                   </div>
                   <CodeBlock code={usageCode} />
@@ -580,8 +580,11 @@ export function ComponentPlayground({
                     )}
                   </h3>
                   <p className="text-xs text-muted">
-                    Copy this file into your project — no package install
-                    needed.
+                    Paste into your project — it also needs the{" "}
+                    <code className="font-mono">cn</code> helper and the ONONC
+                    design tokens. Or run{" "}
+                    <code className="font-mono">npx shadcn add</code> to bring
+                    the file, its imports, and the tokens automatically.
                   </p>
                 </div>
                 <CodeBlock code={code} />
