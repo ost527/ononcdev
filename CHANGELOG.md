@@ -3,7 +3,44 @@
 All notable changes to **ONONC** are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions are
 date-stamped development batches. A rendered version lives at
-[dev.ononc.com/changelog](https://dev.ononc.com/changelog).
+[dev.ononc.com/docs/changelog](https://dev.ononc.com/docs/changelog).
+
+## [1.15] — 2026-07-07 — Mobile hamburger menu (in review)
+
+### Added
+- **Mobile hamburger navigation** — Below the Tailwind `md` breakpoint (<768px), the header's inline category nav is now hidden and a hamburger button (aria-label="Open menu") appears on the right of the sticky header next to the theme toggle. Pressing it opens a right-side Drawer (role=dialog) listing the 4 category nav links with active-route highlighting via `aria-current="page"`. The drawer closes on navigation, Escape keypress, or backdrop click with focus restoration.
+- New `src/components/showcase/mobile-menu.tsx` — a 'use client' component rendering the hamburger button (md:hidden) and reusing the library's existing Drawer primitive (src/components/ui/drawer.tsx, side="right"). Links close the drawer on click and preserve body-scroll lock during the animation.
+- Updated `src/components/showcase/site-header.tsx` — now renders `<MobileMenu items={categories.map(c=>({id,label}))} />` in the header's right cluster after ThemeToggle, following the same RSC + plain-props pattern as Sidebar/MobileNav. No public API or contract changes to SiteHeader.
+
+### Verified
+- tsc 0 errors; eslint 0 errors (6 pre-existing text/* warnings only); vitest 72 files / 261 tests pass; next build exit 0 (578 static pages).
+- Review gate = GO (0 Critical / 0 Major).
+- QA gate = PASS (headless Chromium): mobile-only visibility, right-side slide-in animation, 4 correct nav links, navigate+close behavior, close via X/Escape/backdrop, body-scroll lock, focus trap on open/restore on close, active-route highlight, desktop no-regression, zero console errors.
+
+### Status
+- Implementation complete and verified; awaiting user Go/No-Go before commit and deployment.
+
+## [1.14] — 2026-07-07 — Documentation section + footer refresh
+
+### Added
+- New `/docs` documentation section with a collapsible left sidebar: Getting Started, Installation, Theming, and Usage.
+
+### Changed
+- The footer's 'Contact' column is now 'Support' with a link to the docs, and the contact email moved to the footer's bottom bar.
+- For AI agents, Resources, and Changelog moved under `/docs` (now `/docs/ai-agents`, `/docs/resources`, `/docs/changelog`) so they share the docs sidebar.
+
+## [1.13] — 2026-07-06 — Friendlier design-token guidance + footer contact
+
+### Added
+- Every component detail page now shows an always-visible "Styled with ONONC's design tokens — shadcn add installs them for you" hint linking to the Design tokens guide (`/introduction#design-tokens`).
+- Surfaced the contact email `ononc@ononc.com` in the footer.
+
+### Changed
+- The detail-page Code/Usage tabs and the `/blocks` Code tab link "design tokens" to the guide, and the Copy-for-AI prompt now explains that `shadcn add` writes the tokens + keyframes into your `globals.css` (with a hand-copy `/r/ononc-theme.json` fallback) — so both humans and coding agents know styling is included.
+- Brought the on-site `/changelog` page back in sync with this file (the v1.11 and v1.12 entries were missing from it).
+
+### Verified
+- tsc 0; eslint 0 errors (6 pre-existing text/* warnings); vitest 72 files / 261 tests; next build exit 0. Review = GO; QA = PASS (a headless browser confirmed the tab-gated notes render with working links, and the footer mailto renders in-place on every page).
 
 ## [1.12] — 2026-07-06 — Registry ships design tokens (consumer styling fix)
 
@@ -111,14 +148,14 @@ date-stamped development batches. A rendered version lives at
 ### Fixed
 - Command-palette focus restoration, reduced-motion JS gaps, modal/drawer effect stability, tooltip Escape handling, progress-ring ARIA, showcase tabs ARIA, and segmented-control index-based IDs.
 
-[1.10]: https://dev.ononc.com/changelog
-[1.9]: https://dev.ononc.com/changelog
-[1.8]: https://dev.ononc.com/changelog
-[1.7]: https://dev.ononc.com/changelog
-[1.6]: https://dev.ononc.com/changelog
-[1.5]: https://dev.ononc.com/changelog
-[1.4]: https://dev.ononc.com/changelog
-[1.3]: https://dev.ononc.com/changelog
-[1.2]: https://dev.ononc.com/changelog
-[1.1]: https://dev.ononc.com/changelog
-[1.0]: https://dev.ononc.com/changelog
+[1.10]: https://dev.ononc.com/docs/changelog
+[1.9]: https://dev.ononc.com/docs/changelog
+[1.8]: https://dev.ononc.com/docs/changelog
+[1.7]: https://dev.ononc.com/docs/changelog
+[1.6]: https://dev.ononc.com/docs/changelog
+[1.5]: https://dev.ononc.com/docs/changelog
+[1.4]: https://dev.ononc.com/docs/changelog
+[1.3]: https://dev.ononc.com/docs/changelog
+[1.2]: https://dev.ononc.com/docs/changelog
+[1.1]: https://dev.ononc.com/docs/changelog
+[1.0]: https://dev.ononc.com/docs/changelog

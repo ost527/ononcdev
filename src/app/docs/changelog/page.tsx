@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   title: "Changelog — ONONC",
   description:
     "What's new in ONONC — a reverse-chronological log of releases: new backgrounds, text effects, interactive components, section blocks, the component playground, and AI-agent support.",
-  alternates: { canonical: "/changelog" },
+  alternates: { canonical: "/docs/changelog" },
   openGraph: {
     title: "Changelog — ONONC",
     description:
       "Release history for the ONONC component library: new components, the detail playground, shadcn registry, and machine-readable llms.txt for AI agents.",
-    url: absoluteUrl("/changelog"),
+    url: absoluteUrl("/docs/changelog"),
     type: "article",
   },
 };
@@ -37,6 +37,56 @@ interface Release {
  * page; it is kept in sync with the repo-root CHANGELOG.md (rendered on GitHub).
  */
 const RELEASES: Release[] = [
+  {
+    version: "1.14",
+    date: "2026-07-07",
+    tag: "Docs",
+    tone: "brand",
+    title: "Documentation section + footer refresh",
+    highlights: [
+      "New /docs documentation section with a collapsible left sidebar: Getting Started, Installation, Theming, and Usage.",
+      "The footer's 'Contact' column is now 'Support' with a link to the docs, and the contact email moved to the footer's bottom bar.",
+      "For AI agents, Resources, and Changelog moved under /docs (now /docs/ai-agents, /docs/resources, /docs/changelog) so they share the docs sidebar.",
+    ],
+  },
+  {
+    version: "1.13",
+    date: "2026-07-06",
+    tag: "Docs",
+    tone: "neutral",
+    title: "Friendlier design-token guidance + footer contact",
+    highlights: [
+      "Every component detail page now shows an always-visible design-tokens hint linking to the Design tokens guide, so styling setup is one click away.",
+      "The Code/Usage tabs and the /blocks Code tab link 'design tokens' to that guide; the Copy-for-AI prompt now tells agents the install writes ONONC's tokens + keyframes into globals.css (with a hand-copy /r/ononc-theme.json fallback).",
+      "Surfaced the contact email (ononc@ononc.com) in the footer.",
+      "Brought the on-site changelog back in sync with CHANGELOG.md (v1.11 and v1.12 were missing).",
+    ],
+  },
+  {
+    version: "1.12",
+    date: "2026-07-06",
+    tag: "Registry",
+    tone: "neutral",
+    title: "Registry ships design tokens (consumer styling fix)",
+    highlights: [
+      "Every /r/<id>.json now carries ONONC's design tokens via shadcn cssVars (@theme / :root / .dark) and css (@keyframes + @utility), so npx shadcn add writes the tokens into your globals.css alongside the component — components render styled with no manual token copy.",
+      "Fixes the gap where ~231/336 components compiled but rendered unstyled in consumer projects.",
+      "New standalone /r/ononc-theme.json (registry:theme) installs just the design tokens.",
+      "Verified on the real shadcn CLI in a Next.js + Tailwind v4 project; the consumer build stays green.",
+    ],
+  },
+  {
+    version: "1.11",
+    date: "2026-07-06",
+    tag: "Site",
+    tone: "neutral",
+    title: "All non-block components now have detail pages",
+    highlights: [
+      "Every non-block component (Backgrounds 72 + Text 58 + Components 87 = 217) now has its own /[category]/[id] detail page, so its full source is always viewable on the Code tab.",
+      "The Customizable badge is decoupled from detail-page links — it now marks only components with live Customize controls.",
+      "Sitemap now emits 227 URLs.",
+    ],
+  },
   {
     version: "1.10",
     date: "2026-07-06",
@@ -177,8 +227,14 @@ const BREADCRUMB_LD = {
     {
       "@type": "ListItem",
       position: 2,
+      name: "Docs",
+      item: absoluteUrl("/docs"),
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
       name: "Changelog",
-      item: absoluteUrl("/changelog"),
+      item: absoluteUrl("/docs/changelog"),
     },
   ],
 };
@@ -188,15 +244,15 @@ const secondaryBtn =
 
 export default function ChangelogPage() {
   return (
-    <main className="site-shell py-14 sm:py-20">
+    <article className="max-w-3xl">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_LD) }}
       />
-      <div className="mx-auto max-w-3xl">
+      <div>
         <nav aria-label="Breadcrumb" className="mb-8 text-xs text-muted-2">
-          <Link href="/" className="transition-colors hover:text-foreground">
-            Home
+          <Link href="/docs" className="transition-colors hover:text-foreground">
+            Docs
           </Link>
           <span className="mx-1.5 opacity-50">/</span>
           <span className="text-foreground">Changelog</span>
@@ -280,6 +336,6 @@ export default function ChangelogPage() {
           the notable changes shipped to the registry and showcase.
         </p>
       </div>
-    </main>
+    </article>
   );
 }

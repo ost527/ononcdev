@@ -28,12 +28,6 @@ src/
 │   ├── globals.css              # Design tokens (@theme), keyframes, utilities, light/dark variants
 │   ├── layout.tsx               # Root layout: ScrollProgress + SiteHeader + {children} + FooterBlock + Toaster
 │   ├── page.tsx                 # Landing: ShowcaseHero + category browse cards
-│   ├── ai-agents/
-│   │   └── page.tsx             # "For AI agents" docs page explaining why ONONC suits coding agents; links to llms.txt endpoints
-│   ├── resources/
-│   │   └── page.tsx             # "Recommended resources" board: curated external design systems & component libraries (10 sites with descriptions, tags, outbound links)
-│   ├── changelog/
-│   │   └── page.tsx             # Changelog page listing all releases with version history and feature highlights (GitHub-visible CHANGELOG.md synced)
 │   ├── llms.txt/
 │   │   └── route.ts             # Static route handler serving machine-readable index of all components
 │   ├── llms-full.txt/
@@ -41,19 +35,40 @@ src/
 │   ├── r/
 │   │   └── [name]/route.ts      # shadcn-compatible static registry: /r/<id>.json with bundled sources + dependencies
 │   ├── robots.ts                # robots.txt route handler (allow all, Host, Sitemap)
-│   ├── sitemap.ts               # sitemap.xml route handler (227 URLs: home, changelog, ai-agents, resources, llms.txt, all categories, all non-block detail pages)
+│   ├── sitemap.ts               # sitemap.xml route handler (derives all /docs* URLs from docs nav config; no longer lists /ai-agents, /resources, /changelog at top level)
+│   ├── docs/
+│   │   ├── layout.tsx           # Docs section layout: collapsible left sidebar (Get started + Guides groups)
+│   │   ├── page.tsx             # Getting Started (/docs)
+│   │   ├── installation/
+│   │   │   └── page.tsx         # Installation guide (/docs/installation)
+│   │   ├── theming/
+│   │   │   └── page.tsx         # Theming guide (/docs/theming)
+│   │   ├── usage/
+│   │   │   └── page.tsx         # Usage guide (/docs/usage)
+│   │   ├── ai-agents/
+│   │   │   └── page.tsx         # For AI agents docs page (/docs/ai-agents)
+│   │   ├── resources/
+│   │   │   └── page.tsx         # Recommended resources board (/docs/resources)
+│   │   └── changelog/
+│   │       └── page.tsx         # Changelog page (/docs/changelog)
 │   └── [category]/
 │       ├── layout.tsx           # Sidebar + content split for all category routes
 │       ├── page.tsx             # Per-category view: renders ONLY that category's components
 │       └── [id]/
 │           └── page.tsx         # Per-component detail page with interactive playground (static export, dynamicParams=false)
 ├── components/
+│   ├── docs/                    # Docs section chrome: nav config + collapsible sidebar + prose helpers + page header
+│   │   ├── docs-nav.ts          # DOCS_NAV groups (Get started, Guides) + docsInternalPaths() for the sitemap
+│   │   ├── docs-sidebar.tsx     # Collapsible dropdown sidebar (client) + mobile disclosure nav
+│   │   ├── docs-prose.tsx       # Inline Code + Snippet helpers
+│   │   └── docs-page-header.tsx # Docs page breadcrumb + title + description
 │   ├── backgrounds/             # 72 ambient, animated canvases
 │   ├── text/                    # 58 typographic animation effects
 │   ├── ui/                      # 87 interactive components
 │   ├── blocks/                  # 119 composed section blocks (some are subcategories within blocks)
 │   └── showcase/                # Showcase UI
-│       ├── site-header.tsx      # Sticky header: brand link (/), category nav links (/<category>), theme toggle
+│       ├── site-header.tsx      # Sticky header: brand link (/), category nav links (/<category>), theme toggle, mobile hamburger (md:hidden)
+│       ├── mobile-menu.tsx      # Mobile hamburger menu button (md:hidden) + right-side Drawer (role=dialog) listing 4 category nav links
 │       ├── sidebar.tsx          # Sidebar (desktop rail) + MobileNav (mobile pills); fed plain {id,label,count}[] props
 │       ├── showcase-hero.tsx    # Landing hero with CTAs linking to /backgrounds and /blocks
 │       ├── code-block.tsx       # Syntax-highlighted code with copy button
@@ -88,7 +103,7 @@ src/
   - **UI/Text/Backgrounds (cards):** Linked title + summary direct to detail pages
   - **Blocks (full-width list):** Plain title + summary (no link), inline Preview/Code tabs with ViewportToggle for responsive preview
 - **Component detail routes** (/[category]/[id]) — Static-generated for all non-block components (217 total: backgrounds, text, ui); blocks have no detail pages (/blocks/<id> returns 404). Each detail page is a playground with Preview/Code tabs, viewport presets (Desktop/Tablet/Mobile), responsive resize handle, optional live Customize panel, and Props table
-- **Navigation** — Left Sidebar (desktop) + MobileNav pills (mobile); fed as plain {id,label,count}[] props from registry to keep preview tree server-side
+- **Navigation** — Left Sidebar (desktop) + MobileNav pills (mobile, mid-tier); below md breakpoint (<768px), the header's inline category nav is hidden and a hamburger button appears in the top-right of the sticky header, which opens a right-side Drawer listing the 4 category nav links. All variants fed as plain {id,label,count}[] props from registry to keep preview tree server-side
 - **Copy-Paste Integration** — Component sources embedded at build time; Code tab includes copy-to-clipboard
 
 ---
@@ -259,7 +274,7 @@ Composed, drop-in page sections built from the primitives above.
 - **Comparison Table** — Feature matrix comparing plans with a highlighted column (layout)
 - **Timeline** — A vertical rail-and-node timeline of milestones (layout)
 - **CTA Section** — Closing call-to-action over animated mesh (motion)
-- **Footer** — Brand and navigation links with optional socials row (layout)
+- **Footer** — Brand and navigation links with optional socials row; includes Support column with a link to /docs, and the contact email ononc@ononc.com in the footer's bottom bar (layout)
 - **Banner** — Dismissible announcement bar with gradient wash and CTA (composed)
 - **Team Grid** — Responsive grid of team member cards with avatar and role (layout)
 
@@ -282,11 +297,11 @@ A machine-readable index and dedicated docs page enable LLM coding agents to dis
 - **/llms-full.txt** — Index plus full component source code inlined in ```tsx fences (1.28 MB). Reuses `src/lib/source.ts` for source extraction, served by `src/app/llms-full.txt/route.ts`
 - **/r/<id>.json** — shadcn-compatible static registry (336 items). Each component bundles its complete source plus all transitively imported internal files (@/lib helpers, sibling components) with correct shadcn `type` and `target` alias placeholders (@lib/ @ui/ @components/), and lists real npm dependencies (clsx, tailwind-merge, motion, lucide-react; react/react-dom/next are peers and omitted). Enables one-command install: `npx shadcn@latest add https://dev.ononc.com/r/<id>.json`. Every item also carries ONONC's design tokens via the registry `cssVars` (@theme / :root / .dark) and `css` (@keyframes + @utility) fields, so `shadcn add` writes the tokens into the consumer's globals.css automatically; a standalone `/r/ononc-theme.json` (`registry:theme`) installs just the tokens. Generated at build time from `src/lib/registry-json.ts` and served by static route handler `src/app/r/[name]/route.ts`. Output emitted to `out/r/<id>.json` by `next build`
   > **Note:** `npx shadcn@latest add .../r/<id>.json` ships ONONC's design tokens with every component — the registry item's `cssVars` (theme/light/dark) and `css` (@keyframes + @utility) fields are written into the consumer's `globals.css`, so components render correctly out of the box with no manual token-copy step. All keyframes components reference by name are included — not just `star-spin` (star-border) and `marquee` (flowing-menu) but also `ripple` (ripple-button), `meteor` (meteors), `hue` (plasma), `wave` (wavy-text, pulse-wave-text), and `glitch-a`/`glitch-b` (glitch-text). If you instead copy source straight from a component's Code tab, also copy the token layer (the `@theme`, `:root`/`.dark` variables, keyframes, and utilities) from `src/app/globals.css` and the `cn` helper from `src/lib/utils.ts` — or run `npx shadcn@latest add .../r/ononc-theme.json` once to install just the tokens. Because the shipped theme includes generic token names (`background`, `foreground`, `border`, `muted`, `ring`), installing into a project that already defines them will override those values — reconcile as needed. ONONC components are still meant to be modified and integrated into your design system, not used as isolated package-locked UI.
-- **/ai-agents** — Standalone docs page (`src/app/ai-agents/page.tsx`) explaining why ONONC suits LLM coding agents: real copy-paste source, plain React + Tailwind, predictable structure, machine-readable llms.txt, one-command shadcn install, no additional dependencies, and full reduced-motion/a11y support. Includes JSON-LD breadcrumb and links to all endpoints, plus an "Original work, honest about its lineage" section that acknowledges prior art (shadcn's registry protocol; React Bits/Aceternity/Magic UI concepts) and states ONONC's differentiators — see [docs/originality-audit.md](docs/originality-audit.md). Linked from the footer "Get started" section
+- **/docs/ai-agents** — Docs-section page (`src/app/docs/ai-agents/page.tsx`) explaining why ONONC suits LLM coding agents: real copy-paste source, plain React + Tailwind, predictable structure, machine-readable llms.txt, one-command shadcn install, no additional dependencies, and full reduced-motion/a11y support. Includes JSON-LD breadcrumb and links to all endpoints, plus an "Original work, honest about its lineage" section that acknowledges prior art (shadcn's registry protocol; React Bits/Aceternity/Magic UI concepts) and states ONONC's differentiators — see [docs/originality-audit.md](docs/originality-audit.md). Reachable from the docs sidebar (the footer's Support column links to /docs)
 - **Copy for AI button** — `src/components/showcase/copy-for-ai.tsx` on each component detail page; copies a ready prompt including the install command, docs URL, and component source for immediate agent use
 - **Site configuration** — `src/lib/site.ts` defines `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, defaults to `https://dev.ononc.com`) and `absoluteUrl()` helper used for component links in llms.txt and registry URLs, and for `metadataBase` in `src/app/layout.tsx`. Production domain is `dev.ononc.com`. URLs are 404-safe: component links point to `/[category]/[id]` detail page for all non-block components; only blocks link to their category page instead
-- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (227 URLs: home, changelog, ai-agents, resources, llms.txt, all 4 categories, and all 217 non-block detail pages)
-- **Static export output** — Emitted to `out/llms.txt`, `out/llms-full.txt`, `out/ai-agents.html`, `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (337 files: 336 component items + ononc-theme.json) by `next build` (with `output: "export"`)
+- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (231 URLs: home, /introduction, the 7 /docs* pages, /llms.txt, all 4 categories, and all 217 non-block detail pages)
+- **Static export output** — Emitted to `out/llms.txt`, `out/llms-full.txt`, `out/docs/ai-agents.html`, `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (337 files: 336 component items + ononc-theme.json) by `next build` (with `output: "export"`)
 - **Tests** — Validated by `src/lib/llms.test.ts` (llms.txt/llms-full.txt generation) and `src/lib/registry-json.test.ts` (all 336 items, dependency validation against package.json, transitive import bundling)
 
 ### Component Detail Playground
@@ -407,9 +422,9 @@ Reusable React hook for canvas-based components:
 ## Verification Status
 
 ✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
-✅ **Build** — `npm run build` succeeds (static prerender of / + 4 category SSG routes + 217 non-block detail pages + /_not-found; exits 0)  
+✅ **Build** — `npm run build` succeeds (static prerender of / + /introduction + the 7 /docs* pages + 4 category SSG routes + 217 non-block detail pages + /_not-found; exits 0)  
 ✅ **Lint** — `npm run lint` = 0 errors (eslint flat config; 6 pre-existing warnings in src/components/text/*)  
-✅ **Runtime** — `next start` returns HTTP 200 for /, /backgrounds, /text, /ui, /blocks, /ai-agents, and all 217 component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 336 components; 404 for /blocks/<id>; no hydration errors; all components present; category scoping confirmed  
+✅ **Runtime** — `next start` returns HTTP 200 for /, /introduction, /backgrounds, /text, /ui, /blocks, /docs (+ /docs/installation, /docs/theming, /docs/usage, /docs/ai-agents, /docs/resources, /docs/changelog), and all 217 component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 336 components; 404 for /blocks/<id>; no hydration errors; all components present; category scoping confirmed  
 ✅ **Tests** — `npm test` = 72 files, 261 tests passing (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated with updated detail-page rules; component-playground interface tested); registry items now carry design tokens via cssVars+css (every component includes ONONC's @theme, @keyframes, and @utility declarations)
 
 ---
@@ -445,6 +460,21 @@ All critical and minor issues resolved as of 2026-06-30:
 - ✅ **Shadcn registry bundling** — All 8 emit `/r/<id>.json` with full component source + transitive @/lib/@ui/@components/ imports; dependencies: motion, lucide-react, clsx, tailwind-merge; note: standalone installs assume consumer has globals.css design tokens; star-border requires @keyframes star-spin and flowing-menu reuses @keyframes marquee (not bundled, so animation static until tokens present)
 - ✅ **Build & test verification** — tsc 0 errors, eslint 0 errors (6 pre-existing text/* warnings), 72 test files / 257 tests passing, next build exit 0 (521 static pages; emitted out/ui/{profile-card,scroll-stack,card-stack,magnet,flowing-menu,elastic-slider,star-border,glare-hover}.html + out/r/{profile-card,scroll-stack,card-stack,magnet,flowing-menu,elastic-slider,star-border,glare-hover}.json); registry now totals 336 components (Backgrounds 72 + Text 58 + UI 87 + Blocks 119)
 - ✅ **QA status** — Review GO after fixing 1 Major (card-stack keyboard a11y roving-focus correction) + 2 Minor (flowing-menu reduced-motion name persistence, glare-hover style merge for specificity). QA PASS. **Status: NOT YET COMMITTED OR DEPLOYED (awaiting user check-in)**
+
+### v1.14 Batch (2026-07-07) — Documentation section + footer refresh
+
+- ✅ **New /docs documentation section** — Collapsible left sidebar (Get started + Guides groups) with routes: /docs (Getting Started), /docs/installation, /docs/theming, /docs/usage, /docs/ai-agents, /docs/resources, /docs/changelog. Built with `src/app/docs/layout.tsx`, `docs-nav.ts`, `docs-sidebar.tsx`, `docs-prose.tsx`, and `docs-page-header.tsx`.
+- ✅ **Footer restructure** — The footer's 'Contact' column is now 'Support' (single link to /docs), and the contact email ononc@ononc.com moved to the footer's bottom bar as a mailto link (replacing the previous "Built with Next.js & Tailwind" note).
+- ✅ **Guides relocation** — For AI agents, Resources, and Changelog moved under /docs so they share the docs sidebar; their canonical URLs and BreadcrumbList JSON-LD updated (Home > Docs > page).
+- ✅ **Build & test verification** — tsc 0 errors; eslint 0 errors (6 pre-existing text/* warnings); vitest 72 files / 261 tests passing; next build exit 0. Review = GO (0 Critical/0 Major). QA = PASS (0 defects).
+
+### v1.13 Batch (2026-07-06) — Friendlier design-token guidance + footer contact
+- ✅ **Always-visible detail-page hint** — Every component detail page now shows "Styled with ONONC's design tokens — shadcn add installs them for you" next to the Copy-for-AI button, with "design tokens" linking to the Design tokens guide at /introduction#design-tokens
+- ✅ **Consistent guidance across surfaces** — The detail-page Code/Usage tab captions and the /blocks Code-tab note now link "design tokens" to the same guide (consistent wording across all surfaces)
+- ✅ **Copy-for-AI prompt update** — The per-detail-page aiPrompt now tells agents that `npx shadcn add` installs the component + cn helper + ONONC's Tailwind v4 design tokens + keyframes into globals.css (renders styled, no extra setup), with a hand-copy fallback line `npx shadcn@latest add …/r/ononc-theme.json`
+- ✅ **Footer email relocation** — Surfaced the contact email ononc@ononc.com in the footer's bottom bar (this was later restructured in v1.14 to move the footer columns to Library and Support, with the email remaining in the bottom bar)
+- ✅ **Changelog re-sync** — The on-site /changelog page (RELEASES[]) had drifted to v1.10; synced back in with v1.11 detail-pages, v1.12 token-delivery, and this v1.13 batch (all 13 changelog entries now matching CHANGELOG.md)
+- ✅ **Gate verification** — tsc 0 errors; eslint 0 errors (6 pre-existing text/* warnings); vitest 72 files / 261 tests passing; next build exit 0. Review = GO (0 Critical/0 Major). QA = PASS (0 defects): headless browser confirmed the client-gated Code/Usage tab captions render with working /introduction#design-tokens links (checked /ui/badge and across /blocks' 119 Code tabs); the always-visible detail hint in server-rendered HTML on ui/text/background detail pages; /introduction has the Design tokens section with id="design-tokens"; all 13 changelog entries present and matching CHANGELOG.md
 
 ### v1.12 Batch (2026-07-06) — Registry design-token delivery (consumer styling fix)
 - ✅ **Registry ships design tokens** — Every `/r/<id>.json` component item now carries ONONC's design tokens via shadcn `cssVars` (theme → @theme, light → :root, dark → .dark) and `css` (@keyframes + @utility), so `npx shadcn@latest add …/r/<id>.json` writes tokens into consumer's globals.css automatically. Previously ~231/336 components compiled but emitted zero CSS. Real-system QA PASS: single `shadcn add badge.json` injected tokens+keyframes (26→291 lines); compiled CSS contained resolved rules (`.bg-surface`, `@keyframes star-spin`, `:root`/`.dark` blocks)

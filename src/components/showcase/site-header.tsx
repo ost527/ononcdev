@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MobileMenu } from "@/components/showcase/mobile-menu";
 import { ThemeToggle } from "@/components/showcase/theme-toggle";
 import { categories, componentCount } from "@/registry";
 
@@ -29,6 +30,12 @@ export function SiteHeader() {
             {componentCount} components
           </span>
           <ThemeToggle />
+          <MobileMenu
+            items={categories.map((category) => ({
+              id: category.id,
+              label: category.label,
+            }))}
+          />
         </div>
       </div>
     </header>

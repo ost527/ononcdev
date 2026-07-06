@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/site";
 import { categories, detailPageParams } from "@/registry";
+import { docsInternalPaths } from "@/components/docs/docs-nav";
 
 export const dynamic = "force-static";
 
@@ -9,9 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     "/",
     "/introduction",
-    "/ai-agents",
-    "/resources",
-    "/changelog",
+    ...docsInternalPaths(),
     "/llms.txt",
     ...categories.map((category) => `/${category.id}`),
     ...detailPageParams().map((p) => `/${p.category}/${p.id}`),

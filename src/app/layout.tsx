@@ -9,6 +9,8 @@ import { Toaster } from "@/components/ui/toast";
 import { categories } from "@/registry";
 import { SITE_URL } from "@/lib/site";
 
+const CONTACT_EMAIL = "ononc@ononc.com";
+
 /** Real, registry-synced footer navigation — every link resolves to a route. */
 const footerColumns: FooterColumn[] = [
   {
@@ -19,14 +21,10 @@ const footerColumns: FooterColumn[] = [
     })),
   },
   {
-    heading: "Get started",
-    links: [
-      { label: "Introduction", href: "/introduction" },
-      { label: "For AI agents", href: "/ai-agents" },
-      { label: "Resources", href: "/resources" },
-      { label: "Changelog", href: "/changelog" },
-      { label: "Overview", href: "/" },
-    ],
+    // Getting-started content (Introduction, AI agents, Resources, Changelog)
+    // is consolidated on /docs, which links out to each of those pages.
+    heading: "Support",
+    links: [{ label: "Docs", href: "/docs" }],
   },
 ];
 
@@ -103,7 +101,18 @@ export default function RootLayout({
         <SiteHeader />
         {children}
         <div className="site-shell mt-auto pb-20 pt-24">
-          <FooterBlock brand="ONONC" columns={footerColumns} />
+          <FooterBlock
+            brand="ONONC"
+            columns={footerColumns}
+            note={
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="rounded-sm underline-offset-4 outline-none transition-colors hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand/60"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            }
+          />
         </div>
         <Toaster />
       </body>

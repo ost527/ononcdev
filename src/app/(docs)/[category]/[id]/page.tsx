@@ -46,6 +46,9 @@ export default async function ComponentDetailPage({
     "Install with the shadcn CLI:",
     `npx shadcn@latest add ${absoluteUrl(`/r/${item.id}.json`)}`,
     "",
+    "This installs the component, its internal imports (including the cn helper), and ONONC's Tailwind v4 design tokens + keyframes (written into your globals.css) — so it renders styled with no extra setup.",
+    `If you paste the source by hand instead, install the tokens once too: npx shadcn@latest add ${absoluteUrl("/r/ononc-theme.json")}`,
+    "",
     `Docs: ${absoluteUrl(`/${cat.id}/${item.id}`)}`,
     `All components: ${absoluteUrl("/llms.txt")}`,
     "",
@@ -88,8 +91,19 @@ export default async function ComponentDetailPage({
             ))}
           </div>
         ) : null}
-        <div className="pt-2">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pt-2">
           <CopyForAi prompt={aiPrompt} />
+          <p className="text-xs text-muted">
+            Styled with ONONC&apos;s{" "}
+            <Link
+              href="/introduction#design-tokens"
+              className="text-brand-ink underline-offset-2 hover:underline"
+            >
+              design tokens
+            </Link>{" "}
+            — <code className="font-mono">shadcn add</code> installs them for
+            you.
+          </p>
         </div>
       </div>
 

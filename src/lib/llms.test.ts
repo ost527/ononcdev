@@ -9,7 +9,7 @@ describe("buildLlmsTxt", () => {
   it("starts with the ONONC header and points at the full dump", () => {
     expect(txt.startsWith("# ONONC")).toBe(true);
     expect(txt).toContain(`${SITE_URL}/llms-full.txt`);
-    expect(txt).toContain(`${SITE_URL}/ai-agents`);
+    expect(txt).toContain(`${SITE_URL}/docs/ai-agents`);
   });
 
   it("has a section for every category", () => {

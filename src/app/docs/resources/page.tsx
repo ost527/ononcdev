@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   title: "Recommended resources — ONONC",
   description:
     "A curated board of design systems and component libraries worth bookmarking — from React Bits and Mantine UI to Cloudscape, Primer, Carbon, Material Web, and Fluent UI.",
-  alternates: { canonical: "/resources" },
+  alternates: { canonical: "/docs/resources" },
   openGraph: {
     title: "Recommended resources — design systems & component libraries",
     description:
       "A hand-picked board of design systems and component libraries we like — the sites and repos worth keeping in your bookmarks.",
-    url: absoluteUrl("/resources"),
+    url: absoluteUrl("/docs/resources"),
     type: "article",
   },
 };
@@ -133,11 +133,12 @@ const BREADCRUMB_LD = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+    { "@type": "ListItem", position: 2, name: "Docs", item: absoluteUrl("/docs") },
     {
       "@type": "ListItem",
-      position: 2,
+      position: 3,
       name: "Recommended resources",
-      item: absoluteUrl("/resources"),
+      item: absoluteUrl("/docs/resources"),
     },
   ],
 };
@@ -159,7 +160,7 @@ const secondaryBtn =
 
 export default function ResourcesPage() {
   return (
-    <main className="site-shell py-14 sm:py-20">
+    <article className="max-w-3xl">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_LD) }}
@@ -168,10 +169,10 @@ export default function ResourcesPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ITEMLIST_LD) }}
       />
-      <div className="mx-auto max-w-5xl">
+      <div>
         <nav aria-label="Breadcrumb" className="mb-8 text-xs text-muted-2">
-          <Link href="/" className="transition-colors hover:text-foreground">
-            Home
+          <Link href="/docs" className="transition-colors hover:text-foreground">
+            Docs
           </Link>
           <span className="mx-1.5 opacity-50">/</span>
           <span className="text-foreground">Recommended resources</span>
@@ -252,6 +253,6 @@ export default function ResourcesPage() {
           adding to the board.
         </p>
       </div>
-    </main>
+    </article>
   );
 }

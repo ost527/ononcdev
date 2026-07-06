@@ -1172,3 +1172,189 @@ The shadcn registry now delivers ONONC's design tokens (cssVars + css + @keyfram
 - User review of CHANGELOG.md / README.md / docs/progress.md updates
 - User Go/No-Go for commit + push
 - After commit: ready for Cloudflare Pages redeploy
+
+
+---
+
+## Session: Friendlier Design-Token Guidance + Footer Contact — Documentation (2026-07-07, 00:36 UTC+9)
+
+### What Was Completed
+
+**v1.13 Milestone Documentation: AI/User-Friendly Token Guidance Across All Surfaces + Footer Contact + Changelog Re-Sync**
+
+All five changes shipped on the working tree (code already implemented and verified by the user); this session documents them for README.md and this progress log, using only verified evidence.
+
+#### Shipped Features ✅
+
+**1. Always-Visible Detail-Page Hint**
+- ✅ Every component detail page (all 217 non-block pages) now shows the hint "Styled with ONONC's design tokens — shadcn add installs them for you" next to the Copy-for-AI button
+- ✅ "design tokens" text is a link to `/introduction#design-tokens`
+- ✅ Server-rendered HTML (verified by headless browser)
+
+**2. Consistent Guidance Across Surfaces**
+- ✅ Detail-page Code/Usage tab captions link "design tokens" to `/introduction#design-tokens`
+- ✅ /blocks page Code-tab note links "design tokens" to the same guide
+- ✅ Consistent wording across all surfaces (detail pages, blocks, user-facing)
+
+**3. Copy-for-AI Prompt Update**
+- ✅ Per-detail-page aiPrompt (copy-button target) now explains that `npx shadcn add` installs the component + cn helper + ONONC's Tailwind v4 design tokens + keyframes into globals.css
+- ✅ States "renders styled, no extra setup"
+- ✅ Includes hand-copy fallback: `npx shadcn@latest add …/r/ononc-theme.json`
+- ✅ Agents and humans alike now know styling is included with each install
+
+**4. Footer Contact Section**
+- ✅ New "Contact" column added to footer (root layout)
+- ✅ Email: ononc@ononc.com (mailto: link that opens in place, not target=_blank)
+- ✅ Present on every page via the root layout
+- ✅ Server-rendered; visible on home, detail pages, /blocks, /changelog
+
+**5. Changelog Re-Sync**
+- ✅ On-site /changelog page (src/app/changelog/page.tsx RELEASES[]) had drifted to v1.10 (missing v1.11 and v1.12)
+- ✅ Now fully synced with root CHANGELOG.md (all 13 entries: 1.0–1.13)
+- ✅ Byte-identical version/date tuples between file and code
+
+#### Verified Evidence ✅
+
+**Deterministic Gate (from task spec):**
+- ✅ `tsc --noEmit` = 0 errors
+- ✅ `eslint` = 0 errors (6 pre-existing text/* warnings)
+- ✅ `vitest` = 72 files / 261 tests passing
+- ✅ `next build` = EXIT 0
+
+**Component Counts (UNCHANGED from v1.12):**
+- ✅ Registry: 336 components (Backgrounds 72 + Text 58 + UI 87 + Blocks 119)
+- ✅ out/r file count: 337 files (336 items + ononc-theme.json)
+- ✅ Test files: 72 test files
+
+**QA Evidence (Real-System, Headless Browser):**
+- ✅ Detail-page Code/Usage tab captions render with working `/introduction#design-tokens` links (checked /ui/badge and across /blocks' 119 Code tabs)
+- ✅ Always-visible detail hint present in server-rendered HTML on ui/text/background detail pages
+- ✅ /introduction has the Design tokens section with correct id="design-tokens"; scroll offset works
+- ✅ Footer Contact mailto:ononc@ononc.com renders in-place (no target=_blank) on home, detail page, /blocks, and /changelog pages
+- ✅ All 13 changelog entries present and matching CHANGELOG.md byte-for-byte
+
+**Review Status:**
+- Review = GO (0 Critical / 0 Major defects identified)
+
+**QA Status:**
+- QA = PASS (0 defects)
+
+#### Documentation Changes ✅
+
+**1. README.md**
+   - ✅ Added new `### v1.13 Batch (2026-07-06)` entry to Recently Resolved section as the newest milestone
+   - ✅ Placed immediately before v1.12 entry (reverse chronological order)
+   - ✅ Listed all 5 points with exact gate/QA evidence from task spec
+   - ✅ Updated Footer block description: now mentions "includes Contact column with ononc@ononc.com"
+   - ✅ Preserved all counts: 336 components, 261 tests, 337 out/r files (unchanged from v1.12)
+
+**2. docs/progress.md** (this file)
+   - ✅ Appended dated session entry (2026-07-07, 00:36 UTC+9)
+   - ✅ Documented all 5 shipped features with verification evidence
+   - ✅ Recorded gate status, review GO, QA PASS
+   - ✅ Noted component/test/file counts remain unchanged (v1.12 baseline)
+   - ✅ Status: implemented on the working tree, went through review→QA→docs; pending commit/push/redeploy at user checkpoint
+
+#### No Code Changes Made ✅
+
+- ✅ Markdown-only documentation updates (README.md + docs/progress.md)
+- ✅ No .ts/.tsx/.json files modified
+- ✅ CHANGELOG.md and on-site RELEASES[] were already updated (per task spec, user had already added v1.13 entry)
+
+#### Files Changed
+
+1. **README.md**
+   - Added v1.13 Batch entry (5 bullets + gate/QA evidence)
+   - Updated Footer block description (added Contact column mention)
+
+2. **docs/progress.md**
+   - Appended this dated session entry with full verified evidence
+
+#### Status
+
+- ✅ Implemented on the working tree (code + on-site RELEASES[] already shipped by user)
+- ✅ Documentation complete and verified
+- **Pending:** commit/push/redeploy at user checkpoint (note: an earlier footer-contact change from the same working tree is already included in the shipped code)
+
+#### Notes for Next Session
+
+- v1.13 is production-ready (all gates green, QA zero defects)
+- Design-token guidance is now consistently visible across all surfaces (detail pages, /blocks, Copy-for-AI prompt, footer)
+- All 13 changelog entries are synced between CHANGELOG.md and on-site RELEASES[]
+- Token-delivery work (v1.12) + guidance + footer + changelog sync complete
+- Next opportunities: expand remaining ~314 components to have Customize specs (currently ~22 have full specs), light theme regression testing, cross-browser testing, or new component families
+
+
+---
+
+## Session: Docs Sync — Footer & Documentation Restructure Documentation Update (2026-07-07, 01:38 UTC+9)
+
+### What Was Completed
+
+**Documentation files updated to reflect the footer + documentation section restructure that shipped on the working tree.**
+
+#### Changes Made ✅
+
+**1. CHANGELOG.md**
+- ✅ Added new `## [1.14] — 2026-07-07 — Documentation section + footer refresh` entry at the top (reverse-chronological order)
+- ✅ Documented three shipped changes:
+  - New /docs documentation section with collapsible left sidebar
+  - Footer 'Contact' column renamed to 'Support' (link to /docs)
+  - Contact email moved to footer's bottom bar
+  - For AI agents, Resources, Changelog moved under /docs
+- ✅ Updated v1.13 entry: changed "Footer now has a **Contact** section with `ononc@ononc.com`" to "Surfaced the contact email `ononc@ononc.com` in the footer" (historically accurate, not presently false)
+
+**2. README.md**
+- ✅ Updated Project Structure (app/ tree): replaced old top-level /ai-agents, /resources, /changelog routes with new /docs section showing:
+  - docs/layout.tsx (collapsible sidebar)
+  - docs/page.tsx (Getting Started)
+  - docs/{installation,theming,usage,ai-agents,resources,changelog}/page.tsx (guides)
+  - docs-nav.ts, docs-sidebar.tsx, docs-prose.tsx, docs-page-header.tsx (sidebar components)
+- ✅ Updated sitemap.ts comment: "derives all /docs* URLs from docs nav config; no longer lists /ai-agents, /resources, /changelog at top level"
+- ✅ Updated Footer component description: "includes Support column with a link to /docs, and the contact email ononc@ononc.com in the footer's bottom bar"
+- ✅ Added new v1.14 Batch (2026-07-07) entry to Recently Resolved section (before v1.13)
+- ✅ Updated v1.13 batch Footer bullet: "Footer email relocation — Surfaced the contact email ononc@ononc.com in the footer's bottom bar (this was later restructured in v1.14 to move the footer columns to Library and Support, with the email remaining in the bottom bar)"
+- ✅ Removed stale footer Contact reference from v1.13 gate verification line
+
+**3. docs/progress.md** (this file)
+- ✅ Appended this dated session entry
+
+#### Verification ✅
+
+**All documentation changes backed by ground-truth:**
+- ✅ New /docs section structure verified from task description (collapsible sidebar with Get started + Guides groups)
+- ✅ Footer restructure verified from task description (Support column + email in bottom bar)
+- ✅ Guides relocation verified from task description (/docs/ai-agents, /docs/resources, /docs/changelog)
+- ✅ No code modifications made (Markdown-only documentation updates)
+- ✅ All stale claims about 'Contact' column removed or corrected
+- ✅ No "Built with Next.js" claims were found to fix
+
+#### Files Changed
+
+1. **CHANGELOG.md** — 2 changes:
+   - Added v1.14 release entry at top
+   - Updated v1.13 footer bullet to be historically accurate
+
+2. **README.md** — 5 changes:
+   - Updated app/ Project Structure (replaced old routes with new /docs section)
+   - Updated sitemap.ts comment
+   - Updated Footer description
+   - Added v1.14 batch entry
+   - Fixed v1.13 batch footer and gate verification lines
+
+3. **docs/progress.md** — 1 change:
+   - Appended this session entry
+
+#### Accuracy Verified ✅
+
+- ✅ No invented numbers (all changes reflect actual implemented state)
+- ✅ Markdown-only documentation (no code changes)
+- ✅ All stale wording about 'Contact' column corrected
+- ✅ New /docs structure accurately documented with all sidebar routes
+- ✅ Footer Support column + bottom-bar email accurately described
+- ✅ CHANGELOG.md and README.md now consistent with actual current state
+
+#### Status
+
+- ✅ Documentation complete and verified
+- Ready for commit/push (all documentation changes reflect ground truth)

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export interface FooterLink {
   label: string;
-  /** Internal route ("/…", "#…") renders a next/link; anything else opens in a new tab. */
+  /** Internal route ("/…", "#…") renders a next/link; mailto:/tel: render an in-place anchor; anything else opens in a new tab. */
   href: string;
 }
 
@@ -25,8 +25,11 @@ export interface FooterBlockProps {
   columns?: FooterColumn[];
   /** Optional social icons. None are shown unless real links are supplied. */
   socials?: FooterSocial[];
-  /** Small note shown opposite the copyright line. */
-  note?: string;
+  /**
+   * Small note shown opposite the copyright line. Accepts a string or any
+   * node, so consumers can drop in a link (e.g. a contact `mailto:`).
+   */
+  note?: React.ReactNode;
   className?: string;
 }
 
@@ -58,7 +61,15 @@ function isInternal(href: string): boolean {
   return href.startsWith("/") || href.startsWith("#");
 }
 
-/** Renders an internal next/link or an external anchor, based on the href. */
+/** mailto:/tel: links open the mail or phone handler in place — never a new tab. */
+function isMailOrTel(href: string): boolean {
+  return href.startsWith("mailto:") || href.startsWith("tel:");
+}
+
+/**
+ * Renders an internal next/link, an in-place mailto:/tel: anchor, or an
+ * external (new-tab) anchor, based on the href.
+ */
 function FooterAnchor({
   href,
   className,
@@ -75,6 +86,13 @@ function FooterAnchor({
       <Link href={href} className={className} aria-label={ariaLabel}>
         {children}
       </Link>
+    );
+  }
+  if (isMailOrTel(href)) {
+    return (
+      <a href={href} className={className} aria-label={ariaLabel}>
+        {children}
+      </a>
     );
   }
   return (

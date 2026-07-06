@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   title: "For AI agents — ONONC",
   description:
     "ONONC is built for AI coding agents: real copy-paste source, plain React + Tailwind, a predictable structure, and a machine-readable llms.txt index.",
-  alternates: { canonical: "/ai-agents" },
+  alternates: { canonical: "/docs/ai-agents" },
   openGraph: {
     title: "The React component library built for AI coding agents — ONONC",
     description:
       "Real copy-paste source, plain React + Tailwind + Framer Motion, and a machine-readable llms.txt so agents add components on the first try.",
-    url: absoluteUrl("/ai-agents"),
+    url: absoluteUrl("/docs/ai-agents"),
     type: "article",
   },
 };
@@ -102,8 +102,14 @@ const BREADCRUMB_LD = {
     {
       "@type": "ListItem",
       position: 2,
+      name: "Docs",
+      item: absoluteUrl("/docs"),
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
       name: "For AI agents",
-      item: absoluteUrl("/ai-agents"),
+      item: absoluteUrl("/docs/ai-agents"),
     },
   ],
 };
@@ -115,15 +121,15 @@ const secondaryBtn =
 
 export default function AiAgentsPage() {
   return (
-    <main className="site-shell py-14 sm:py-20">
+    <article className="max-w-3xl">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_LD) }}
       />
-      <div className="mx-auto max-w-3xl">
+      <div>
         <nav aria-label="Breadcrumb" className="mb-8 text-xs text-muted-2">
-          <Link href="/" className="transition-colors hover:text-foreground">
-            Home
+          <Link href="/docs" className="transition-colors hover:text-foreground">
+            Docs
           </Link>
           <span className="mx-1.5 opacity-50">/</span>
           <span className="text-foreground">For AI agents</span>
@@ -229,7 +235,7 @@ export default function AiAgentsPage() {
               </span>
               , and the libraries we recommend are on{" "}
               <Link
-                href="/resources"
+                href="/docs/resources"
                 className="font-medium text-foreground underline-offset-4 hover:underline"
               >
                 Resources
@@ -354,6 +360,6 @@ export default function AiAgentsPage() {
           </section>
         </div>
       </div>
-    </main>
+    </article>
   );
 }

@@ -49,7 +49,8 @@ function docsSection(): string {
     "## Docs",
     `- [Home](${absoluteUrl("/")}): Landing page and category overview.`,
     `- [Introduction](${absoluteUrl("/introduction")}): What ONONC is and how to use the site.`,
-    `- [For AI agents](${absoluteUrl("/ai-agents")}): How coding agents consume ONONC.`,
+    `- [Docs](${absoluteUrl("/docs")}): Getting started — install, theming, and usage.`,
+    `- [For AI agents](${absoluteUrl("/docs/ai-agents")}): How coding agents consume ONONC.`,
     `- [Full source dump](${absoluteUrl("/llms-full.txt")}): Every component's full source inlined in one file.`,
   ].join("\n");
 }

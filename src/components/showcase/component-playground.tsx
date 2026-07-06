@@ -27,6 +27,7 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
+import Link from "next/link";
 import { CodeBlock } from "@/components/showcase/code-block";
 import {
   ControlField,
@@ -562,7 +563,14 @@ export function ComponentPlayground({
                     </h3>
                     <p className="text-xs text-muted">
                       Reflects your Customize options — works once the component
-                      and its design tokens are in your project.
+                      and its{" "}
+                      <Link
+                        href="/introduction#design-tokens"
+                        className="text-brand-ink underline-offset-2 hover:underline"
+                      >
+                        design tokens
+                      </Link>{" "}
+                      are in your project.
                     </p>
                   </div>
                   <CodeBlock code={usageCode} />
@@ -581,10 +589,15 @@ export function ComponentPlayground({
                   </h3>
                   <p className="text-xs text-muted">
                     Paste into your project — it also needs the{" "}
-                    <code className="font-mono">cn</code> helper and the ONONC
-                    design tokens. Or run{" "}
-                    <code className="font-mono">npx shadcn add</code> to bring
-                    the file, its imports, and the tokens automatically.
+                    <code className="font-mono">cn</code> helper and ONONC&apos;s{" "}
+                    <Link
+                      href="/introduction#design-tokens"
+                      className="text-brand-ink underline-offset-2 hover:underline"
+                    >
+                      design tokens
+                    </Link>
+                    . Or run <code className="font-mono">npx shadcn add</code>{" "}
+                    to bring the file, its imports, and the tokens automatically.
                   </p>
                 </div>
                 <CodeBlock code={code} />

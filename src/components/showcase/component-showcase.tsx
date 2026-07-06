@@ -416,7 +416,21 @@ export function ComponentShowcase({
         </div>
         <div {...panelProps}>
           {tab === "code" ? (
-            <CodeBlock code={code} />
+            <div className="space-y-2">
+              <p className="px-1 text-xs text-muted">
+                Paste into your project — it also needs the{" "}
+                <code className="font-mono">cn</code> helper and ONONC&apos;s{" "}
+                <Link
+                  href="/introduction#design-tokens"
+                  className="text-brand-ink underline-offset-2 hover:underline"
+                >
+                  design tokens
+                </Link>
+                . Or run <code className="font-mono">npx shadcn add</code> to
+                bring the file, its imports, and the tokens automatically.
+              </p>
+              <CodeBlock code={code} />
+            </div>
           ) : (
             <div
               ref={desktopPreviewRef}
