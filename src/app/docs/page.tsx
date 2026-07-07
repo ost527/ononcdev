@@ -1,37 +1,37 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Check, Palette, Terminal, Wrench } from "lucide-react";
+import { ArrowRight, Palette, Terminal, Wrench } from "lucide-react";
 import { componentCount, categories } from "@/registry";
 import { absoluteUrl } from "@/lib/site";
-import { Code, Snippet } from "@/components/docs/docs-prose";
+import { Code, Table } from "@/components/docs/docs-prose";
 import { DocsPageHeader } from "@/components/docs/docs-page-header";
 
 export const metadata: Metadata = {
   title: "Getting Started — ONONC Docs",
   description:
-    "Install ONONC components with the shadcn CLI or copy-paste them into your Next.js + Tailwind v4 app. Prerequisites and a first install in two minutes.",
+    "How ONONC works, the prerequisites, and a map of the docs — installation, theming, and usage — for the motion-first React component library.",
   alternates: { canonical: "/docs" },
   openGraph: {
     title: "Getting Started with ONONC",
     description:
-      "Prerequisites and your first component install — with the shadcn CLI or copy-paste.",
+      "How ONONC works, prerequisites, and where to go next: installation, theming, and usage.",
     url: absoluteUrl("/docs"),
     type: "article",
   },
 };
 
-const PREREQS: { title: string; body: string }[] = [
+const PRINCIPLES: { title: string; body: string }[] = [
   {
-    title: "React 19",
-    body: "Components are plain .tsx files, so any React 19 app works — Next.js (App Router) is what ONONC is built and tested on.",
+    title: "Real source, in your repo",
+    body: "Adding a component drops its actual .tsx into your project. You read it, edit it, and own it — there is no black box and no version to upgrade.",
   },
   {
-    title: "Tailwind CSS v4",
-    body: "Styling uses Tailwind v4 utilities and CSS-first @theme tokens. The design tokens live in your globals.css — see Theming.",
+    title: "No lock-in",
+    body: "Because it is just your code, you can change anything. Nothing is package-locked, so teammates and AI agents extend it like any other file.",
   },
   {
-    title: "A few peer packages",
-    body: "motion (Framer Motion) for animated components, lucide-react for icons, plus clsx + tailwind-merge for the cn helper. The CLI adds these for you.",
+    title: "Motion-first & accessible",
+    body: "Every component is built from scratch with keyboard support and prefers-reduced-motion handling — the eye-candy is accessible too.",
   },
 ];
 
@@ -45,23 +45,21 @@ const NEXT_STEPS: {
     href: "/docs/installation",
     icon: Terminal,
     title: "Installation",
-    body: "The shadcn CLI in depth, the copy-paste path, and exactly what lands in your project.",
+    body: "Add a component with the shadcn CLI or by copying its source — and exactly what lands in your project.",
   },
   {
     href: "/docs/theming",
     icon: Palette,
     title: "Theming",
-    body: "Install the design tokens so components render correctly — with the CLI or by hand.",
+    body: "Install the design tokens so components render correctly, then customize colors, radius, and fonts.",
   },
   {
     href: "/docs/usage",
     icon: Wrench,
     title: "Usage",
-    body: "Import a component, customize its props, and browse the full library.",
+    body: "Import a component, customize its props on the playground, and browse the full library.",
   },
 ];
-
-const INSTALL_CMD = `npx shadcn@latest add ${absoluteUrl("/r/aurora-background.json")}`;
 
 const BREADCRUMB_LD = {
   "@context": "https://schema.org",
@@ -84,31 +82,55 @@ export default function GettingStartedPage() {
         description={
           <>
             ONONC is a motion-first React component library — {componentCount}{" "}
-            components across {categories.length} categories. There is no
-            package to depend on: install a component with the shadcn CLI or
-            copy its source straight from the site. This guide gets you from
-            zero to a rendered component.
+            components across {categories.length} categories, built from scratch
+            with no package to depend on. This page explains how it works and
+            what you need; the guides that follow take you from an empty project
+            to a component on the page.
           </>
         }
       />
 
       <div className="mt-10 space-y-12 text-pretty leading-relaxed text-muted">
-        <section id="prerequisites" className="scroll-mt-24">
+        <section id="how-it-works" className="scroll-mt-24">
           <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-            Prerequisites
+            How ONONC works
           </h2>
           <p className="mt-3 text-sm sm:text-base">
-            ONONC components are idiomatic React + Tailwind — no bespoke
-            runtime, no UI-kit dependency. You need:
+            ONONC is not an npm package you install and import. Every component
+            is real source code you bring into your project — with the{" "}
+            <span className="font-medium text-foreground">shadcn CLI</span> or by
+            copying it from the site — after which the file lives in{" "}
+            <span className="font-medium text-foreground">your</span> repo.
+            Getting productive is three short steps:{" "}
+            <Link
+              href="/docs/installation"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              install
+            </Link>{" "}
+            a component,{" "}
+            <Link
+              href="/docs/theming"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              set up the tokens
+            </Link>
+            , then{" "}
+            <Link
+              href="/docs/usage"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              use
+            </Link>{" "}
+            it.
           </p>
           <ul className="mt-5 grid gap-4 sm:grid-cols-3">
-            {PREREQS.map((item) => (
+            {PRINCIPLES.map((item) => (
               <li
                 key={item.title}
                 className="rounded-xl border border-border bg-surface p-5"
               >
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <Check className="size-4 text-brand-ink" aria-hidden />
+                <h3 className="text-sm font-semibold text-foreground">
                   {item.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -119,44 +141,77 @@ export default function GettingStartedPage() {
           </ul>
         </section>
 
-        <section id="quick-start" className="scroll-mt-24">
+        <section id="prerequisites" className="scroll-mt-24">
           <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-            Install your first component
+            Prerequisites
           </h2>
           <p className="mt-3 text-sm sm:text-base">
-            Every component is published to a shadcn-compatible registry. One
-            command drops the component, every internal file it imports, and
-            ONONC&apos;s design tokens into your project — so it renders
-            correctly with no extra setup:
+            ONONC components are idiomatic React + Tailwind — no bespoke runtime
+            and no UI-kit dependency. You need:
           </p>
-          <Snippet label="Install a component with the shadcn CLI">
-            {INSTALL_CMD}
-          </Snippet>
-          <p className="mt-4 text-sm sm:text-base">
-            Swap <Code>aurora-background</Code> for any component&apos;s
-            registry id — you&apos;ll find the exact command on each
-            component&apos;s page and in{" "}
-            <a
-              href="/llms.txt"
-              className="font-medium text-foreground underline-offset-4 hover:underline"
-            >
-              llms.txt
-            </a>
-            . Prefer to read the code first? The{" "}
-            <Link
-              href="/docs/installation"
-              className="font-medium text-foreground underline-offset-4 hover:underline"
-            >
-              copy-paste path
-            </Link>{" "}
-            works too.
-          </p>
+          <Table
+            head={["Requirement", "Notes"]}
+            rows={[
+              [
+                <span key="t" className="font-medium text-foreground">
+                  React 19
+                </span>,
+                <>
+                  Components are plain <Code>.tsx</Code> files, so any React 19
+                  app works. Next.js (App Router) is what ONONC is built and
+                  tested on.
+                </>,
+              ],
+              [
+                <span key="t" className="font-medium text-foreground">
+                  Tailwind CSS v4
+                </span>,
+                <>
+                  Styling uses Tailwind v4 utilities and CSS-first{" "}
+                  <Code>@theme</Code> tokens. Set the tokens up once — see{" "}
+                  <Link
+                    href="/docs/theming"
+                    className="font-medium text-foreground underline-offset-4 hover:underline"
+                  >
+                    Theming
+                  </Link>
+                  .
+                </>,
+              ],
+              [
+                <span key="t" className="font-medium text-foreground">
+                  A shadcn setup
+                </span>,
+                <>
+                  The one-command install uses the shadcn CLI, which needs a{" "}
+                  <Code>components.json</Code> (run{" "}
+                  <Code>npx shadcn@latest init</Code> once). Not required if you
+                  copy-paste instead.
+                </>,
+              ],
+              [
+                <span key="t" className="font-medium text-foreground">
+                  A few peer packages
+                </span>,
+                <>
+                  <Code>motion</Code> (Framer Motion) for animation,{" "}
+                  <Code>lucide-react</Code> for icons, and{" "}
+                  <Code>clsx</Code> + <Code>tailwind-merge</Code> for the{" "}
+                  <Code>cn</Code> helper. The CLI installs these for you.
+                </>,
+              ],
+            ]}
+          />
         </section>
 
         <section id="next-steps" className="scroll-mt-24">
           <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
             Next steps
           </h2>
+          <p className="mt-3 text-sm sm:text-base">
+            Three short guides take you from an empty project to a component on
+            the page:
+          </p>
           <ul className="mt-5 grid gap-4 sm:grid-cols-3">
             {NEXT_STEPS.map((item) => (
               <li key={item.href}>
