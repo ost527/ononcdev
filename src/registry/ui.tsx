@@ -186,7 +186,7 @@ export const ui: Category = {
         <TiltCard className="w-60">
           <div className="rounded-2xl border border-border bg-surface p-6">
             <div className="h-2 w-12 rounded-full bg-brand" />
-            <h4 className="mt-4 font-semibold">Tilt me around</h4>
+            <p className="mt-4 font-semibold">Tilt me around</p>
             <p className="mt-1 text-sm text-muted">
               Move your cursor across the card.
             </p>
@@ -202,7 +202,7 @@ export const ui: Category = {
       tags: ["pointer"],
       preview: (
         <SpotlightCard className="w-64">
-          <h4 className="font-semibold">Spotlight</h4>
+          <p className="font-semibold">Spotlight</p>
           <p className="mt-1 text-sm text-muted">Hover to sweep the highlight.</p>
         </SpotlightCard>
       ),
@@ -265,6 +265,7 @@ export const ui: Category = {
       preview: (
         <Accordion
           className="w-full max-w-sm"
+          headingLevel="h2"
           defaultIndex={0}
           items={[
             { title: "What is ONONC?", content: "An original animated component kit." },
@@ -378,7 +379,7 @@ export const ui: Category = {
       frameClassName: "min-h-72 w-full items-start justify-center p-6",
       preview: (
         <Popover label="Open popover">
-          <h4 className="font-semibold text-foreground">Dimensions</h4>
+          <p className="font-semibold text-foreground">Dimensions</p>
           <p className="mt-1 text-muted">
             Put any content in here — forms, menus, or details.
           </p>
@@ -1141,7 +1142,7 @@ export const ui: Category = {
           <p className="text-xs font-medium uppercase tracking-widest text-muted-2">
             Holo pass
           </p>
-          <h3 className="mt-2 text-xl font-semibold">Aurora Nine</h3>
+          <p className="mt-2 text-xl font-semibold">Aurora Nine</p>
           <p className="mt-1 text-sm text-muted">
             Tilt me — the sheen shifts hue with the pointer.
           </p>
@@ -1214,7 +1215,7 @@ export const ui: Category = {
       preview: (
         <div className="relative h-full w-full">
           <div className="flex h-full w-full flex-col items-center justify-center gap-2">
-            <h3 className="text-xl font-semibold">Page content</h3>
+            <p className="text-xl font-semibold">Page content</p>
             <p className="text-sm text-muted">Revealed when loading completes.</p>
           </div>
           <Preloader />

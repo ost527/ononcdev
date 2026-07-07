@@ -33,6 +33,9 @@ export interface ComponentShowcaseProps {
   customizable?: boolean;
   /** When set, the title + summary link to the component detail page. */
   href?: string;
+  /** Heading tag for the component name (default "h3"); use "h2" when the card
+   * sits directly under a page-level h1 (e.g. a sub-category listing page). */
+  headingLevel?: "h2" | "h3";
   /** Extra classes for the block-layout desktop preview wrapper (reserve height). */
   previewClassName?: string;
   /** Extra inset around the block-layout preview frame, in pixels. */
@@ -292,13 +295,16 @@ function Heading({
   href,
   name,
   className,
+  level = "h3",
 }: {
   href?: string;
   name: string;
   className?: string;
+  level?: "h2" | "h3";
 }) {
+  const Tag = level;
   return (
-    <h3 className={className}>
+    <Tag className={className}>
       {href ? (
         <Link href={href} className="transition-colors hover:text-brand-ink">
           {name}
@@ -306,7 +312,7 @@ function Heading({
       ) : (
         name
       )}
-    </h3>
+    </Tag>
   );
 }
 
@@ -342,6 +348,7 @@ export function ComponentShowcase({
   bleed,
   customizable,
   href,
+  headingLevel = "h3",
   previewClassName,
   previewPadding = 0,
   previewBorder = false,
@@ -394,7 +401,7 @@ export function ComponentShowcase({
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-3">
           <div>
-            <Heading href={href} name={name} className="text-lg font-medium" />
+            <Heading href={href} name={name} level={headingLevel} className="text-lg font-medium" />
             <Summary href={href} description={description} />
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -502,7 +509,7 @@ export function ComponentShowcase({
       </div>
       <div className="flex flex-1 flex-col gap-2 border-t border-border p-4">
         <div className="flex items-start justify-between gap-2">
-          <Heading href={href} name={name} className="min-w-0 font-medium" />
+          <Heading href={href} name={name} level={headingLevel} className="min-w-0 font-medium" />
           {bleed && <DarkOnlyBadge />}
         </div>
         <Summary href={href} description={description} />

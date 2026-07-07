@@ -30,6 +30,32 @@ describe("ComponentShowcase — Dark only badge", () => {
   });
 });
 
+describe("ComponentShowcase — heading level", () => {
+  const base = {
+    name: "Badge",
+    description: "Compact status label.",
+    code: "export const x = 1;",
+    preview: <div data-testid="preview" />,
+  };
+
+  it("renders the card title as an h3 by default", () => {
+    render(<ComponentShowcase {...base} />);
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Badge" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders the card title as an h2 when headingLevel='h2' (under a page h1)", () => {
+    render(<ComponentShowcase {...base} headingLevel="h2" />);
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Badge" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { level: 3, name: "Badge" }),
+    ).not.toBeInTheDocument();
+  });
+});
+
 describe("ComponentShowcase — card links + no inline tabs", () => {
   const base = {
     name: "Badge",

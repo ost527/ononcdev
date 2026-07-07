@@ -22,6 +22,12 @@ function reduceMotion() {
   }));
 }
 
+/** The front card is the only one not hidden from assistive tech. */
+function expectFrontCard(title: string) {
+  const el = screen.getByText(title);
+  expect(el.closest('[aria-hidden="true"]')).toBeNull();
+}
+
 describe("SwipeCards", () => {
   it("exposes a focusable, labelled deck with keyboard instructions", () => {
     render(<SwipeCards items={ITEMS} label="Deck" />);
@@ -35,7 +41,7 @@ describe("SwipeCards", () => {
 
   it("shows the front card and pointer-free Pass/Keep controls", () => {
     render(<SwipeCards items={ITEMS} />);
-    expect(screen.getByRole("heading", { name: "Alpha" })).toBeInTheDocument();
+    expectFrontCard("Alpha");
     expect(screen.getByRole("button", { name: "Pass" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Keep" })).toBeInTheDocument();
   });
@@ -47,7 +53,7 @@ describe("SwipeCards", () => {
     // Arrow keys are consumed (preventDefault → dispatchEvent returns false)…
     expect(fireEvent.keyDown(group, { key: "ArrowRight" })).toBe(false);
     // …and reveal the next card.
-    expect(screen.getByRole("heading", { name: "Bravo" })).toBeInTheDocument();
+    expectFrontCard("Bravo");
     // A non-arrow key is left for the browser.
     expect(fireEvent.keyDown(group, { key: "Enter" })).toBe(true);
   });

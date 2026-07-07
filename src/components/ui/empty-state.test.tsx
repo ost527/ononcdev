@@ -11,7 +11,7 @@ describe("EmptyState", () => {
         action={<button type="button">Add item</button>}
       />,
     );
-    expect(screen.getByRole("heading", { name: "No items" })).toBeInTheDocument();
+    expect(screen.getByText("No items")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Add item" })).toBeInTheDocument();
   });
 });

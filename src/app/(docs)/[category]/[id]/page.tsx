@@ -4,14 +4,20 @@ import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { ComponentPlayground } from "@/components/showcase/component-playground";
 import { CopyForAi } from "@/components/showcase/copy-for-ai";
+import { SubcategoryView } from "./subcategory-view";
 import { readSource } from "@/lib/source";
 import { absoluteUrl } from "@/lib/site";
 import { detailPageParams, findComponent } from "@/registry";
+import {
+  findSubcategory,
+  isSubcategoryId,
+  subcategoryParams,
+} from "@/registry/subcategory-routing";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return detailPageParams();
+  return [...subcategoryParams(), ...detailPageParams()];
 }
 
 export async function generateMetadata({
@@ -20,6 +26,16 @@ export async function generateMetadata({
   params: Promise<{ category: string; id: string }>;
 }): Promise<Metadata> {
   const { category, id } = await params;
+
+  if (isSubcategoryId(id)) {
+    const sub = findSubcategory(category, id);
+    if (!sub) return { title: "ONONC" };
+    return {
+      title: `${sub.group.label} — ${sub.category.label} — ONONC`,
+      description: `${sub.group.label} — ${sub.group.items.length} ${sub.category.label} components with live previews and copy-paste source.`,
+    };
+  }
+
   const found = findComponent(category, id);
   if (!found) return { title: "ONONC" };
   return {
@@ -28,12 +44,19 @@ export async function generateMetadata({
   };
 }
 
-export default async function ComponentDetailPage({
+export default async function CategoryItemPage({
   params,
 }: {
   params: Promise<{ category: string; id: string }>;
 }) {
   const { category, id } = await params;
+
+  // A `group-*` id addresses a sub-category listing; anything else is a
+  // component detail page (or a 404 under dynamicParams=false).
+  if (isSubcategoryId(id)) {
+    return <SubcategoryView categoryId={category} subId={id} />;
+  }
+
   const found = findComponent(category, id);
   if (!found) notFound();
 

@@ -51,11 +51,13 @@ src/
 │   │   │   └── page.tsx         # Recommended resources board (/docs/resources)
 │   │   └── changelog/
 │   │       └── page.tsx         # Changelog page (/docs/changelog)
-│   └── [category]/
-│       ├── layout.tsx           # Sidebar + content split for all category routes
-│       ├── page.tsx             # Per-category view: renders ONLY that category's components
-│       └── [id]/
-│           └── page.tsx         # Per-component detail page with interactive playground (static export, dynamicParams=false)
+│   └── (docs)/                  # Route group for category + subcategory pages
+│       ├── [category]/
+│       │   ├── layout.tsx       # Sidebar + content split for all category routes
+│       │   ├── page.tsx         # Per-category view: renders grid of sub-category cards
+│       │   └── [id]/
+│       │       ├── page.tsx     # Branch on group- prefix: sub-category listing (group-*) or component detail page (else)
+│       │       └── subcategory-view.tsx  # Renders sub-category listing: breadcrumb, h1, component grid
 ├── components/
 │   ├── docs/                    # Docs section chrome: nav config + collapsible sidebar + prose helpers + page header
 │   │   ├── docs-nav.ts          # DOCS_NAV groups (Get started, Guides) + docsInternalPaths() for the sitemap
@@ -70,9 +72,11 @@ src/
 │       ├── site-header.tsx      # Sticky header: brand link (/), category nav links (/<category>), theme toggle, mobile hamburger (md:hidden)
 │       ├── mobile-menu.tsx      # Mobile hamburger menu button (md:hidden) + right-side Drawer (role=dialog) listing 4 category nav links
 │       ├── sidebar.tsx          # Sidebar (desktop rail) + MobileNav (mobile pills); fed plain {id,label,count}[] props
+│       ├── subcategory-card.tsx # Grid card for a sub-category, showing label + component count + preview names
+│       ├── component-grid.tsx   # Shared item grid layout for sub-category listing pages
 │       ├── showcase-hero.tsx    # Landing hero with CTAs linking to /backgrounds and /blocks
 │       ├── code-block.tsx       # Syntax-highlighted code with copy button
-│       ├── component-showcase.tsx  # Preview + Code tabs for category pages (grid cards)
+│       ├── component-showcase.tsx  # Preview + Code tabs for category pages (grid cards) with optional headingLevel prop
 │       ├── component-playground.tsx  # Detail page: tabs, viewport controls, resize handle, customize panel, props table
 │       ├── playground-controls.tsx   # Customize controls using library primitives (Slider, Switch, SegmentedControl, etc.)
 │       ├── copy-for-ai.tsx      # Button copying AI-ready install prompt on detail pages
@@ -93,17 +97,19 @@ src/
     ├── ui.tsx                   # UI registry (87 items)
     ├── blocks.tsx               # Blocks registry (119 items, some subcategories)
     ├── playground.tsx           # Per-component playgrounds: customize controls + render function + props (client module)
-    ├── subcategories.ts         # Optional sub-category grouping within blocks (e.g., Features, Stats, Forms)
+    ├── subcategories.ts         # Sub-category grouping for every category (particles, reveal, inputs, heroes, …)
+    ├── subcategory-routing.ts   # Sub-category route helpers: SUBCATEGORY_PREFIX, isSubcategoryId, subcategoryParams, findSubcategory
     └── index.ts                 # Central registry export: categories[], componentCount, allComponentParams(), findComponent()
 ```
 
 **Architecture:** The showcase is a docs-style site with a shared chrome (header/footer/scroll-progress/toaster) in the root layout:
 - **Landing** (/) — Category cards with browse CTAs
-- **Per-category routes** (/backgrounds, /text, /ui, /blocks) — Sidebar + grid of component cards
-  - **UI/Text/Backgrounds (cards):** Linked title + summary direct to detail pages
-  - **Blocks (full-width list):** Plain title + summary (no link), inline Preview/Code tabs with ViewportToggle for responsive preview
+- **Per-category routes** (/backgrounds, /text, /ui, /blocks) — Sidebar + grid of sub-category cards, each with a live, non-interactive preview thumbnail of the group's lead component, plus label, component count, preview names, and Browse affordance. The preview sits inert (aria-hidden, pointer-events-none) inside a stretched-link card so preview elements never create invalid nesting
+- **Sub-category listing routes** (/[category]/group-<id>) — Breadcrumb (`Category > Group`), page title, and a grid of components within that sub-group
+  - **UI/Text/Backgrounds:** Grid cards (title, preview, summary link to detail page)
+  - **Blocks:** Full-width inline list (title, summary, Preview/Code tabs with ViewportToggle for responsive preview)
 - **Component detail routes** (/[category]/[id]) — Static-generated for all non-block components (217 total: backgrounds, text, ui); blocks have no detail pages (/blocks/<id> returns 404). Each detail page is a playground with Preview/Code tabs, viewport presets (Desktop/Tablet/Mobile), responsive resize handle, optional live Customize panel, and Props table
-- **Navigation** — Left Sidebar (desktop) + MobileNav pills (mobile, mid-tier); below md breakpoint (<768px), the header's inline category nav is hidden and a hamburger button appears in the top-right of the sticky header, which opens a right-side Drawer listing the 4 category nav links. All variants fed as plain {id,label,count}[] props from registry to keep preview tree server-side
+- **Navigation** — Left Sidebar (desktop) + MobileNav pills (mobile, mid-tier); sub-group links now navigate to sub-category pages (`/[category]/group-<id>`); active state is pathname-based (aria-current="page"). Below md breakpoint (<768px), the header's inline category nav is hidden and a hamburger button appears in the top-right of the sticky header, which opens a right-side Drawer listing the 4 category nav links. All variants fed as plain {id,label,count}[] props from registry to keep preview tree server-side
 - **Copy-Paste Integration** — Component sources embedded at build time; Code tab includes copy-to-clipboard
 
 ---
@@ -177,7 +183,7 @@ Interactive building blocks with pointer reactivity, keyboard support, and reduc
 - **Dock** — macOS-style icons magnifying by proximity (motion)
 - **Marquee** — Seamless infinite scroller, pausing on hover (CSS loop)
 - **Carousel** — Looping slides with arrows, dots, arrow-key support (a11y)
-- **Accordion** — Accessible disclosure list with smooth height transitions (a11y)
+- **Accordion** — Accessible disclosure list with smooth height transitions (a11y); now accepts optional `headingLevel` prop ('h2'|'h3'|'h4', default h3) to enforce correct heading hierarchy
 - **Tabs** — Accessible tablist with sliding underline indicator (a11y)
 - **Tooltip** — Shows on hover and keyboard focus, linked via aria (a11y)
 - **Switch** — Accessible toggle with a spring thumb (a11y)
@@ -300,7 +306,7 @@ A machine-readable index and dedicated docs page enable LLM coding agents to dis
 - **/docs/ai-agents** — Docs-section page (`src/app/docs/ai-agents/page.tsx`) explaining why ONONC suits LLM coding agents: real copy-paste source, plain React + Tailwind, predictable structure, machine-readable llms.txt, one-command shadcn install, no additional dependencies, and full reduced-motion/a11y support. Includes JSON-LD breadcrumb and links to all endpoints, plus an "Original work, honest about its lineage" section that acknowledges prior art (shadcn's registry protocol; React Bits/Aceternity/Magic UI concepts) and states ONONC's differentiators — see [docs/originality-audit.md](docs/originality-audit.md). Reachable from the docs sidebar (the footer's Support column links to /docs)
 - **Copy for AI button** — `src/components/showcase/copy-for-ai.tsx` on each component detail page; copies a ready prompt including the install command, docs URL, and component source for immediate agent use
 - **Site configuration** — `src/lib/site.ts` defines `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, defaults to `https://dev.ononc.com`) and `absoluteUrl()` helper used for component links in llms.txt and registry URLs, and for `metadataBase` in `src/app/layout.tsx`. Production domain is `dev.ononc.com`. URLs are 404-safe: component links point to `/[category]/[id]` detail page for all non-block components; only blocks link to their category page instead
-- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (231 URLs: home, /introduction, the 7 /docs* pages, /llms.txt, all 4 categories, and all 217 non-block detail pages)
+- **Search engine and metadata** — `src/app/robots.ts` serves robots.txt (allow all, Host, Sitemap) and `src/app/sitemap.ts` serves sitemap.xml (258 URLs: home, /introduction, the 7 /docs* pages, /llms.txt, all 4 categories, all 27 sub-category pages, and all 217 non-block detail pages)
 - **Static export output** — Emitted to `out/llms.txt`, `out/llms-full.txt`, `out/docs/ai-agents.html`, `out/robots.txt`, `out/sitemap.xml`, and `out/r/*.json` (337 files: 336 component items + ononc-theme.json) by `next build` (with `output: "export"`)
 - **Tests** — Validated by `src/lib/llms.test.ts` (llms.txt/llms-full.txt generation) and `src/lib/registry-json.test.ts` (all 336 items, dependency validation against package.json, transitive import bundling)
 
@@ -332,13 +338,14 @@ Vitest is configured for unit tests of helpers and component smoke tests. Run wi
 
 - **Config** — `vitest.config.ts` with jsdom environment and React import detection
 - **Setup** — `vitest.setup.ts` for test utilities and global mocks (e.g., IntersectionObserver)
-- **Coverage** — 72 test files, 261 tests passing:
+- **Coverage** — 73 test files, 269 tests passing:
   - `src/lib/utils.test.ts` — helpers (cn, clamp, mapRange, seededRandom, prefersReducedMotion)
   - `src/lib/llms.test.ts` — llms.txt/llms-full.txt generation validation
   - `src/lib/registry-json.test.ts` — registry-json generation (all 336 items, dependency validation against package.json, transitive import bundling)
   - `src/registry/registry.test.ts` — registry structure validation (asserts all entries and every sourcePath file exists)
   - `src/registry/playground.test.ts` — playground specs validation
-  - `src/components/showcase/component-playground.test.tsx` — playground interface tests
+  - `src/registry/subcategory-routing.test.ts` — subcategory route helpers validation
+  - `src/components/showcase/component-playground.test.tsx` — playground interface tests (includes headingLevel prop tests)
   - `src/components/ui/{switch,accordion,breadcrumbs,carousel,combobox,pagination,toggle-group,tag-input,file-dropzone,progress-bar}.test.ts` — a11y smoke tests for interactive components
 
 ---
@@ -422,10 +429,10 @@ Reusable React hook for canvas-based components:
 ## Verification Status
 
 ✅ **Type Safety** — `npx tsc --noEmit` = 0 errors  
-✅ **Build** — `npm run build` succeeds (static prerender of / + /introduction + the 7 /docs* pages + 4 category SSG routes + 217 non-block detail pages + /_not-found; exits 0)  
+✅ **Build** — `npm run build` succeeds (static prerender of / + /introduction + the 7 /docs* pages + 4 category SSG routes + 27 sub-category pages + 217 non-block detail pages + /_not-found; exits 0)  
 ✅ **Lint** — `npm run lint` = 0 errors (eslint flat config; 6 pre-existing warnings in src/components/text/*)  
-✅ **Runtime** — `next start` returns HTTP 200 for /, /introduction, /backgrounds, /text, /ui, /blocks, /docs (+ /docs/installation, /docs/theming, /docs/usage, /docs/ai-agents, /docs/resources, /docs/changelog), and all 217 component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 336 components; 404 for /blocks/<id>; no hydration errors; all components present; category scoping confirmed  
-✅ **Tests** — `npm test` = 72 files, 261 tests passing (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated with updated detail-page rules; component-playground interface tested); registry items now carry design tokens via cssVars+css (every component includes ONONC's @theme, @keyframes, and @utility declarations)
+✅ **Runtime** — `next start` returns HTTP 200 for /, /introduction, /backgrounds, /text, /ui, /blocks, /docs (+ /docs/installation, /docs/theming, /docs/usage, /docs/ai-agents, /docs/resources, /docs/changelog), all 27 sub-category pages (/[category]/group-<id>), and all 217 component detail routes; /llms.txt, /llms-full.txt, /robots.txt, and /sitemap.xml serve static exports; /r/<id>.json shadcn registry endpoints available for all 336 components; 404 for /blocks/<id>; no hydration errors; all components present; category and sub-category scoping confirmed  
+✅ **Tests** — `npm test` = 73 files, 269 tests passing (registry test validates all entries + sourcePath existence; llms.txt/llms-full.txt generation validated; registry-json generation validated with dependency checks; playground specs validated with updated detail-page rules; subcategory-routing tests validate route helpers; component-playground interface tested with headingLevel prop); registry items now carry design tokens via cssVars+css (every component includes ONONC's @theme, @keyframes, and @utility declarations)
 
 ---
 
@@ -559,8 +566,6 @@ All critical and minor issues resolved as of 2026-06-30:
 ---
 
 ## Known Minor Issues (non-blocking)
-
-None currently open. Recently resolved:
 
 - ✅ **progress-bar.tsx** — `aria-label` now falls back to `"Progress"` when the `label` prop is omitted, so the progressbar always has an accessible name.
 - ✅ **combobox.tsx** — The first ArrowDown while closed now only opens the list (no longer skips the first option); it advances only when already open.

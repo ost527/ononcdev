@@ -175,7 +175,7 @@ export function ScrollStack({
               background: item.background,
             }}
           >
-            <h3 className="text-xl font-semibold tracking-tight">{item.title}</h3>
+            <p className="text-xl font-semibold tracking-tight">{item.title}</p>
             {item.subtitle && (
               <p
                 className={cn(

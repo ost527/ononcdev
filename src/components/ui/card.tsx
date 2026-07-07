@@ -22,9 +22,9 @@ export function CardHeader({ className, ...props }: HTMLAttributes<HTMLDivElemen
 export function CardTitle({
   className,
   ...props
-}: HTMLAttributes<HTMLHeadingElement>) {
+}: HTMLAttributes<HTMLDivElement>) {
   return (
-    <h3
+    <div
       className={cn("text-base font-semibold text-foreground", className)}
       {...props}
     />

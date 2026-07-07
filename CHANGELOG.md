@@ -5,6 +5,39 @@ All notable changes to **ONONC** are documented here. The format is based on
 date-stamped development batches. A rendered version lives at
 [dev.ononc.com/docs/changelog](https://dev.ononc.com/docs/changelog).
 
+## [1.16] — 2026-07-07 — Category → sub-category navigation, preview thumbnails, and /ui heading-outline fix
+
+### Changed
+- **Category pages now show sub-category cards with live preview thumbnails** — Each category route (/backgrounds, /text, /ui, /blocks) now renders a grid of sub-category cards (one per logical group), each with a live, non-interactive preview thumbnail of the group's lead component, plus label, component count, preview names, and a Browse affordance. The preview sits inert (aria-hidden, pointer-events-none) inside a stretched-link card so preview elements never create invalid nesting. Backgrounds/text/ui thumbnails render cleanly; block thumbnails are cropped previews of full sections (functional, cosmetically rough — acceptable). Replaces the prior long-scroll layout with in-page anchors.
+- **Heading outline noise on /ui/group-* pages now fixed** — Decorative/content titles in component preview demos were demoted to non-heading elements (styled identically) to clean up heading hierarchy. The semantic accordion header was preserved and made level-configurable via a new optional `headingLevel` prop ('h2'|'h3'|'h4', default 'h3') so sub-category pages can enforce correct heading order. Specifics: inline demo headings in `src/registry/ui.tsx` (tilt-card, spotlight, popover, chroma-card, preloader) → `<p>`; CardTitle `src/components/ui/card.tsx` → `<div>` (matches modern shadcn); item/placeholder titles in empty-state, card-swap, card-stack, scroll-stack, swipe-cards → `<p>`; all 4 previously-noisy /ui/group-* pages now render with a clean heading outline (h1 → h2s → footer h3, no skip), verified in built HTML + headless-browser a11y-tree walk.
+- **New sub-category listing pages** — Dedicated routes at `/[category]/group-<id>` (e.g., /backgrounds/group-particles, /blocks/group-heroes) list only that sub-group's components: a `Category > Group` breadcrumb, h1 page title, then component grid (cards for backgrounds/text/ui; inline full-width Preview/Code blocks for blocks).
+- **URL scheme** — Sub-category pages reuse the existing dynamic route `src/app/(docs)/[category]/[id]/page.tsx` with a reserved `group-` id prefix (collision-free — no component id starts with `group-`). The route branches on the prefix: `group-*` → sub-category listing, else → component detail page (unchanged).
+- **Sidebar navigation** — Sub-group links now navigate to sub-category pages (`/[category]/group-<id>`) instead of anchor links; IntersectionObserver scroll-spy removed; active state is purely pathname-based (`aria-current="page"`).
+- **Blocks get sub-category pages too** — (/blocks shows 7 sub-category cards; /blocks/group-heroes lists hero blocks inline). Individual block detail pages still do not exist (/blocks/<id> still returns 404).
+- **A11y** — Sub-category listing pages render each card title as an `<h2>` (under the page `<h1>`) so heading order never skips a level.
+
+### Added
+- New `src/components/showcase/subcategory-card.tsx` — grid card component for sub-categories (label, count, preview names, Browse link).
+- New `src/components/showcase/component-grid.tsx` — shared item grid layout reused by sub-category listing pages.
+- New `src/app/(docs)/[category]/[id]/subcategory-view.tsx` — renders sub-category listing (breadcrumb, h1, component grid).
+- New `src/registry/subcategory-routing.ts` — route helpers: `SUBCATEGORY_PREFIX`, `isSubcategoryId()`, `subcategoryParams()`, `findSubcategory()`.
+- New `src/registry/subcategory-routing.test.ts` — tests for route helpers.
+
+### Updated
+- `src/app/(docs)/[category]/page.tsx` — now renders sub-category cards instead of all components inline.
+- `src/app/(docs)/[category]/[id]/page.tsx` — branches on `group-` prefix; `generateStaticParams` now returns `[...subcategoryParams(), ...detailPageParams()]`; `dynamicParams=false`.
+- `src/components/showcase/sidebar.tsx` — sub-group links navigate to sub-category pages; scroll-spy removed; active state is pathname-based.
+- `src/components/showcase/component-showcase.tsx` — added optional `headingLevel` prop (default h3) for correct heading hierarchy on sub-category listing pages.
+- `src/app/sitemap.ts` — now emits all 27 sub-category URLs (+6 backgrounds, +5 text, +9 ui, +7 blocks).
+
+### Verified
+- tsc --noEmit 0 errors; eslint 0 errors (6 pre-existing text/* warnings only); vitest 73 files / 269 tests pass (includes the subcategory-routing route-helper tests and the ComponentShowcase headingLevel tests; card/empty-state/swipe-cards tests were updated for the heading demotions with no net count change); next build exit 0 (out/ emits 27 new sub-category pages: out/{backgrounds 6, text 5, ui 9, blocks 7}/group-*.html, plus 217 component detail pages unchanged; /blocks/<component> still 404). The Accordion `headingLevel` behavior is verified via the built HTML (showcase preview renders h2).
+- Sitemap now emits 258 URLs (was 231; +27 sub-category URLs).
+- Component counts unchanged: 336 total (Backgrounds 72 + Text 58 + UI 87 + Blocks 119); 27 sub-groups (backgrounds 6, text 5, ui 9, blocks 7).
+- **Heading-outline fix verified:** All 4 previously-noisy /ui/group-* pages now have a clean heading outline (h1 → h2s → footer h3, no skip), verified in the built HTML + a headless-browser a11y-tree walk. Tests updated: card.test.tsx, empty-state.test.tsx, swipe-cards.test.tsx remain passing; new CardTitle `<div>` renders correctly.
+- Review gate = GO (0 Critical / 0 Major).
+- QA gate = PASS (headless browser): all sub-category pages render correctly with proper breadcrumbs, page titles (h1), component grids; live preview thumbnails render cleanly (inert + stretched-link); sidebar links navigate to sub-category pages; active state highlights correctly; category pages show sub-category cards with previews; detail pages render unchanged; no heading-order skips; zero console errors.
+
 ## [1.15] — 2026-07-07 — Mobile hamburger menu (in review)
 
 ### Added

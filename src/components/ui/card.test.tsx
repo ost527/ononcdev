@@ -12,7 +12,7 @@ describe("Card", () => {
         </CardHeader>
       </Card>,
     );
-    expect(screen.getByRole("heading", { name: "Plan" })).toBeInTheDocument();
+    expect(screen.getByText("Plan")).toBeInTheDocument();
     expect(screen.getByText("Pro tier")).toBeInTheDocument();
   });
 });

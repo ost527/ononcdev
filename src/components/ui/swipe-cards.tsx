@@ -221,7 +221,7 @@ export function SwipeCards({
 
                 <div className="flex flex-1 flex-col gap-3 p-5">
                   <div>
-                    <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
+                    <p className="text-lg font-semibold tracking-tight">{item.title}</p>
                     {item.subtitle && (
                       <p className="mt-0.5 text-sm text-muted">{item.subtitle}</p>
                     )}

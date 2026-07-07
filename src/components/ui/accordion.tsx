@@ -16,6 +16,12 @@ export interface AccordionProps {
   multiple?: boolean;
   /** Index open by default. */
   defaultIndex?: number | null;
+  /**
+   * Heading level wrapping each header button. WAI-ARIA recommends accordion
+   * headers be headings at a level that fits the surrounding document; defaults
+   * to "h3".
+   */
+  headingLevel?: "h2" | "h3" | "h4";
 }
 
 /**
@@ -27,7 +33,9 @@ export function Accordion({
   className,
   multiple = false,
   defaultIndex = null,
+  headingLevel = "h3",
 }: AccordionProps) {
+  const HeadingTag = headingLevel;
   const baseId = useId();
   const [open, setOpen] = useState<Set<number>>(
     () => new Set(defaultIndex != null ? [defaultIndex] : []),
@@ -49,7 +57,7 @@ export function Accordion({
         const panelId = `${baseId}-p-${i}`;
         return (
           <div key={i}>
-            <h3>
+            <HeadingTag>
               <button
                 id={headerId}
                 type="button"
@@ -66,7 +74,7 @@ export function Accordion({
                   )}
                 />
               </button>
-            </h3>
+            </HeadingTag>
             <div
               id={panelId}
               role="region"

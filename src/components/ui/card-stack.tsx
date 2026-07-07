@@ -161,9 +161,9 @@ export function CardStack({
                     }}
                   />
                   <div className="flex flex-1 flex-col justify-center gap-1 px-5">
-                    <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                    <p className="text-lg font-semibold tracking-tight text-foreground">
                       {item.title}
-                    </h3>
+                    </p>
                     {item.subtitle && (
                       <p className="text-sm text-muted">{item.subtitle}</p>
                     )}
